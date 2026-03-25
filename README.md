@@ -1,6 +1,6 @@
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow?style=for-the-badge&logo=github)  
 
-![Logo do Projeto](https://via.placeholder.com/800x200?text=Imagem+do+Projeto)
+![Logo da Minha Empresa](https://saocamilo.br/wp-content/uploads/2023/08/logo-sao-camilo-hospital.png)
 
 
 # ***<span style="color:green;">AQUOS</span>***
@@ -15,7 +15,7 @@
 | Larissa Gomes                | 25.00625-5 | @gLariii         | Desenvolvedor |
 | Luana Ferreira Silva         | 25.01656-9 | @luafxrreira     | Desenvolvedor |
 | Thiago Santos Machado        | 25.01702-1 | @Thiago-stosm    | Desenvolvedor |
-| Victor Zakimi                | 23.00187-9 | @Victor-Hugo-PZ  | Desenvolvedor |
+| Victor Hugo Pinto Zakimi     | 23.00187-9 | @Victor-Hugo-PZ  | Desenvolvedor |
 
 ## **<span style="color:green;">Estrutura do projeto</span>**
 ```
@@ -55,8 +55,19 @@ AQUOS/
 ## **<span style="color:green;">Funcionalidades</span>**  
 
 ## **<span style="color:green;">Tecnologias utilizadas</span>**
-- Python
-- React  
+
+<p align="left">
+    <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/250px-Typescript_logo_2020.svg.png"
+            width="64" height="64" alt="Typescript" /><a>  Typescript</a></a>  
+    <a href="https://www.python.org/doc/" target="_blank" rel="noreferrer"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1280px-Python-logo-notext.svg.png"
+            width="64" height="64" alt="Python" /><a>  Python</a></a>
+    <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"><img
+            src="https://images.icon-icons.com/1381/PNG/512/mysqlworkbench_93532.png"
+            width="64" height="64" alt="MySQL" /><a>  MySQL</a></a>
+
+</p>
 
 ## **<span style="color:green;">Como executar</span>**
   
