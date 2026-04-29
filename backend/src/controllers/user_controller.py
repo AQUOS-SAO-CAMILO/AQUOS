@@ -48,6 +48,7 @@ def register_user():
 # Endpoint de busca de usuários
 @login.route('/list', methods=['GET'])
 def list_all_users():
+    
     try:
         result = list_all_users_logic()
         return jsonify(result), 200

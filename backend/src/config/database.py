@@ -10,6 +10,15 @@ class MockConnection:
             "maria": {"user": "maria", "password": "senha123", "id": 3}
         }
         self.next_id = 4  # Para inserir novos usuários
+
+        self.training_sessions_data = {
+            1: {"id": 1, "user_id": 1, "date": "2025-02-07"},
+            2: {"id": 2, "user_id": 2, "date": "2025-02-07"}
+        }
+        self.next_session_id = 3
+
+        self.session_results_data = {}
+        self.next_result_id = 1
     
     def cursor(self):
         return MockCursor(self.users_data, self)
@@ -103,6 +112,33 @@ class MockCursor:
                     print(f"Erro. Usuário com o id {user_id} não encontrado")
             
             self.result = []
+
+            # SELECT para training_sessions
+        elif "select * from training_sessions" in query_lower:
+            if params:
+                user_id = params[0]
+                self.result = []
+                for session in self.connection.training_sessions_data.values():
+                    if session["user_id"] == user_id:
+                        self.result.append((
+                            session["id"],
+                            session["user_id"],
+                            session["date"]
+                        ))
+                        break  # se só espera uma sessão
+
+        # INSERT para session_results
+        elif "insert into session_results" in query_lower:
+            if params:
+                user_id, weight_variation_kg = params
+                new_id = self.connection.next_result_id
+                self.connection.session_results_data[new_id] = {
+                    "id": new_id,
+                    "user_id": user_id,
+                    "weight_variation_kg": weight_variation_kg
+                }
+                self.connection.next_result_id += 1
+                self.result = []
 
     def fetchone(self):
         return self.result[0] if self.result else None
