@@ -5,6 +5,7 @@ from flask_login import LoginManager
 
 from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
+from backend.src.controllers.register_controller import register
 
 # Criação de aplicativo Flask
 app = Flask(__name__)
@@ -19,6 +20,7 @@ CORS(app)
 # Registrar os Blueprints para as rotas
 # Login 
 app.register_blueprint(login)
+app.register_blueprint(register)
 
 # alterar isso dps, coloquei só pra testar se tava tudo ok
 @app.route("/")
