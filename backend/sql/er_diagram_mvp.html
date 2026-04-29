@@ -1,0 +1,100 @@
+
+<style>#erd{padding:8px 0}#erd svg{width:100%}</style>
+<div id="erd"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad:false, theme:'base',
+  fontFamily:'"Anthropic Sans",sans-serif',
+  themeVariables:{darkMode:dark,fontSize:'13px',fontFamily:'"Anthropic Sans",sans-serif',
+    lineColor:dark?'#9c9a92':'#73726c',textColor:dark?'#c2c0b6':'#3d3d3a'}
+});
+const { svg } = await mermaid.render('erd-svg', `erDiagram
+  users ||--o| athlete_profiles : "has profile"
+  users ||--o{ team_members : "belongs to"
+  teams ||--o{ team_members : "has"
+  athlete_profiles ||--o{ training_sessions : "performs"
+  training_sessions ||--o{ fluid_intake_logs : "logs"
+  training_sessions ||--|| session_results : "produces"
+
+  users {
+    uuid id PK
+    varchar email UK
+    varchar password_hash
+    varchar name
+    varchar role
+  }
+  teams {
+    uuid id PK
+    varchar name
+    varchar sport
+    timestamptz created_at
+  }
+  team_members {
+    uuid id PK
+    uuid user_id FK
+    uuid team_id FK
+    varchar role
+    timestamptz joined_at
+  }
+  athlete_profiles {
+    uuid id PK
+    uuid user_id FK
+    varchar athlete_code UK
+    varchar sport_modality
+    numeric body_weight_kg
+  }
+  training_sessions {
+    uuid id PK
+    uuid athlete_id FK
+    varchar modality
+    numeric pre_weight_kg
+    numeric post_weight_kg
+    timestamptz session_start
+    timestamptz session_end
+    numeric temperature_c
+    smallint humidity_pct
+    smallint urine_color_pre
+    boolean clothing_soaked
+    text notes
+  }
+  fluid_intake_logs {
+    uuid id PK
+    uuid session_id FK
+    numeric volume_ml
+    varchar fluid_type
+    timestamptz logged_at
+  }
+  session_results {
+    uuid id PK
+    uuid session_id FK
+    numeric sweat_rate_lph
+    numeric weight_loss_pct
+    numeric fluid_balance_ml
+    varchar dehydration_risk
+    numeric target_intake_min_mlh
+    numeric target_intake_max_mlh
+    smallint interval_minutes
+    boolean alert_dehydration
+    boolean alert_overhydration
+    text notes
+  }
+`);
+document.getElementById('erd').innerHTML = svg;
+document.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs=[nums[0],nums[2],nums[4],nums[6]],ys=[nums[1],nums[3],nums[5],nums[7]];
+  const x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;
+  const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',w);rect.setAttribute('height',h);rect.setAttribute('rx','8');
+  for(const a of['fill','stroke','stroke-width','class','style'])if(firstPath.hasAttribute(a))rect.setAttribute(a,firstPath.getAttribute(a));
+  firstPath.replaceWith(rect);
+});
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path,#erd svg.erDiagram .row-rect-even path').forEach(p=>p.setAttribute('stroke','none'));
+</script>
