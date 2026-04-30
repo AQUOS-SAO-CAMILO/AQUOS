@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+
+  "id": "f7o9gq",
+"scripts": {
+  "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+  "backend": "python -m backend.src.main",
+  "frontend": "cd frontend && npm run dev"
+}
+}
