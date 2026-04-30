@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
 from backend.src.controllers.register_controller import register
+from backend.src.config.connection import create_connection
 
 # Criação de aplicativo Flask
 app = Flask(__name__)
@@ -16,6 +17,8 @@ app.config.from_object(Config)
 
 # Configuração do CORS (permite requisições de qualquer origem)
 CORS(app)
+
+connection = create_connection()
 
 # Registrar os Blueprints para as rotas
 # Login 
@@ -28,4 +31,4 @@ def hello_world():
     return "<p>hello world</p>"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)  #

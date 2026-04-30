@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def conectar():
+def create_connection():
     connection = None
     try:
         connection = psycopg2.connect(
@@ -18,15 +18,11 @@ def conectar():
         cursor = connection.cursor()
         cursor.execute("SELECT version();")
         print(f"Banco de dados conectado com sucesso: {cursor.fetchone()}")
+        return connection 
 
     except Exception as e:
         print(f"Erro na conexão com o banco de dados: {e}")
 
-    finally:
-        if connection:
-            cursor.close()
-            connection.close()
-            print(f"Conexão do banco de dados encerrada.")
 
 if __name__ == "__main__":
-    conectar()
+    create_connection()
