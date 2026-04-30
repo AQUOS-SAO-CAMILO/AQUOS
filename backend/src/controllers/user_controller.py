@@ -10,16 +10,16 @@ login = Blueprint('login', __name__)
 def authenticate_user():
 
     data = request.get_json()
-    user = data.get('user')
+    email = data.get('email')
     password = data.get('password')
 
     # Verificação dos dados fornecidos
-    if not user or not password:
-        return jsonify({"error": "Usuário e senha são obriatórios."}), 400
+    if not email or not password:
+        return jsonify({"error": "Usuário e email são obriatórios."}), 400
     
     try:
         # Gerar token
-        token = authenticate_user_logic(user, password)
+        token = authenticate_user_logic(email, password)
        
         return jsonify({
             "message": "Autenticação bem-sucedida",
@@ -33,14 +33,16 @@ def authenticate_user():
 def register_user():
 
     data = request.get_json()
-    user = data.get('user')
+    email = data.get('email')
     password = data.get('password')
+    name = data.get('name')
+    role = data.get('role', 'athlete')
 
-    if not user or not password:
+    if not email or not password or not name:
         return jsonify({"error": "Preencha todos os campos!"}), 400
     
     try:
-        result = register_user_logic(user, password)
+        result = register_user_logic(email, password, name, role)
         return jsonify(result), 201
     except Exception as e:
         return jsonify({"error": f"Erro ao tentar criar novo usuário, {e}"}), 400
@@ -61,23 +63,24 @@ def update_user_data():
 
     data = request.get_json()
     user_id = data.get('id')
-    new_user = data.get('user')
+    new_email = data.get('email')
     new_password = data.get('password')
+    new_name = data.get('name')
 
-    if not user_id:
-        return jsonify({"error": "Id do usuário precisa ser preenchido!"}), 400
+    if not user_id and not new_name:
+        return jsonify({"error": "Id e nome do usuário precisam ser preenchidos."}), 400
 
-    if not new_password and not new_user:
+    if not new_password and not new_email:
         return jsonify({"error": "Forneça o usuário ou senha para atualização de dados."}), 400
         
     try:
-        result = update_user_data_logic(user_id, new_user, new_password)
+        result = update_user_data_logic(user_id, new_email, new_password, new_name)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": f"Erro ao tentar atualizar dados do usuário, {e}"}), 400
 
 # Endpoint de deletar o usuário
-@login.route('/delete', methods=['DELETE'])
+@login.route('/delete', methods=['PUT'])
 def delete_user():
 
     data = request.get_json()
