@@ -116,3 +116,388 @@ body {
 		height: 100px !important;
 	}
 }
+
+/* container principal do menu adm/atleta */
+.menu-adm-container {
+	min-height: 100vh;
+	background: #f7f4ee;
+	padding: 10px 15px; /* margens */
+	display: flex;
+	flex-direction: column;
+	max-width: 100%; 
+	margin: 0;
+	box-sizing: border-box;
+}
+
+.menu-adm-header {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 10px;
+	padding-top: 5px;
+}
+
+/* svg user topo */
+.user-icon-svg {
+	width: 35px;
+	height: 35px;
+	color: #000;
+	cursor: pointer;
+}
+
+/* texto d boas vindas */
+.welcome-text {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #000;
+	margin-bottom: 15px;
+	text-align: left;
+	width: 100%;
+	padding-left: 5px;
+}
+
+/* grid vertical dos cards */
+.menu-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	flex-grow: 1;
+	width: 100%;
+}
+
+/* estilo dos cards grandes do menu */
+.menu-card {
+	background: #f7f4ee;
+	border: 1px solid #444;
+	border-radius: 4px;
+	height: 300px; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.6rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s;
+	color: #000;
+	width: 100%;
+	box-shadow: none;
+}
+
+.menu-card:hover {
+	background: #efebe2;
+}
+
+/* area dos btns no rodapé */
+.footer-actions {
+	display: flex;
+	justify-content: center;
+	padding: 20px 0;
+}
+
+/* p/ quando tiver + de 1 btn no footer */
+.footer-actions.multi-btn {
+	flex-direction: column;
+	gap: 12px;
+	padding: 10px 0 30px 0;
+}
+
+/* botões padrão de relatório/sessão */
+.reports-btn {
+	padding: 10px 32px;
+	border: 2px solid #b71c1c;
+	border-radius: 24px;
+	background: #fff;
+	color: #b71c1c;
+	font-size: 1.15rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s;
+	min-width: 200px;
+	margin: 0 auto;
+}
+
+.report-icon-svg {
+	width: 20px;
+	height: 20px;
+	color: #b71c1c;
+}
+
+.reports-btn:hover {
+	background: #b71c1c;
+	color: #fff;
+}
+
+.reports-btn:hover .report-icon-svg {
+	color: #fff;
+}
+
+/* estilos da pré-sessão */
+.pre-sessao-container {
+	min-height: 100vh;
+	background: #f7f4ee;
+	display: flex;
+	flex-direction: column;
+	max-width: 450px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+/* abas d navegação do treino */
+.sessao-tabs {
+	display: flex;
+	border-bottom: 1px solid #ccc;
+	padding: 15px 10px 0;
+	gap: 10px;
+}
+
+.tab {
+	padding: 8px 5px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: #777; 
+	position: relative;
+	cursor: pointer;
+}
+
+.tab.active {
+	color: #000;
+}
+
+/* linha vermelha da aba ativa */
+.tab.active::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: #b71c1c;
+}
+
+.tab.disabled::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: #e09e9e;
+	opacity: 0.8;
+}
+
+.sessao-content {
+	padding: 20px 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* labels dos campos */
+.input-group label {
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #000;
+	letter-spacing: 0.5px;
+}
+
+/* inputs arredondados padrão */
+.sessao-input {
+	width: 100%;
+	padding: 10px 16px;
+	border: 1px solid #bbb;
+	border-radius: 20px;
+	background: #fff;
+	font-size: 0.95rem;
+	box-sizing: border-box;
+	outline: none;
+	color: #000;
+}
+
+/* estilo do placeholder e do select vazio */
+.sessao-input::placeholder {
+	color: #777;
+	font-style: italic;
+}
+
+.sessao-input.placeholder-state {
+	color: #777;
+	font-style: italic;
+}
+
+.sessao-input option {
+	color: #000;
+	font-style: normal;
+}
+
+/* seta custom do select */
+.select-input {
+	appearance: none;
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: right 15px center;
+	background-size: 15px;
+}
+
+/* slider de intensidade */
+.slider-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+}
+
+.sessao-slider {
+	width: 100%;
+	height: 4px;
+	background: #eee;
+	border-radius: 2px;
+	outline: none;
+	-webkit-appearance: none;
+}
+
+/* bolinha do slider */
+.sessao-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 18px;
+	height: 18px;
+	background: #b71c1c;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.slider-value {
+	font-weight: 700;
+	font-size: 1.1rem;
+}
+
+/* botões d opção única (vestimenta) */
+.option-buttons {
+	display: flex;
+	gap: 10px;
+}
+
+.option-btn {
+	flex: 1;
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	background: #fff;
+	color: #000;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.option-btn.active {
+	background: #e0e0e0;
+	box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* seletor d cor do mijo */
+.color-scale {
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+}
+
+.color-box {
+	width: 35px;
+	height: 35px;
+	border-radius: 8px;
+	cursor: pointer;
+	border: 1px solid #ddd;
+}
+
+.color-box.selected {
+	border-color: #000;
+	border-width: 2px;
+	transform: scale(1.1);
+}
+
+/* escala de sede */
+.sede-scale {
+	display: flex;
+	gap: 15px;
+}
+
+.sede-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+	color: #000;
+}
+
+.drop-icon {
+	width: 30px;
+	height: 30px;
+	color: #ddd;
+}
+
+.drop-icon.active {
+	color: #1976D2;
+}
+
+.sede-item span {
+	font-weight: 700;
+}
+
+/* grid d botões de sintomas */
+.sintomas-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 10px;
+}
+
+.sintoma-btn {
+	padding: 10px 5px;
+	background: #fff;
+	color: #000;
+	border: none;
+	border-radius: 8px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sintoma-btn.active {
+	background: #e0e0e0;
+}
+
+/* campo azul d hidratação */
+.hydration-input {
+	background: #64b5f6;
+	color: #fff;
+	border: none;
+	font-weight: 700;
+}
+
+.hydration-input::placeholder {
+	color: rgba(255,255,255,0.9);
+}
+
+/* btn grande d continuar no final */
+.continue-btn {
+	width: 100%;
+	padding: 12px;
+	background: #b71c1c;
+	color: #fff;
+	border: none;
+	border-radius: 25px;
+	font-size: 1.2rem;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
