@@ -67,11 +67,11 @@ def update_user_data():
     new_password = data.get('password')
     new_name = data.get('name')
 
-    if not user_id and not new_name:
-        return jsonify({"error": "Id e nome do usuário precisam ser preenchidos."}), 400
+    if not user_id:
+        return jsonify({"error": "Id precisa ser preenchidos."}), 400
 
-    if not new_password and not new_email:
-        return jsonify({"error": "Forneça o usuário ou senha para atualização de dados."}), 400
+    if not new_password and not new_email and not new_name:
+        return jsonify({"error": "Forneça ao menos um campo (email, nome ou senha) para atualização de dados."}), 400
         
     try:
         result = update_user_data_logic(user_id, new_email, new_password, new_name)

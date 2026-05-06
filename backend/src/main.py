@@ -5,7 +5,7 @@ from flask_login import LoginManager
 
 from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
-from backend.src.controllers.register_controller import register
+from backend.src.controllers.session_controller import register
 from backend.src.config.connection import create_connection
 
 # Criação de aplicativo Flask

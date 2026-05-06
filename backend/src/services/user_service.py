@@ -1,23 +1,16 @@
-import jwt
 from backend.src.config.connection import create_connection
+from backend.src.DAOS.user_DAO import *
+
+import jwt
 from flask import current_app
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def authenticate_user_logic(email, password):
-    connection = create_connection()
-    if not connection:
-        # return jsonify({"error": "Não foi possível conectar com o banco"}), 500
-        raise Exception("Não foi possível conectar com o banco")
-
     try:
-        # Verificar se o user existe no banco de dados
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-        found_user_result = cursor.fetchone()
+        found_user_result = get_all_users_by_email(email)
 
         if not found_user_result:
-            # return jsonify({"error": "Usuário não encontrado"}), 404
             raise ValueError("Usuário não encontrado")
         
         user_id = found_user_result[0]
@@ -26,9 +19,7 @@ def authenticate_user_logic(email, password):
         username = found_user_result[3]
         user_role = found_user_result[4]
 
-        # Verificar se a password está correta 
         if not check_password_hash(password_hash, password):
-            # return jsonify({"error": "Senha incorreta"}), 401
             raise ValueError("Senha incorreta")
         
         token = jwt.encode({
@@ -39,44 +30,35 @@ def authenticate_user_logic(email, password):
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         }, current_app.config['SECRET_KEY'], algorithm='HS256')
 
-        return token 
+        return {
+            "message": "Token gerado com sucesso!",
+            "token": token
+        } 
     
-    finally:
-        connection.close()   
+    except Exception as e:
+        return {"error": f"Erro ao tentar autenticar usuário. {e}"}    
 
 def register_user_logic(email, password, name, role='athlete'):
-    connection = create_connection()
-    if not connection:
-        # return jsonify({"error": "Não foi possível conectar com o banco"}), 500
-        raise Exception("Não foi possível conectar com o banco")
-    
     try:
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-        if cursor.fetchone():
+        find_user = get_all_users_by_email(email)
+
+        if find_user:
             raise Exception("Usuário já está cadastrado no sistema")
         
         hashed_password = generate_password_hash(password)
+        password = hashed_password
 
-        cursor.execute("INSERT INTO users (email, password_hash, name, role) VALUES (%s, %s, %s, %s)", (email, hashed_password, name, role))
-        connection.commit()
+        insert_new_user(email, password, name, role)
 
         return {"message": "Usuário criado com sucesso!"}
 
-    finally:    
-        connection.close()
+    except Exception as e:
+        return {"error": f"Erro ao tentar autenticar usuário. {e}"}    
 
 def list_all_users_logic():
-    connection = create_connection()
-    if not connection:
-        # return jsonify({"error": "Não foi possível conectar com o banco"}), 500
-        raise Exception("Não foi possível conectar com o banco")
-    
     try:
-        cursor = connection.cursor()
-        cursor.execute("SELECT id, email, name, role, is_active FROM users")
-        all_users = cursor.fetchall()
-
+        all_users = get_all_data_users()
+        
         if not all_users:   
             raise Exception("Nenhum usuário encontrado no sistema.")
         
@@ -96,58 +78,42 @@ def list_all_users_logic():
             "users": users
                 }
     
-    finally:
-        connection.close()
+    except Exception as e:
+        return {"error": f"Erro ao tentar autenticar usuário. {e}"}
 
 def update_user_data_logic(user_id, new_email=None, new_password=None, new_name=None):
-    connection = create_connection()
-    if not connection:
-        raise Exception("Não foi possível conectar com o banco")
-    
     try:
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
-        found_user = cursor.fetchone()
-
+        found_user = get_all_users_by_id(user_id)
+        
         if not found_user:
             raise Exception(f"Usuário com id {user_id} não encontrado")
         
         if new_email:
-            cursor.execute("UPDATE users SET email = %s WHERE id = %s", (new_email, user_id))
+            update_user_email(new_email, user_id)
             
         if new_password:
             hashed_password = generate_password_hash(new_password)
-            cursor.execute("UPDATE users SET password_hash = %s WHERE id = %s", (hashed_password, user_id))
+            password = hashed_password
+            update_user_password(password, user_id)
 
         if new_name:
-            cursor.execute("UPDATE users SET name = %s where id = %s", (new_name, user_id))
+            update_user_name(new_name, user_id)
 
-        connection.commit()
         return {"message": "Usuário atualizado com sucesso"}
     
-    finally:
-        connection.close()
+    except Exception as e:
+        return {"error": f"Erro ao tentar autenticar usuário. {e}"}
 
 def delete_user_logic(user_id):
-    connection = create_connection()
-    if not connection:
-        raise Exception("Não foi possível conectar com o banco")
-    
     try:
-        cursor = connection.cursor()
-
-        cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
-        found_user = cursor.fetchone()
+        found_user = get_all_users_by_id(user_id)
 
         if not found_user:
             raise Exception (f"Usuário com id {user_id} não encontrado")
         
-        # Ele vai só desativar, não deletar completamente o usuário
-        cursor.execute("UPDATE users SET is_active = FALSE WHERE id = %s", (user_id,))
-        connection.commit()
+        update_desactive_user_account(user_id)
 
         return {"message": "Usuário desativado com sucesso!"}
     
-    finally:
-        connection.close()
+    except Exception as e:
+        return {"error": f"Erro ao tentar autenticar usuário. {e}"}

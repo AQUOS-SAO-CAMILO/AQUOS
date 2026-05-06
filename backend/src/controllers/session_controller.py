@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from backend.src.services.register_service import calculate_session_metrics, save_session_result, get_session_data, register_environment_logic, create_session_logic, register_hydration_logic, register_mass_logic, session_end_logic
+from backend.src.services.session_service import calculate_session_metrics, save_session_result, get_session_data, register_environment_logic, create_session_logic, register_hydration_logic, register_mass_logic, session_end_logic
 from datetime import datetime
 
 register = Blueprint('register', __name__)
@@ -20,9 +20,9 @@ def start_session():
     if not session_start:
         return jsonify({"message": "Data de início da sessão do atleta é obrigatória."}), 400
     if bladder_emptied is None:
-        return jsonify({"message": "Indicar se bexiga foi esvaziada é obrigatório."}), 400
+        return jsonify({"error": "Indicar se bexiga foi esvaziada é obrigatório."}), 400
     if clothing_soaked is None:
-        return jsonify({"message": "Indicar se há suor nas roupas é obrigatório."}), 400
+        return jsonify({"error": "Indicar se há suor nas roupas é obrigatório."}), 400
     
     try:
         result = create_session_logic(athlete_id, modality, session_start, bladder_emptied, clothing_soaked)
@@ -105,9 +105,6 @@ def register_hydration():
     if not session_id or not volume_ml:
         return jsonify({"error": "Id da sessão do usuário e volume ingerido são obrigatórios!"}), 400
 
-    if volume_ml <= 0:
-        return jsonify({"error": "Volume deve ser maior que zero."}), 400 
-    
     try:
         result = register_hydration_logic(session_id, volume_ml, fluid_type, logged_at)
         return jsonify(result), 201
