@@ -28,16 +28,31 @@ def create_athlete_profile(athlete_id, athlete_code):
     connection.commit()
     connection.close()
     return result
+
+def update_training_session(athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes):
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("""UPDATE training_sessions
+                   SET modality = %s, intensity = %s, session_start = %s, urine_color_pre = %s, 
+                   bladder_emptied = %s, clothing_soaked = %s, urine_volume_ml = %s, notes = %s 
+                   WHERE athlete_id = %s""", (modality, intensity, session_start, 
+                                   urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes, athlete_id))
+    connection.commit()
+    connection.close()
+    return {
+            "Update": True,
+            "session_id": athlete_id    
+                }
     
-def create_training_session(athlete_profile_id, modality, session_start, bladder_emptied, clothing_soaked):
+def create_training_session(athlete_profile_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes):
     connection = create_connection()
     cursor = connection.cursor()
     cursor.execute("""
             INSERT INTO training_sessions 
-            (athlete_id, modality, session_start, bladder_emptied, clothing_soaked) 
-            VALUES (%s, %s, %s, %s, %s) 
+            (athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) 
             RETURNING id
-        """, (athlete_profile_id, modality, session_start, bladder_emptied, clothing_soaked))
+        """, (athlete_profile_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes))
     result = cursor.fetchone()[0]
     connection.commit()
     connection.close()
@@ -77,10 +92,15 @@ def update_session_result(metrics, session_id):
     cursor = connection.cursor()
     cursor.execute("""UPDATE session_results
                            SET total_intake_ml = %s, adjusted_weight_loss_kg = %s,
-                           weight_loss_pct = %s, sweat_rate_lph = %s, fluid_balance_ml = %s 
+                           weight_loss_pct = %s, sweat_rate_lph = %s, fluid_balance_ml = %s, dehydration_risk = %s,
+                           target_intake_min_mlh = %s, target_intake_max_mlh = %s, interval_minutes = %s, 
+                           alert_dehydration = %s, alert_overhydration = %s, notes = %s, calculated_at = %s   
                            WHERE session_id = %s""", (metrics['total_intake_ml'], metrics['adjusted_weight_loss_kg'], 
                                                       metrics['weight_loss_pct'], metrics['sweat_rate_lph'], 
-                                                      metrics['fluid_balance_ml'], session_id))
+                                                      metrics['fluid_balance_ml'], metrics['dehydration_risk'], metrics['target_intake_min_mlh'],
+                                                      metrics['target_intake_max_mlh'], metrics['interval_minutes'],
+                                                      metrics['alert_dehydration'], metrics['alert_overhydration'],
+                                                      metrics['notes'], metrics['calculated_at'], session_id))
     connection.commit()
     connection.close()
     return {
@@ -88,16 +108,21 @@ def update_session_result(metrics, session_id):
             "session_id": session_id    
                 }
 
-def insert_session_result(metrics, session_id):
+def insert_session_result(metrics, session_id, ):
     connection = create_connection()
     cursor = connection.cursor()
     cursor.execute("""INSERT INTO session_results 
                             (session_id, total_intake_ml, adjusted_weight_loss_kg, 
-                            weight_loss_pct, sweat_rate_lph, fluid_balance_ml)
-                            VALUES (%s, %s, %s, %s, %s, %s)""", (session_id, metrics['total_intake_ml'], 
-                                                                 metrics['adjusted_weight_loss_kg'],
-                                                                 metrics['weight_loss_pct'], metrics['sweat_rate_lph'], 
-                                                                 metrics['fluid_balance_ml']))
+                            weight_loss_pct, sweat_rate_lph, fluid_balance_ml, dehydration_risk, 
+                            target_intake_min_mlh, target_intake_max_mlh,
+                            interval_minutes, alert_dehydration, alert_overhydration, notes, calculated_at)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, 
+                            %s, %s, %s, %s, %s, %s, %s)""", (session_id, metrics['total_intake_ml'], 
+                            metrics['adjusted_weight_loss_kg'],
+                            metrics['weight_loss_pct'], metrics['sweat_rate_lph'], metrics['fluid_balance_ml'], 
+                            metrics['dehydration_risk'], metrics['target_intake_min_mlh'], metrics['target_intake_max_mlh'], 
+                            metrics['interval_minutes'], metrics['alert_dehydration'], metrics['alert_overhydration'],
+                            metrics['notes'], metrics['calculated_at']))
     connection.commit()
     connection.close()
     return {

@@ -5,7 +5,7 @@ from flask_login import LoginManager
 
 from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
-from backend.src.controllers.session_controller import register
+from backend.src.controllers.session_controller import session
 from backend.src.config.connection import create_connection
 
 # Criação de aplicativo Flask
@@ -23,7 +23,7 @@ connection = create_connection()
 # Registrar os Blueprints para as rotas
 # Login 
 app.register_blueprint(login)
-app.register_blueprint(register)
+app.register_blueprint(session)
 
 # alterar isso dps, coloquei só pra testar se tava tudo ok
 @app.route("/")

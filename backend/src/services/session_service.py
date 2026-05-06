@@ -1,10 +1,26 @@
-from backend.src.config.connection import create_connection
 from backend.src.DAOS.session_DAO import *
 from datetime import datetime
 
-def create_session_logic(athlete_id, modality, session_start, bladder_emptied, clothing_soaked):
+def create_session_logic(athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes):
     try:
-
+        if  urine_color_pre < 1 or urine_color_pre > 8:
+            raise ValueError("Insira um valor dentro da escala fornecida")
+        # 1 --> excesso de agua
+        if urine_color_pre == 1:
+            message = "Excesso de água. Você pode estar bebendo água demais, o que pode diluir sais minerais essenciais no sangue. Reduza um pouco o ritmo."
+        # 2, 3 e 4 --> boa hidratação
+        if urine_color_pre == 2 or urine_color_pre == 3 or urine_color_pre == 4:
+            message = "Boa hidratação. Seu corpo tem a quantidade certa de fluidos para funcionar bem. Continue assim!"
+        # 5 --> cuidado
+        if urine_color_pre == 5:
+            message = "Seu corpo está começando a reter água. É um sinal amarelo (literalmente) para você beber um copo de água agora."
+        # 6 e 7 --> desidratação
+        if urine_color_pre == 6 or urine_color_pre == 7 or urine_color_pre == 8:
+            message = "O corpo pode estar desidratado. Se a cor persistir mesmo após beber água, pode indicar problemas nos rins ou fígado."
+        
+        if urine_volume_ml < 0:
+            raise ValueError("Volume da urina não pode ser negativo.")
+        
         profile = get_athlete_profile_by_user_id(athlete_id)
 
         if profile:
@@ -13,23 +29,23 @@ def create_session_logic(athlete_id, modality, session_start, bladder_emptied, c
             profile_exists = get_athlete_profile_by_id(athlete_id)
 
             if profile_exists:
-                athlete_profile_id = athlete_id
+                session_id = update_training_session(athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes) 
             else:
                 athlete_code = f"ATH_{str(athlete_id)[:8].upper()}"
                 athlete_profile_id = create_athlete_profile(athlete_id, athlete_code)
-
-        session_id = create_training_session(athlete_profile_id, modality, session_start, bladder_emptied, clothing_soaked)
+                session_id = create_training_session(athlete_profile_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes)
 
         return {
             "message": "Sessão criada com sucesso!",
-            "session_id": session_id
+            "athlete_id": session_id,
+            "hydration_alert": message
         }
     
     except Exception as e:
         return {"error": f"Erro ao tentar criar sessão. {e}"}
         
 
-def register_mass_logic(pre_weight_kg, post_weight_kg, session_id):
+def session_mass_logic(pre_weight_kg, post_weight_kg, session_id):
     try:
         session = select_all_data(session_id)
         
@@ -45,7 +61,7 @@ def register_mass_logic(pre_weight_kg, post_weight_kg, session_id):
 
         return {
             "message": "Percentual de variação de massa adicionado com sucesso no banco de dados!",
-            "Diferenca_kg": round(weight_loss_pct, 2)    
+            "diff_kg": round(weight_loss_pct, 2)    
                 }
     
     except Exception as e:
@@ -71,13 +87,48 @@ def calculate_session_metrics(session_data):
     # Balanço hídrico (mL)
     fluid_balance_ml = total_intake_ml - (adjusted_weight_loss_kg * 1000) 
 
+    if weight_loss_pct < 1:
+        risk_level = "none"
+    elif weight_loss_pct < 2:
+        risk_level = "low"
+    elif weight_loss_pct < 3:
+        risk_level = "moderate"
+    elif weight_loss_pct < 4:
+        risk_level = "high"
+    else:
+        risk_level = "critical"
+
+    min_intake = pre_weight * 5     # 5ml/kg/hr 
+    max_intake = pre_weight * 10    # 10ml/kg/hr
+
+    interval_minutes = 15 if sweat_rate_lph < 1 else 10 if sweat_rate_lph < 2 else 20
+
+    alert_dehydration = weight_loss_pct > 2
+    alert_overhydration = fluid_balance_ml > 1000 # nesse caso, a retenção se torna excessiva
+
+    if alert_dehydration:
+        notes = f"Risco de desidratação detectado! Perda de {round(weight_loss_pct, 2)} do peso corporal"
+    elif alert_overhydration:
+        notes = f"Risco de hiperhidratação detectado! Balanço hidrico positivo de {round(fluid_balance_ml, 2)}ml."
+    else:
+        notes = "Hidratação adequada."
+
     return {
         "session_id": session_data['id'],
         "total_intake_ml": total_intake_ml,
         "adjusted_weight_loss_kg": round(adjusted_weight_loss_kg, 2),
         "weight_loss_pct": round(weight_loss_pct, 2),
         "sweat_rate_lph": round(sweat_rate_lph, 2),
-        "fluid_balance_ml": round(fluid_balance_ml, 2)
+        "fluid_balance_ml": round(fluid_balance_ml, 2),
+        
+        "dehydration_risk": risk_level,
+        "target_intake_min_mlh": min_intake,
+        "target_intake_max_mlh": max_intake,
+        "interval_minutes": interval_minutes,
+        "alert_dehydration": alert_dehydration,
+        "alert_overhydration": alert_overhydration,
+        "notes": notes,
+        "calculated_at": datetime.now()
     }
 
 def save_session_result(session_id, metrics):
@@ -119,7 +170,7 @@ def get_session_data(session_id):
         return {"error": f"Erro ao tentar criar sessão. {e}"}
     
 
-def register_environment_logic(temperature_c, humidity_pct, session_id):
+def session_environment_logic(temperature_c, humidity_pct, session_id):
     try:
         session = select_all_data(session_id)
         if not session:
@@ -130,14 +181,14 @@ def register_environment_logic(temperature_c, humidity_pct, session_id):
         return{
             "message": "temperatura e umidade adicionados com sucesso ao banco de dados!",
             "temperature_c": temperature_c,
-            "umidade": humidity_pct,
+            "humidity": humidity_pct,
             "session_id": session_id
         }
 
     except Exception as e:
         return {"error": f"Erro ao tentar criar sessão. {e}"}
 
-def register_hydration_logic(session_id, volume_ml, fluid_type='water', logged_at=None):   
+def session_hydration_logic(session_id, volume_ml, fluid_type='water', logged_at=None):   
     try:
         session = get_hydration_id_by_session_id(session_id)
         if not session:
