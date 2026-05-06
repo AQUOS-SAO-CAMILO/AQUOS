@@ -86,6 +86,7 @@ body {
 	outline: none;
 	transition: border 0.2s;
 	color: black;
+	box-sizing: border-box; /* garante que o input não estoure a margem */
 }
 
 .auth-input:focus {
@@ -105,8 +106,8 @@ body {
 @media (max-width: 600px) {
 	.auth-card {
 		min-width: 90vw;
-		max-width: 98vw;
-		padding: 24px 8px;
+		max-width: 95vw;
+		padding: 24px 20px; /* aumentado o padding lateral p/ não encostar na borda */
 	}
 	.auth-title {
 		font-size: 2rem;
