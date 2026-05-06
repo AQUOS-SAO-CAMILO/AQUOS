@@ -21,7 +21,7 @@ export default function PreSessao() {
     }
   };
 
-  // escala d cores p/ o seletor de mijo
+  // escala d cores p/ o seletor de urina
   const coresUrina = [
     "#FFFFFF", "#F9F5C5", "#F7EF4E", "#FFCC00", "#FFA500", "#F28500", "#C67111"
   ];
@@ -93,7 +93,7 @@ export default function PreSessao() {
           </div>
         </section>
 
-        {/* seletor visual p/ mijo */}
+        {/* seletor visual p/ urina */}
         <section className="input-group">
           <label>COR DA URINA</label>
           <div className="color-scale">
