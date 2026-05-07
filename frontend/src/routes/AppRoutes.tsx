@@ -5,6 +5,7 @@ import Cadastro from "../pages/Cadastro";
 import MenuAdm from "../pages/MenuAdm";
 import MenuAtleta from "../pages/MenuAtleta";
 import PreSessao from "../pages/PreSessao";
+import DuranteSessao from "../pages/DuranteSessao";
 
 // gerenciamento das rotas do app
 export default function AppRoutes() {
@@ -18,6 +19,7 @@ export default function AppRoutes() {
       <Route path="/menu-adm" element={<MenuAdm />} />
       <Route path="/menu-atleta" element={<MenuAtleta />} />
       <Route path="/pre-sessao" element={<PreSessao />} />
+      <Route path="/durante-sessao" element={<DuranteSessao />} />
     </Routes>
   );
 }

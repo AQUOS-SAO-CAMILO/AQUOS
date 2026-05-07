@@ -502,3 +502,126 @@ body {
 	margin-top: 20px;
 	margin-bottom: 40px;
 }
+
+/* --- estilos do durante a sessão --- */
+.during-content {
+	gap: 30px !important;
+}
+
+/* blocos coloridos de monitoramento */
+.monitoring-block {
+	border-radius: 12px;
+	padding: 15px 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	width: 100%; /* ocupa a largura total disponível */
+	box-sizing: border-box;
+}
+
+.water-block {
+	background-color: #c5e1f0; /* azul claro da foto */
+}
+
+.urine-block {
+	background-color: #fef9c3; /* amarelo claro da foto (ajustado p/ ser + fiel) */
+}
+
+.block-header {
+	text-align: center;
+	margin-bottom: 5px;
+}
+
+.block-header h3 {
+	margin: 0;
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #000;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+}
+
+.total-value {
+	display: block;
+	font-size: 1.1rem;
+	font-weight: 700;
+	margin-top: 2px;
+}
+
+/* grid de ícones de volume */
+.icon-selection-grid {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	gap: 20px;
+}
+
+.icon-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	cursor: pointer;
+}
+
+.icon-box {
+	width: 70px; /* levemente maior p/ caber melhor o svg */
+	height: 70px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.icon-box img {
+	width: 75%;
+	height: 75%;
+	object-fit: contain;
+}
+
+.water-bg {
+	background-color: #90caf9; /* azul um pouco mais escuro p/ o ícone */
+}
+
+.urine-bg {
+	background-color: #fde68a; /* amarelo um pouco mais escuro p/ o ícone */
+}
+
+.icon-item span {
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
+/* botões de ajuste fino (+/- 50ml) */
+.fine-adjustment {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.fine-adjustment button {
+	background: transparent; /* fundo transparente como na foto */
+	border: none;
+	width: 28px;
+	height: 28px;
+	font-size: 1.4rem;
+	font-weight: 800;
+	color: #000; /* cor preta p/ os símbolos + e - */
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.1s;
+}
+
+.fine-adjustment button:active {
+	transform: scale(1.2);
+}
+
+.fine-adjustment span {
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #000;
+}

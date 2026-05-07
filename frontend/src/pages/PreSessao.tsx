@@ -30,9 +30,9 @@ export default function PreSessao() {
     <div className="pre-sessao-container">
       {/* navegação entre as fases do treino */}
       <nav className="sessao-tabs">
-        <div className="tab active">Pré-Sessão</div>
-        <div className="tab disabled">Durante a Sessão</div>
-        <div className="tab disabled">Pós-Sessão</div>
+        <div className="tab disabled" onClick={() => navigate("/pre-sessao")}>Pré-Sessão</div>
+        <div className="tab disabled" onClick={() => navigate("/durante-sessao")}>Durante a Sessão</div>
+        <div className="tab disabled" onClick={() => navigate("/pos-sessao")}>Pós-Sessão</div>
       </nav>
 
       <main className="sessao-content">
