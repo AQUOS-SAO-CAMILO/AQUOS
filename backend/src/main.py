@@ -1,3 +1,6 @@
+import logging
+import logger
+
 from flask import Flask
 from flask_cors import CORS
 from config import Config
@@ -7,6 +10,11 @@ from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
 from backend.src.controllers.session_controller import session
 from backend.src.config.connection import create_connection
+
+logger.setup()
+
+log = logging.getLogger("meuapp")
+
 
 # Criação de aplicativo Flask
 app = Flask(__name__)
@@ -31,4 +39,4 @@ def hello_world():
     return "<p>hello world</p>"
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)  #
+    app.run(debug=True, port=5001) 
