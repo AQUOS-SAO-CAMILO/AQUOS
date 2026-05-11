@@ -126,7 +126,7 @@ def session_environment():
         log.warning("Id da sessão não informado na requisição de dados ambientais.")
         return jsonify({"error": "O id da sessão precisa ser preenchido."}), 400
     
-    if temperature_c is None or humigit pull --rebase origin backenddity_pct is None:
+    if temperature_c is None or humidity_pct is None:
         log.warning("Temperatura ou umidade ausentes na requisição de dados ambientais. session_id=%s", session_id)
         return jsonify({"error": "Os valores de temperatura e umidade precisam ser preenchdo."}), 400
     
