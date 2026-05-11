@@ -1,5 +1,5 @@
 import logging
-import logger
+import backend.src.logger as logger
 
 from flask import Flask
 from flask_cors import CORS
@@ -14,7 +14,6 @@ from backend.src.config.connection import create_connection
 logger.setup()
 
 log = logging.getLogger("meuapp")
-
 
 # Criação de aplicativo Flask
 app = Flask(__name__)
