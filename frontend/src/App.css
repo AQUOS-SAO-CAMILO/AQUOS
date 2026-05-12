@@ -103,6 +103,24 @@ body {
 	cursor: pointer;
 }
 
+.error-text {
+	color: #c62828;
+	font-size: 14px;
+	margin: 6px 0 12px 0;
+	font-weight: 500;
+	padding-left: 12px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	letter-spacing: 0.3px;
+}
+
+.error-text::before {
+	content: "!";
+	font-size: 14px;
+	flex-shrink: 0;
+}
+
 @media (max-width: 600px) {
 	.auth-card {
 		min-width: 90vw;
