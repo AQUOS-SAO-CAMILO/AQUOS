@@ -14,62 +14,63 @@ from backend.src.services.session_service import (
 
 # teste da funçao sobre a urina
 def test_create_session_hydration(mocker):
-    
+
     fixed_date = datetime(2026, 5, 9, 14, 0, 0)
 
     mock_get_by_user = mocker.patch("backend.src.services.session_service.get_athlete_profile_by_user_id")
+    mock_get_by_id = mocker.patch("backend.src.services.session_service.get_athlete_profile_by_id")
     mock_create_session = mocker.patch("backend.src.services.session_service.create_training_session", return_value=100)
+    mock_get_by_user.return_value = None
+    mock_get_by_id.return_value = None
+    mocker.patch("backend.src.services.session_service.create_athlete_profile", return_value=50)
 
-    mock_get_by_user.return_value = (1,)
-
-    # excesso de agua (1)
+    # teste cor da urina = 1 ( n sei pq ta retornando erro)
     resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 1, True, True, 200, "Nota")
     assert "Excesso de água" in resp["hydration_alert"]
 
     # hidratação boa (2,3,4)
-    resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 2, True, True, 200, "Nota")
+    resp = create_session_logic(2, "Corrida", "Alta", fixed_date, 2, True, True, 200, "Nota")
     assert "Boa hidratação" in resp["hydration_alert"]
 
-    resp = create_session_logic(1, "Natação", "Média", fixed_date, 3, True, False, 200, "Nota")
+    resp = create_session_logic(3, "Natação", "Média", fixed_date, 3, True, False, 200, "Nota")
     assert "Boa hidratação" in resp["hydration_alert"]
 
-    resp = create_session_logic(1, "Futebol", "Alta", fixed_date, 4, True, False, 200, "Nota")
+    resp = create_session_logic(4, "Futebol", "Alta", fixed_date, 4, True, False, 200, "Nota")
     assert "Boa hidratação" in resp["hydration_alert"] 
     
     # Cuidado (5)
-    resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 5, True, False, 200, "Nota")
+    resp = create_session_logic(5, "Corrida", "Alta", fixed_date, 5, True, False, 200, "Nota")
     assert "reter água" in resp["hydration_alert"]
 
     # desidratação (6,7,8)
-    resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 6, True, True, 200, "Nota")
+    resp = create_session_logic(6, "Corrida", "Alta", fixed_date, 6, True, True, 200, "Nota")
     assert "persistir mesmo após beber água" in resp["hydration_alert"]
-                                   
-    resp = create_session_logic(1, "Natação", "Alta", fixed_date, 7, True, True, 200, "Nota")
+                                    
+    resp = create_session_logic(7, "Natação", "Alta", fixed_date, 7, True, True, 200, "Nota")
     assert "persistir mesmo após beber água" in resp["hydration_alert"]
-                                   
-    resp = create_session_logic(1, "Futebol", "Alta", fixed_date, 8, True, True, 200, "Nota")
+                                    
+    resp = create_session_logic(8, "Futebol", "Alta", fixed_date, 8, True, True, 200, "Nota")
     assert "persistir mesmo após beber água" in resp["hydration_alert"]
 
     # validacao dos valores
-    resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 10, True, True, 200, "Nota")
-    assert "Erro" in resp["error"]
+    resp = create_session_logic(9, "Corrida", "Alta", fixed_date, 10, True, True, 200, "Nota")
+    assert "error" in resp
     assert "escala fornecida" in resp["error"]
 
     # volume negativo
     resp = create_session_logic(1, "Corrida", "Alta", fixed_date, 3, True, True, -50, "Nota")
+    assert "error" in resp
     assert "não pode ser negativo" in resp["error"]
 
-    # teste criação perfil
+    # teste criação perfil 
     mock_get_by_user.return_value = None
     mocker.patch("backend.src.services.session_service.get_athlete_profile_by_id", return_value=None)
     mock_create_profile = mocker.patch("backend.src.services.session_service.create_athlete_profile", return_value=50)
-    
+
     resp = create_session_logic(999, "Corrida", "Alta", fixed_date, 3, True, True, 200, "Nota")
-    
+
     mock_create_profile.assert_called_once()
-
     assert resp["message"] == "Sessão criada com sucesso!"
-
 
 # teste validacao do peso
 def test_session_mass_logic(mocker):

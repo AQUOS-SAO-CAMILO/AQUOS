@@ -1,4 +1,5 @@
 import pytest
+from flask import Flask
 from backend.src.services.user_service import (
     authenticate_user_logic, 
     register_user_logic,
@@ -9,20 +10,21 @@ from backend.src.services.user_service import (
 
 # Teste de autenticação sucesso
 def test_authenticate_user_success(mocker):
-    
-    mock_user = (1, "lulu@email.com", "hash_fake", "lulu", "admin")
-    mocker.patch("backend.src.services.user_service.get_all_users_by_email", return_value=mock_user)
-    mocker.patch("backend.src.services.user_service.check_password_hash", return_value=True)
-    mock_app = mocker.patch("backend.src.services.user_service.current_app")
-    mock_app.config = {'SECRET_KEY': 'teste_key'}
-    spy_jwt = mocker.patch("backend.src.services.user_service.jwt.encode",return_value="token_fake")
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'teste_key'
 
-    response = authenticate_user_logic("lulu@email.com", "senha123")
+    with app.app_context():
+        mock_user = (1, "lulu@email.com", "hash_fake", "lulu", "admin")
+        mocker.patch("backend.src.services.user_service.get_all_users_by_email", return_value=mock_user)
+        mocker.patch("backend.src.services.user_service.check_password_hash", return_value=True)
+        spy_jwt = mocker.patch("backend.src.services.user_service.jwt.encode", return_value="token_fake")
 
-    assert response["token"] == "token_fake"
-    assert response["message"] == "Token gerado com sucesso!"
+        response = authenticate_user_logic("lulu@email.com", "senha123")
 
-    spy_jwt.assert_called_once()
+        assert response["token"] == "token_fake"
+        assert response["message"] == "Token gerado com sucesso!"
+
+        spy_jwt.assert_called_once()
 
 # teste autenticacao com senha errada
 def test_authenticate_user_wrong_password(mocker):

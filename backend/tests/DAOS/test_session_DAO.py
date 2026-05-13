@@ -1,5 +1,3 @@
-#LARISSA: IMPORTANTE: LEMBRAR DE ARRUMAR OS CODIGOS SQL POIS multilinha pode quebrar--> ainda n entendi cm fzr mlr vou arrumar dps
-    
 import pytest
 from backend.src.DAOS.session_DAO import (
     create_athlete_profile,
@@ -216,15 +214,12 @@ def test_insert_hydration_data(mock_db):
     assert result["session_id"] == 10
 
     cursor.execute.assert_called_with(
-        """INSERT INTO fluid_intake_logs (session_id, volume_ml, fluid_type, logged_at)\n                      
-            VALUES (%s, %s, %s, %s)""",
+        "INSERT INTO fluid_intake_logs (session_id, volume_ml, fluid_type, logged_at) \n                      VALUES (%s, %s, %s, %s)",
         (10, 250, "water", None),
     )
 
     conn.commit.assert_called_once()
     conn.close.assert_called_once()
-
-
 
 # testes da funcao update_mass_value
 def test_update_mass_value(mock_db):
@@ -235,12 +230,11 @@ def test_update_mass_value(mock_db):
     assert result["Update"] is True
     assert result["session_id"] == 10
 
+ # Larissa: descobri q se tira o espaçamento não funciona
     cursor.execute.assert_called_with(
-        """UPDATE training_sessions\n                      
-            SET pre_weight_kg = %s, post_weight_kg = %s\n                      
-                WHERE id = %s""",
-        (75.5, 74.0, 10),
-    )
+    "UPDATE training_sessions     \n                      SET pre_weight_kg = %s, post_weight_kg = %s \n                      WHERE id = %s",
+    (75.5, 74.0, 10),
+)
 
     conn.commit.assert_called_once()
     conn.close.assert_called_once()
@@ -266,12 +260,11 @@ def test_update_environment_data(mock_db):
     assert result["Update"] is True
     assert result["session_id"] == 10
 
+ # Larissa: descobri q se tira o espaçamento não funciona
     cursor.execute.assert_called_with(
-        """UPDATE training_sessions \n                       
-            SET temperature_c = %s, humidity_pct = %s\n                       
-                WHERE id = %s""",
-        (30, 80, 10),
-    )
+    "UPDATE training_sessions \n                       SET temperature_c = %s, humidity_pct = %s \n                       WHERE id = %s",
+    (30, 80, 10),
+)
 
     conn.commit.assert_called_once()
     conn.close.assert_called_once()
@@ -284,13 +277,12 @@ def test_update_data_end(mock_db):
 
     assert result["Update"] is True
     assert result["session_id"] == 10
-
+    
+ # Larissa: descobri q se tira o espaçamento não funciona
     cursor.execute.assert_called_with(
-        """UPDATE training_sessions\n                       
-            SET session_end = %s\n                       
-                 WHERE id = %s""",
-        ("2026-05-10 12:00", 10),
-    )
+    "UPDATE training_sessions \n                       SET session_end = %s \n                       WHERE id = %s",
+    ("2026-05-10 12:00", 10),
+)
 
     conn.commit.assert_called_once()
     conn.close.assert_called_once()
