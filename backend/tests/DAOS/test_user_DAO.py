@@ -1,5 +1,3 @@
-#LARISSA: IMPORTANTE: LEMBRAR DE ARRUMAR OS CODIGOS SQL POIS multilinha pode quebrar--> ainda n entendi cm fzr mlr vou arrumar dps
-
 import pytest
 from backend.src.DAOS.user_DAO import (
     get_all_users_by_email,

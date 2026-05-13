@@ -1,5 +1,10 @@
 node_modules/
 
+# Relatorio de teste em html
+htmlcov/
+.coverage
+.pytest_cache/
+
 # segurança
 .env
 
