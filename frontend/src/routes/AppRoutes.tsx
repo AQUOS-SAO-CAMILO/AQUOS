@@ -6,6 +6,8 @@ import MenuAdm from "../pages/MenuAdm";
 import MenuAtleta from "../pages/MenuAtleta";
 import PreSessao from "../pages/PreSessao";
 import DuranteSessao from "../pages/DuranteSessao";
+import DadosAtleta from "../pages/DadosAtleta";
+import PosSessao from "../pages/PosSessao";
 
 // gerenciamento das rotas do app
 export default function AppRoutes() {
@@ -14,12 +16,12 @@ export default function AppRoutes() {
       <Route path="/" element={<Inicial />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Cadastro />} />
-      
-      {/* novas telas criadas p/ o fluxo do user */}
       <Route path="/menu-adm" element={<MenuAdm />} />
       <Route path="/menu-atleta" element={<MenuAtleta />} />
       <Route path="/pre-sessao" element={<PreSessao />} />
       <Route path="/durante-sessao" element={<DuranteSessao />} />
+      <Route path="/dados-atleta" element={<DadosAtleta/>}/>
+      <Route path="/pos-sessao" element={<PosSessao />} />
     </Routes>
   );
 }
