@@ -4,6 +4,7 @@ Requires: reportlab==4.5.1
 """
 
 from reportlab.lib.pagesizes import A4
+from session_DAO import get_session_result
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
@@ -53,6 +54,30 @@ class HydrationSession:
     alert_overhydration: bool
     notes: Optional[str] = None
     calculated_at: Optional[str] = None
+
+def create_session(session_id):
+    result = session_DAO.get_session_result(session_id)
+
+    if result is None:
+        print('Session not found')
+        return None
+
+    return HydrationSession(
+        session_id=result[1],
+        total_intake_ml=result[2],
+        adjusted_weight_loss_kg=result[3],
+        weight_loss_pct=result[4],
+        sweat_rate_lph=result[5],
+        fluid_balance_ml=result[6],
+        dehydration_risk=result[7],
+        target_intake_min_mlh=result[8],
+        target_intake_max_mlh=result[9],
+        interval_minutes=result[10],
+        alert_dehydration=result[11],
+        alert_overhydration=result[12],
+        notes=result[13],
+        calculated_at=result[14],
+    )
 
 
 def _styles():

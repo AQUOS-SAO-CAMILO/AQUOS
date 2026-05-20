@@ -200,7 +200,7 @@ def update_data_end(session_id, session_end):
 def get_session_result(session_id):
     connection = create_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT *FROM session_results WHERE id = '{session_id}';")
+    cursor.execute("SELECT * FROM session_results WHERE id = %s", (session_id,))
     result = cursor.fetchone()
     connection.close()
-    return 
+    return result
