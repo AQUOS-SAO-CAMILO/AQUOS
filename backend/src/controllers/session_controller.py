@@ -1,7 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 from backend.src.services.session_service import *
 from datetime import datetime
 import logging
+
+from backend.src.utils.report_pdf import create_session, generate_hydration_pdf
 
 log = logging.getLogger("meuapp")
 
@@ -111,6 +113,33 @@ def calculate_metrics():
         log.error("Erro ao calcular métricas. session_id=%s | Erro: %s", session_id, e)
         return jsonify({"error": f"Erro ao tentar realizar o cálculo de métricas, {e}"}), 400
 
+@session.route('/session/report/<session_id>', methods=['GET'])
+def session_report(session_id):
+    log.debug("Requisição de relatório PDF recebida. session_id=%s", session_id)
+
+    if not session_id:
+        log.warning("Id da sessão não informado na requisição de relatório.")
+        return jsonify({"error": "Id da sessão é obrigatório."}), 400
+
+    try:
+        session = create_session(session_id)
+
+        if session is None:
+            log.warning("Sessão não encontrada para geração de relatório. session_id=%s", session_id)
+            return jsonify({"error": "Sessão não encontrada."}), 404
+
+        pdf_bytes = generate_hydration_pdf(session)
+        log.info("Relatório PDF gerado com sucesso. session_id=%s", session_id)
+
+        return Response(
+            pdf_bytes,
+            mimetype="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=hydration_report.pdf"}
+        )
+
+    except Exception as e:
+        log.error("Erro ao gerar relatório PDF. session_id=%s | Erro: %s", session_id, e)
+        return jsonify({"error": f"Erro ao tentar gerar relatório. {e}"}), 400 
 
 @session.route('/session/environment', methods=['POST'])
 def session_environment():
