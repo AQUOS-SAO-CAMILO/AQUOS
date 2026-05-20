@@ -1,7 +1,4 @@
-"""
-Hydration Session PDF Report Generator — minimal style
-Requires: reportlab==4.5.1
-"""
+from io import BytesIO
 
 from reportlab.lib.pagesizes import A4
 from session_DAO import get_session_result
@@ -14,29 +11,6 @@ from reportlab.platypus import (
 )
 from dataclasses import dataclass
 from typing import Optional
-
-# Dados mockups para teste - serão utilizados somente na fase de dev
-session_id: 7
-
-total_intake_ml: 800.00
-adjusted_weight_loss_kg: 1.200
-weight_loss_pct: 1.85
-sweat_rate_lph: 1.750
-fluid_balance_ml: -950.00
-
-dehydration_risk: moderate
-
-target_intake_min_mlh: 700.0
-target_intake_max_mlh: 1200.0
-interval_minutes: 10
-
-alert_dehydration: true
-alert_overhydration: false
-
-notes = 'Athlete presented significant fluid loss during training.'
-
-calculated_at = '2026-05-19 11:00:00'
-
 
 @dataclass
 class HydrationSession:
@@ -121,10 +95,11 @@ def _data_table(rows: list, st: dict) -> Table:
     ]))
     return t
 
+def generate_hydration_pdf(data: HydrationSession) -> bytes:
+    buffer = BytesIO()
 
-def generate_hydration_pdf(data: HydrationSession, output_path: str = "hydration_report.pdf") -> str:
     doc = SimpleDocTemplate(
-        output_path,
+        buffer,
         pagesize=A4,
         leftMargin=20*mm, rightMargin=20*mm,
         topMargin=18*mm,  bottomMargin=18*mm,
@@ -200,7 +175,7 @@ def generate_hydration_pdf(data: HydrationSession, output_path: str = "hydration
         st["footer"]))
 
     doc.build(story)
-    return output_path
+    return buffer.getvalue()
 
 
 if __name__ == "__main__":
@@ -220,7 +195,12 @@ if __name__ == "__main__":
         notes="Athlete presented significant fluid loss during training.",
         calculated_at="2026-05-19 11:00:00",
     )
-    path = generate_hydration_pdf(session, "/mnt/user-data/outputs/hydration_report.pdf")
-    print(f"PDF saved → {path}")
+
+    pdf_bytes = generate_hydration_pdf(session)
+
+    with open("hydration_report.pdf", "wb") as f:
+        f.write(pdf_bytes)
+
+    print("PDF saved → hydration_report.pdf")
 
 
