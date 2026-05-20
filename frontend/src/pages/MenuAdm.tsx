@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
 
+// 1. Importando o CSS correspondente ao Menu
+import styles from "../styles/Menu.module.css"; 
+
 // tela p/ gerenciar o sistema (adm)
 export default function MenuAdm() {
   const navigate = useNavigate();
 
   return (
-    <div className="menu-adm-container">
-      <header className="menu-adm-header">
+    <div className={styles.container}>
+      <header className={styles.header}>
         {/* ícone do user no topo */}
         <svg 
-          className="user-icon-svg" 
+          className={styles.userIconSvg} 
           viewBox="0 0 24 24" 
           fill="currentColor"
         >
@@ -17,25 +20,26 @@ export default function MenuAdm() {
         </svg>
       </header>
 
-      <main className="menu-adm-content">
-        <h1 className="welcome-text">Olá, Guilherme!</h1>
+      {/* Removi a className "menu-adm-content" da tag <main> pois não havia CSS para ela no seu arquivo original */}
+      <main>
+        <h1 className={styles.welcomeText}>Olá, Guilherme!</h1>
 
         {/* cards principais do menu */}
-        <div className="menu-grid">
-          <button className="menu-card">
+        <div className={styles.grid}>
+          <button className={styles.card}>
             <span>API Clima</span>
           </button>
 
-          <button className="menu-card">
+          <button className={styles.card}>
             <span>Atletas em risco</span>
           </button>
         </div>
 
         {/* btn p/ ver relatórios no rodapé */}
-        <div className="footer-actions">
-          <button className="reports-btn">
+        <div className={styles.footerActions}>
+          <button className={styles.reportsBtn}>
             <svg 
-              className="report-icon-svg" 
+              className={styles.reportIconSvg} 
               viewBox="0 0 24 24" 
               fill="currentColor"
             >

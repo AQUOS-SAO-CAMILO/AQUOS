@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// 1. Importando o CSS de Sessão
+import styles from "../styles/Session.module.css";
+
 // tela p/ finalizar a sessão e coletar dados pós-treino
 export default function PosSessao() {
   const navigate = useNavigate();
-  
   
   // estados p/ os inputs interativos
   const [massaCorporal, setMassaCorporal] = useState("");
@@ -27,35 +29,45 @@ export default function PosSessao() {
   ];
 
   return (
-    <div className="pre-sessao-container">
+    // container principal
+    <div className={styles.container}>
+      
       {/* abas de navegação */}
-      <nav className="sessao-tabs">
-        <div className="tab disabled" onClick={() => navigate("/pre-sessao")}>Pré-Sessão</div>
-        <div className="tab disabled" onClick={() => navigate("/durante-sessao")}>Durante a Sessão</div>
-        <div className="tab active">Pós-Sessão</div>
+      <nav className={styles.tabs}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pre-sessao")}>
+          Pré-Sessão
+        </div>
+        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/durante-sessao")}>
+          Durante a Sessão
+        </div>
+        <div className={`${styles.tab} ${styles.tabActive}`}>
+          Pós-Sessão
+        </div>
       </nav>
 
-      <main className="sessao-content">
+      <main className={styles.content}>
+        
         {/* massa corporal pós-treino */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>MASSA CORPORAL (Kg)</label>
           <input 
             type="text" 
             placeholder="EX: 70.6" 
-            className="sessao-input"
+            className={styles.input}
             value={massaCorporal}
             onChange={(e) => setMassaCorporal(e.target.value)}
           />
         </section>
 
         {/* nível de suor nas roupas */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>NIVEL DE SUOR NAS ROUPAS</label>
-          <div className="option-buttons">
+          <div className={styles.optionButtons}>
             {["Pouco", "Moderado", "Encharcado"].map((n) => (
               <button 
                 key={n}
-                className={`option-btn ${nivelSuor === n ? 'active' : ''}`}
+                // 2. Interpolação de classe no React com CSS Modules
+                className={`${styles.optionBtn} ${nivelSuor === n ? styles.optionBtnActive : ''}`}
                 onClick={() => setNivelSuor(n)}
               >
                 {n}
@@ -65,13 +77,14 @@ export default function PosSessao() {
         </section>
 
         {/* grid de sintomas pós-treino */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>SINTOMAS</label>
-          <div className="sintomas-grid">
+          <div className={styles.sintomasGrid}>
             {listaSintomas.map((s) => (
               <button 
                 key={s}
-                className={`sintoma-btn ${sintomas.includes(s) ? 'active' : ''}`}
+                // Mesma interpolação feita nos botões de suor
+                className={`${styles.sintomaBtn} ${sintomas.includes(s) ? styles.sintomaBtnActive : ''}`}
                 onClick={() => toggleSintoma(s)}
               >
                 {s}
@@ -80,9 +93,10 @@ export default function PosSessao() {
           </div>
         </section>
 
-        {/* btn de finalizar (vermelho no protótipo) */}
-        <footer className="sessao-footer">
-          <button className="continue-btn finish-btn" onClick={() => navigate("/menu-atleta")}>
+        {/* btn de finalizar */}
+        <footer>
+          {/* Removi a classe 'finish-btn' pois ela não estava declarada no seu App.css original. A 'continueBtn' já deixa o botão vermelho conforme planejado! */}
+          <button className={styles.continueBtn} onClick={() => navigate("/menu-atleta")}>
             Finalizar
           </button>
         </footer>

@@ -5,6 +5,9 @@ import * as yup from "yup";
 import { cadastroSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
 
+// 1. Importando o arquivo de estilos de autenticação
+import styles from "../styles/Auth.module.css";
+
 export default function Cadastro() {
   const navigate = useNavigate();
 
@@ -28,7 +31,7 @@ export default function Cadastro() {
   }
 
   async function validatePassword(valor: string) {
-    if (valor != password) {
+    if (valor !== password) { // Boa prática do TypeScript/JS: usar !== em vez de !=
       setErroPassword("As senhas são diferentes");
     } else {
       setErroPassword("");
@@ -55,13 +58,15 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card register-card">
+    // 2. Trocando as classes para o padrão CSS Modules
+    <div className={styles.container}>
+      {/* Removida a classe 'register-card' pois não existia regra CSS atrelada a ela */}
+      <div className={styles.card}>
         <Logo />
-        <h1 className="auth-title">AQUOS</h1>
+        <h1 className={styles.title}>AQUOS</h1>
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="text"
           placeholder="Nome"
           value={name}
@@ -69,7 +74,7 @@ export default function Cadastro() {
         />
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="email"
           placeholder="Email"
           value={email}
@@ -78,10 +83,11 @@ export default function Cadastro() {
             validateEmail(e.target.value);
           }}
         />
-        {erroEmail && <div className="error-text">{erroEmail}</div>}
+        {/* Usando a classe styles.errorText */}
+        {erroEmail && <div className={styles.errorText}>{erroEmail}</div>}
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="password"
           placeholder="Senha"
           value={password}
@@ -89,7 +95,7 @@ export default function Cadastro() {
         />
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="password"
           placeholder="Confirmar senha"
           value={passwordConfirm}
@@ -98,9 +104,13 @@ export default function Cadastro() {
             validatePassword(e.target.value);
           }}
         />
-        {erroPassword && <div className="error-text">{erroPassword}</div>}
+        {/* Usando a classe styles.errorText */}
+        {erroPassword && <div className={styles.errorText}>{erroPassword}</div>}
 
-        <button className="auth-btn primary" onClick={validateCadastro}>
+        <button 
+          className={`${styles.btn} ${styles.btnPrimary}`} 
+          onClick={validateCadastro}
+        >
           Registrar
         </button>
 
@@ -112,7 +122,10 @@ export default function Cadastro() {
           />
         )}
 
-        <button className="auth-btn back" onClick={() => navigate("/")}>
+        <button 
+          className={`${styles.btn} ${styles.btnBack}`} 
+          onClick={() => navigate("/")}
+        >
           Voltar
         </button>
       </div>

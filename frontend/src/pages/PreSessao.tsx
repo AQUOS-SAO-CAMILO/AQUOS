@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { preSessaoSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
 
+// 1. Importando o CSS de Sessão
+import styles from "../styles/Session.module.css";
+
 // formulário de pré-treino (dados do atleta)
 export default function PreSessao() {
   const navigate = useNavigate();
+  
   // estados p/ os inputs interativos
   const [intensidade, setIntensidade] = useState(3);
   const [vestimenta, setVestimenta] = useState("Normal");
@@ -61,40 +65,39 @@ export default function PreSessao() {
   }
 
   return (
-    <div className="pre-sessao-container">
+    // 2. Substituindo classes string pelas propriedades de styles
+    <div className={styles.container}>
       {/* navegação entre as fases do treino */}
-      <nav className="sessao-tabs">
-        <div className="tab active" onClick={() => navigate("/pre-sessao")}>
+      <nav className={styles.tabs}>
+        <div className={`${styles.tab} ${styles.tabActive}`} onClick={() => navigate("/pre-sessao")}>
           Pré-Sessão
         </div>
-        <div
-          className="tab disabled"
-          onClick={() => navigate("/durante-sessao")}
-        >
+        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/durante-sessao")}>
           Durante a Sessão
         </div>
-        <div className="tab disabled" onClick={() => navigate("/pos-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pos-sessao")}>
           Pós-Sessão
         </div>
       </nav>
 
-      <main className="sessao-content">
+      <main className={styles.content}>
         {/* campos de texto básicos */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>MASSA CORPORAL (Kg)</label>
           <input
             type="text"
             placeholder="EX: 70.6"
-            className="sessao-input"
+            className={styles.input}
             value={massaCorporal}
             onChange={(e) => setMassaCorporal(e.target.value)}
           />
         </section>
 
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>MODALIDADE</label>
           <select
-            className={`sessao-input select-input ${modalidade === "" ? "placeholder-state" : ""}`}
+            // 3. Juntando as 3 classes do select
+            className={`${styles.input} ${styles.selectInput} ${modalidade === "" ? styles.placeholderState : ""}`}
             value={modalidade}
             onChange={(e) => setModalidade(e.target.value)}
           >
@@ -107,10 +110,10 @@ export default function PreSessao() {
           </select>
         </section>
 
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>DURAÇÃO PREVISTA (min)</label>
           <input
-            className="sessao-input"
+            className={styles.input}
             type="text"
             placeholder="EX: 120"
             value={duracaoPrevista}
@@ -119,29 +122,30 @@ export default function PreSessao() {
         </section>
 
         {/* slider d intensidade 1-5 */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>INTENSIDADE</label>
-          <div className="slider-container">
+          <div className={styles.sliderContainer}>
             <input
               type="range"
               min="1"
               max="5"
               value={intensidade}
               onChange={(e) => setIntensidade(parseInt(e.target.value))}
-              className="sessao-slider"
+              className={styles.slider}
             />
-            <div className="slider-value">{intensidade}</div>
+            <div className={styles.sliderValue}>{intensidade}</div>
           </div>
         </section>
 
         {/* escolha de tipo d roupa */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>VESTIMENTA</label>
-          <div className="option-buttons">
+          <div className={styles.optionButtons}>
             {["Leve", "Normal", "Pesada"].map((v) => (
               <button
                 key={v}
-                className={`option-btn ${vestimenta === v ? "active" : ""}`}
+                // Interpolação de classe ativa
+                className={`${styles.optionBtn} ${vestimenta === v ? styles.optionBtnActive : ""}`}
                 onClick={() => setVestimenta(v)}
               >
                 {v}
@@ -151,13 +155,13 @@ export default function PreSessao() {
         </section>
 
         {/* seletor visual p/ urina */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>COR DA URINA</label>
-          <div className="color-scale">
+          <div className={styles.colorScale}>
             {coresUrina.map((cor, index) => (
               <div
                 key={index}
-                className={`color-box ${corUrina === index ? "selected" : ""}`}
+                className={`${styles.colorBox} ${corUrina === index ? styles.colorBoxSelected : ""}`}
                 style={{ backgroundColor: cor }}
                 onClick={() => setCorUrina(index)}
               />
@@ -166,13 +170,13 @@ export default function PreSessao() {
         </section>
 
         {/* escala d sede */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>SEDE</label>
-          <div className="sede-scale">
+          <div className={styles.sedeScale}>
             {[1, 2, 3, 4, 5].map((s) => (
-              <div key={s} className="sede-item" onClick={() => setSede(s)}>
+              <div key={s} className={styles.sedeItem} onClick={() => setSede(s)}>
                 <svg
-                  className={`drop-icon ${sede >= s ? "active" : ""}`}
+                  className={`${styles.dropIcon} ${sede >= s ? styles.dropIconActive : ""}`}
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -185,9 +189,9 @@ export default function PreSessao() {
         </section>
 
         {/* grid d sintomas */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>SINTOMAS</label>
-          <div className="sintomas-grid">
+          <div className={styles.sintomasGrid}>
             {[
               "Boca seca",
               "Fadiga",
@@ -198,7 +202,7 @@ export default function PreSessao() {
             ].map((s) => (
               <button
                 key={s}
-                className={`sintoma-btn ${sintomas.includes(s) ? "active" : ""}`}
+                className={`${styles.sintomaBtn} ${sintomas.includes(s) ? styles.sintomaBtnActive : ""}`}
                 onClick={() => toggleSintoma(s)}
               >
                 {s}
@@ -208,10 +212,10 @@ export default function PreSessao() {
         </section>
 
         {/* campo d hidratação (azul) */}
-        <section className="input-group">
+        <section className={styles.inputGroup}>
           <label>HIDRATAÇÃO (ml)</label>
           <input
-            className="sessao-input hydration-input"
+            className={`${styles.input} ${styles.hydrationInput}`}
             type="text"
             placeholder="EX: 2000"
             value={hidratacao}
@@ -220,8 +224,9 @@ export default function PreSessao() {
         </section>
 
         {/* btn p/ seguir no fluxo */}
-        <footer className="sessao-footer">
-          <button className="continue-btn" onClick={validatePreSessao}>
+        {/* Novamente, removida a classe 'sessao-footer' da tag footer para manter limpo */}
+        <footer>
+          <button className={styles.continueBtn} onClick={validatePreSessao}>
             Continuar
           </button>
         </footer>

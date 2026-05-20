@@ -1,15 +1,18 @@
 import { useNavigate } from "react-router-dom";
 
+// 1. Importando o mesmo arquivo do Menu Adm
+import styles from "../styles/Menu.module.css";
+
 // tela d menu p/ o atleta
 export default function MenuAtleta() {
   const navigate = useNavigate();
 
   return (
-    <div className="menu-adm-container">
-      <header className="menu-adm-header">
+    <div className={styles.container}>
+      <header className={styles.header}>
         {/* ícone do user no topo */}
         <svg 
-          className="user-icon-svg" 
+          className={styles.userIconSvg} 
           viewBox="0 0 24 24" 
           fill="currentColor"
         >
@@ -17,25 +20,28 @@ export default function MenuAtleta() {
         </svg>
       </header>
 
-      <main className="menu-adm-content">
-        <h1 className="welcome-text">Olá, Guilherme!</h1>
+      {/* Mesma coisa do MenuAdm: removi a classe da tag main pois não tinha estilo atrelado a ela */}
+      <main>
+        <h1 className={styles.welcomeText}>Olá, Guilherme!</h1>
 
         {/* opções rápidas do atleta */}
-        <div className="menu-grid">
-          <button className="menu-card">
+        <div className={styles.grid}>
+          <button className={styles.card}>
             <span>API Clima</span>
           </button>
 
-          <button className="menu-card">
+          <button className={styles.card}>
             <span>última sessão</span>
           </button>
         </div>
 
-        {/* ações d rodapé (sessão e relatórios) */}
-        <div className="footer-actions multi-btn">
-          <button className="reports-btn primary-action">
+        {/* 2. Juntando a classe base com a classe que ajusta o espaçamento para múltiplos botões */}
+        <div className={`${styles.footerActions} ${styles.footerActionsMultiBtn}`}>
+          
+          {/* Removi a classe "primary-action" pois não havia estilo declarado para ela no seu arquivo original. O styles.reportsBtn já deixa o botão vermelho no padrão correto! */}
+          <button className={styles.reportsBtn}>
             <svg 
-              className="report-icon-svg" 
+              className={styles.reportIconSvg} 
               viewBox="0 0 24 24" 
               fill="currentColor"
             >
@@ -44,9 +50,9 @@ export default function MenuAtleta() {
             Nova sessão
           </button>
           
-          <button className="reports-btn">
+          <button className={styles.reportsBtn}>
             <svg 
-              className="report-icon-svg" 
+              className={styles.reportIconSvg} 
               viewBox="0 0 24 24" 
               fill="currentColor"
             >

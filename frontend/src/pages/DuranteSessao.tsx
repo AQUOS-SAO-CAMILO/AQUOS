@@ -9,6 +9,9 @@ import icon150ml from "../assets/150ml.svg";
 import icon300ml from "../assets/300ml.svg";
 import icon600ml from "../assets/600ml.svg";
 
+// 1. Importando o CSS de Sessão
+import styles from "../styles/Session.module.css";
+
 // tela p/ monitorar hidratação e urina durante o treino
 export default function DuranteSessao() {
   const navigate = useNavigate();
@@ -26,45 +29,54 @@ export default function DuranteSessao() {
   const ajustarUrina = (ml: number) => setUrinaTotal(prev => Math.max(0, prev + ml));
 
   return (
-    <div className="pre-sessao-container">
-      {/* abas de navegação (mesmo padrão da anterior) */}
-      <nav className="sessao-tabs">
-        <div className="tab disabled" onClick={() => navigate("/pre-sessao")}>Pré-Sessão</div>
-        <div className="tab active">Durante a Sessão</div>
-        <div className="tab disabled">Pós-Sessão</div>
+    // 2. Substituindo 'pre-sessao-container' por styles.container
+    <div className={styles.container}>
+      
+      {/* abas de navegação */}
+      <nav className={styles.tabs}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pre-sessao")}>
+          Pré-Sessão
+        </div>
+        <div className={`${styles.tab} ${styles.tabActive}`}>
+          Durante a Sessão
+        </div>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
+          Pós-Sessão
+        </div>
       </nav>
 
-      <main className="sessao-content during-content">
+      {/* Juntando content e duringContent */}
+      <main className={`${styles.content} ${styles.duringContent}`}>
         
         {/* bloco de ingestão de água */}
-        <section className="monitoring-block water-block">
-          <div className="block-header">
+        <section className={`${styles.monitoringBlock} ${styles.waterBlock}`}>
+          <div className={styles.blockHeader}>
             <h3>INGESTÃO DE ÁGUA TOTAL</h3>
-            <span className="total-value">{aguaTotal.toString().padStart(4, '0')} ml</span>
+            <span className={styles.totalValue}>{aguaTotal.toString().padStart(4, '0')} ml</span>
           </div>
           
-          <div className="icon-selection-grid">
-            <div className="icon-item" onClick={() => addAgua(250)}>
-              <div className="icon-box water-bg">
+          <div className={styles.iconSelectionGrid}>
+            <div className={styles.iconItem} onClick={() => addAgua(250)}>
+              <div className={`${styles.iconBox} ${styles.waterBg}`}>
                 <img src={icon250ml} alt="250ml" />
               </div>
               <span>250ml</span>
             </div>
-            <div className="icon-item" onClick={() => addAgua(500)}>
-              <div className="icon-box water-bg">
+            <div className={styles.iconItem} onClick={() => addAgua(500)}>
+              <div className={`${styles.iconBox} ${styles.waterBg}`}>
                 <img src={icon500ml} alt="500ml" />
               </div>
               <span>500ml</span>
             </div>
-            <div className="icon-item" onClick={() => addAgua(1000)}>
-              <div className="icon-box water-bg">
+            <div className={styles.iconItem} onClick={() => addAgua(1000)}>
+              <div className={`${styles.iconBox} ${styles.waterBg}`}>
                 <img src={icon1L} alt="1l" />
               </div>
               <span>1l</span>
             </div>
           </div>
 
-          <div className="fine-adjustment">
+          <div className={styles.fineAdjustment}>
             <button onClick={() => ajustarAgua(-50)}>−</button>
             <span>Ajustar 50ml</span>
             <button onClick={() => ajustarAgua(50)}>+</button>
@@ -72,34 +84,34 @@ export default function DuranteSessao() {
         </section>
 
         {/* bloco de volume urinário */}
-        <section className="monitoring-block urine-block">
-          <div className="block-header">
+        <section className={`${styles.monitoringBlock} ${styles.urineBlock}`}>
+          <div className={styles.blockHeader}>
             <h3>VOLUME URINÁRIO TOTAL</h3>
-            <span className="total-value">{urinaTotal.toString().padStart(4, '0')} ml</span>
+            <span className={styles.totalValue}>{urinaTotal.toString().padStart(4, '0')} ml</span>
           </div>
 
-          <div className="icon-selection-grid">
-            <div className="icon-item" onClick={() => addUrina(150)}>
-              <div className="icon-box urine-bg">
+          <div className={styles.iconSelectionGrid}>
+            <div className={styles.iconItem} onClick={() => addUrina(150)}>
+              <div className={`${styles.iconBox} ${styles.urineBg}`}>
                 <img src={icon150ml} alt="150ml" />
               </div>
               <span>150ml</span>
             </div>
-            <div className="icon-item" onClick={() => addUrina(300)}>
-              <div className="icon-box urine-bg">
+            <div className={styles.iconItem} onClick={() => addUrina(300)}>
+              <div className={`${styles.iconBox} ${styles.urineBg}`}>
                 <img src={icon300ml} alt="300ml" />
               </div>
               <span>300ml</span>
             </div>
-            <div className="icon-item" onClick={() => addUrina(600)}>
-              <div className="icon-box urine-bg">
+            <div className={styles.iconItem} onClick={() => addUrina(600)}>
+              <div className={`${styles.iconBox} ${styles.urineBg}`}>
                 <img src={icon600ml} alt="600ml" />
               </div>
               <span>600ml</span>
             </div>
           </div>
 
-          <div className="fine-adjustment">
+          <div className={styles.fineAdjustment}>
             <button onClick={() => ajustarUrina(-50)}>−</button>
             <span>Ajustar 50ml</span>
             <button onClick={() => ajustarUrina(50)}>+</button>
@@ -107,8 +119,9 @@ export default function DuranteSessao() {
         </section>
 
         {/* btn de prosseguir */}
-        <footer className="sessao-footer">
-          <button className="continue-btn" onClick={() => navigate("/menu-atleta")}>
+        {/* Removi a classe 'sessao-footer' da tag footer pois não havia estilo declarado no CSS base */}
+        <footer>
+          <button className={styles.continueBtn} onClick={() => navigate("/menu-atleta")}>
             Continuar
           </button>
         </footer>

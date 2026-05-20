@@ -1,0 +1,83 @@
+:root {
+    /* Cores de Fundo */
+    --bg-main: #f7f4ee;
+    --bg-hover: #efebe2;
+    --bg-white: #ffffff;
+    
+    /* Cores da Marca (Tons de Vermelho) */
+    --brand-primary: #b71c1c;
+    --brand-hover: #d32f2f;
+    --brand-error: #c62828;
+    
+    /* Texto */
+    --text-dark: #000000;
+    --text-muted: #444444;
+    --text-light: #ffffff;
+    --text-gray: #777777;
+    --text-placeholder: #AEAEAE;
+    
+    /* Cores de Monitoramento (Sessão) */
+    --water-light: #c5e1f0;
+    --water-dark: #90caf9;
+    --water-blue: #64b5f6;
+    --water-icon: #1976D2;
+    --urine-light: #fef9c3;
+    --urine-dark: #fde68a;
+    
+    /* Bordas e UI */
+    --border-light: #dddddd;
+    --border-medium: #cccccc;
+    --border-dark: #bbbbbb;
+    --input-focus: #2D9CDB;
+
+    
+}
+
+/* src/styles/variables.css */
+
+:root {
+    /* --- CORES DO SISTEMA AQUOS --- */
+    --brand-primary: #b71c1c;
+    --brand-hover: #d32f2f;
+    --brand-error: #c62828;
+    
+    --water-light: #c5e1f0;
+    --water-dark: #90caf9;
+    --water-blue: #64b5f6;
+    --water-icon: #1976D2;
+    --urine-light: #fef9c3;
+    --urine-dark: #fde68a;
+
+    /* --- VARIÁVEIS BASE (Vindas do seu index.css) --- */
+    --text: #6b6375;
+    --text-h: #08060d;
+    --bg: #fff;
+    --bg-main: #f7f4ee; /* Fundo padrão das suas telas */
+    --border: #e5e4e7;
+    --code-bg: #f4f3ec;
+    --accent: #aa3bff;
+    --accent-bg: rgba(170, 59, 255, 0.1);
+    --accent-border: rgba(170, 59, 255, 0.5);
+    --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+    /* --- FONTES --- */
+    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --mono: ui-monospace, Consolas, monospace;
+}
+
+/* Modo Escuro (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #9ca3af;
+        --text-h: #f3f4f6;
+        --bg: #16171d;
+        --bg-main: #f7f4ee; /* Um tom escuro para suas telas de auth/menu */
+        --border: #2e303a;
+        --code-bg: #1f2028;
+        --accent: #c084fc;
+        --accent-bg: rgba(192, 132, 252, 0.15);
+        --accent-border: rgba(192, 132, 252, 0.5);
+        --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    }
+}

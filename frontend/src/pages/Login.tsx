@@ -4,6 +4,7 @@ import { useState } from "react";
 import * as yup from "yup";
 import { loginSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
+import styles from "../styles/Auth.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,13 +29,15 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card login-card">
+    // 2. Substituição das strings (ex: "auth-container") por styles.container
+    <div className={styles.container}>
+      {/* Removi a classe "login-card" pois ela não tinha estilos específicos no seu CSS original */}
+      <div className={styles.card}>
         <Logo />
-        <h1 className="auth-title">AQUOS</h1>
+        <h1 className={styles.title}>AQUOS</h1>
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="email"
           placeholder="Email"
           value={email}
@@ -42,16 +45,20 @@ export default function Login() {
         />
 
         <input
-          className="auth-input"
+          className={styles.input}
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <div className="auth-forgot">Esqueceu a sua senha?</div>
+        <div className={styles.forgot}>Esqueceu a sua senha?</div>
 
-        <button className="auth-btn primary" onClick={validateLogin}>
+        {/* 3. Para combinar a classe base (btn) com a variante (btnPrimary), usamos template literals (crases) */}
+        <button 
+          className={`${styles.btn} ${styles.btnPrimary}`} 
+          onClick={validateLogin}
+        >
           Entrar
         </button>
 
@@ -63,7 +70,10 @@ export default function Login() {
           />
         )}
 
-        <button className="auth-btn back" onClick={() => navigate("/")}>
+        <button 
+          className={`${styles.btn} ${styles.btnBack}`} 
+          onClick={() => navigate("/")}
+        >
           Voltar
         </button>
       </div>

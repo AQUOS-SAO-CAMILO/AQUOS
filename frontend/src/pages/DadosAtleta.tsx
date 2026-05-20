@@ -1,28 +1,36 @@
 import React from 'react';
 
+// 1. Importamos os estilos de layout (fundo, card e botões)
+import authStyles from '../styles/Auth.module.css';
+// 2. Importamos os estilos específicos de formulário (inputs, labels, grupos)
+import formStyles from '../styles/Form.module.css';
+
 const DadosAtleta = () => {
   return (
-    <div className="auth-container">
+    // Usamos authStyles para o container externo
+    <div className={authStyles.container}>
       
-      <div className="auth-card">
+      <div className={authStyles.card}>
         
-
-        <div className="formContent">
-          <div className="formBody">
-            <div className="fieldGroup">
-              <label className="label">NOME COMPLETO</label>
-              <input type="text" className="input" />
+        {/* A partir daqui, usamos formStyles para o formulário interno */}
+        <div className={formStyles.content}>
+          <div className={formStyles.body}>
+            
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>NOME COMPLETO</label>
+              <input type="text" className={formStyles.input} />
             </div>
 
-            <div className="fieldGroup">
-              <label className="label">DATA DE NASCIMENTO</label>
-              <input type="text" placeholder="00/00/0000" className="input" />
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>DATA DE NASCIMENTO</label>
+              <input type="text" placeholder="00/00/0000" className={formStyles.input} />
             </div>
 
-            <div className="fieldGroup">
-              <label className="label">GÊNERO</label>
-              <div className="selectWrapper">
-                  <select className="input" defaultValue="">
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>GÊNERO</label>
+              <div className={formStyles.selectWrapper}>
+                  {/* Nota: no CSS modules eu converti a tag select.input só para a classe .input */}
+                  <select className={formStyles.input} defaultValue="">
                       <option value="" disabled hidden>Selecione</option>
                       <option value="masculino">Masculino</option>
                       <option value="feminino">Feminino</option>
@@ -31,10 +39,10 @@ const DadosAtleta = () => {
               </div>
             </div>
 
-            <div className="fieldGroup">
-              <label className="label">MODALIDADE</label>
-              <div className="selectWrapper">
-                  <select className="input" defaultValue="">
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>MODALIDADE</label>
+              <div className={formStyles.selectWrapper}>
+                  <select className={formStyles.input} defaultValue="">
                       <option value="" disabled hidden>Selecione</option>
                       <option value="futebol">Futebol</option>
                       <option value="volei">Vôlei</option>
@@ -42,32 +50,36 @@ const DadosAtleta = () => {
               </div>
             </div>
 
-            <div className="fieldGroup fieldGroupActive">
-              <label className="label">EQUIPE</label>
-              <div className="selectWrapper">
-                  <select className="input inputActive" defaultValue="">
+            {/* A classe fieldGroupActive não tinha CSS no seu arquivo original, mas mantive a estrutura caso você crie depois */}
+            <div className={`${formStyles.fieldGroup} ${formStyles.fieldGroupActive || ''}`}>
+              <label className={formStyles.label}>EQUIPE</label>
+              <div className={formStyles.selectWrapper}>
+                  {/* Juntando input e inputActive do formulário */}
+                  <select className={`${formStyles.input} ${formStyles.inputActive}`} defaultValue="">
                       <option value="" disabled hidden>Selecione</option>
                   </select>
               </div>
             </div>
 
-            <div className="fieldGroup">
-              <label className="label">PESO (Kg)</label>
-              <input type="number" className="input" />
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>PESO (Kg)</label>
+              <input type="number" className={formStyles.input} />
             </div>
 
-            <div className="fieldGroup">
-              <label className="label">ALTURA (cm)</label>
-              <input type="number" className="input" />
+            <div className={formStyles.fieldGroup}>
+              <label className={formStyles.label}>ALTURA (cm)</label>
+              <input type="number" className={formStyles.input} />
             </div>
           </div>
 
-         
-          <div className="buttonContainer">
-            <button className="auth-btn primary" type="button">
+          <div className={formStyles.buttonContainer}>
+            {/* Voltamos a usar authStyles para os botões */}
+            {/* Dica de UI: Talvez o botão Cancelar fique melhor só com authStyles.btn (sem o btnPrimary) para dar contraste */}
+            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button">
               Cancelar
             </button>
-            <button className="auth-btn primary" type="button">
+            
+            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button">
               Salvar
             </button>
           </div>
