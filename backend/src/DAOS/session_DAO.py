@@ -196,3 +196,11 @@ def update_data_end(session_id, session_end):
         "Update": True,
         "session_id": session_id
     }
+
+def get_session_result(session_id):
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT *FROM session_results WHERE id = '{session_id}';")
+    result = cursor.fetchone()
+    connection.close()
+    return 
