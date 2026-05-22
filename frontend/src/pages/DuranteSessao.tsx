@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import icon250ml from "../assets/250ml.svg";
 import icon500ml from "../assets/500ml.svg";
 import icon1L from "../assets/1L.svg";
-import icon150ml from "../assets/150ml.svg";
-import icon300ml from "../assets/300ml.svg";
-import icon600ml from "../assets/600ml.svg";
+import icon150ml from "../assets/bexiga1.svg";
+import icon300ml from "../assets/bexiga2.svg";
+import icon600ml from "../assets/bexiga3.svg";
 
 // 1. Importando o CSS de Sessão
 import styles from "../styles/Session.module.css";

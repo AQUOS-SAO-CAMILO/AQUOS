@@ -86,7 +86,8 @@
     gap: 10px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
-    min-width: 200px;
+    width: 100%;
+    max-width: 210px;
     margin: 0 auto;
 }
 
