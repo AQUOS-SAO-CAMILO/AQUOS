@@ -111,7 +111,7 @@ export default function MenuAdm() {
 
         {/* btn p/ ver relatórios no rodapé */}
         <div className={styles.footerActions}>
-          <button className={styles.reportsBtn} onClick={() => navigate("/relatorios-adm")}>
+          <button className={styles.reportsBtn} onClick={() => navigate("/filtro-relatorio")}>
             <svg 
               className={styles.reportIconSvg} 
               viewBox="0 0 24 24" 

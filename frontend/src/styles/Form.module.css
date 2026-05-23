@@ -75,3 +75,52 @@
     gap: 12px;
     margin-top: 32px;
 }
+
+@media (max-width: 768px) {
+    .label {
+        font-size: 12px;
+    }
+    .input {
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+    .fieldGroup {
+        gap: 4px;
+    }
+    .buttonContainer {
+        gap: 10px;
+        margin-top: 28px;
+    }
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
+    .body {
+        gap: 14px;
+    }
+    .label {
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+    .input {
+        padding: 10px 12px;
+        font-size: 14px;
+        border-radius: 10px;
+        margin: 6px 0;
+    }
+    .fieldGroup {
+        gap: 4px;
+    }
+    .buttonContainer {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 24px;
+    }
+    .selectWrapper::after {
+        right: 12px;
+        font-size: 9px;
+    }
+}

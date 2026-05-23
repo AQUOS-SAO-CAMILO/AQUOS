@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-
-// Reutilizando os mesmos estilos das telas de autenticação e formulário
 import authStyles from '../styles/Auth.module.css';
 import formStyles from '../styles/Form.module.css';
 
