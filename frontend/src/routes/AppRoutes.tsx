@@ -8,6 +8,8 @@ import PreSessao from "../pages/PreSessao";
 import DuranteSessao from "../pages/DuranteSessao";
 import DadosAtleta from "../pages/DadosAtleta";
 import PosSessao from "../pages/PosSessao";
+import ResultadoSessao from "../pages/ResultadoSessao";
+
 // gerenciamento das rotas do app
 export default function AppRoutes() {
   return (
@@ -21,6 +23,7 @@ export default function AppRoutes() {
       <Route path="/durante-sessao" element={<DuranteSessao />} />
       <Route path="/dados-atleta" element={<DadosAtleta/>}/>
       <Route path="/pos-sessao" element={<PosSessao />} />
+      <Route path="/resultado-sessao" element={<ResultadoSessao />} />
     </Routes>
   );
 }

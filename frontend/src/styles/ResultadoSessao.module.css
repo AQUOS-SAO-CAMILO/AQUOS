@@ -1,0 +1,147 @@
+.container {
+  min-height: 100vh;
+  background: var(--bg-main, #f7f4ee);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 450px;
+  margin: 0 auto;
+  font-family: var(--sans, system-ui, sans-serif);
+}
+
+.mainTitle {
+  color: var(--brand-primary, #b71c1c);
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-dark, #000);
+  margin: 20px 0 10px 0;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Base para todos os cards de resultado */
+.resultCard {
+  width: 100%;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.cardLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dark, #000);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.cardValue {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-dark, #000);
+}
+
+/* Variações de Cores dos Cards */
+.greenCard {
+  background-color: #9bcea3;
+}
+
+.blueCard {
+  background-color: #92c3e6;
+}
+
+.yellowCard {
+  background-color: #f7e089;
+  flex-direction: row;
+  gap: 10px;
+  padding: 16px;
+}
+
+.whiteCard {
+  background-color: #ffffff;
+  flex: 1; /* Faz os cards dividirem o espaço igualmente */
+}
+
+/* Grid para os cards menores emparelhados */
+.cardsRow {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Estilos específicos do Card Azul (Recomendações) */
+.blueCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.dropIcon {
+  width: 16px;
+  height: 16px;
+  color: #000;
+}
+
+.italicText {
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* Estilos específicos do Card Amarelo (Alerta) */
+.alertIcon {
+  width: 20px;
+  height: 20px;
+  color: #000;
+}
+
+.yellowCard .cardLabel {
+  margin-bottom: 0; /* Remove a margem pois ele fica ao lado do ícone */
+  font-size: 0.85rem;
+}
+
+/* Grupo de Botões do Rodapé */
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-top: 40px;
+}
+
+.actionBtn {
+  width: 100%;
+  background-color: var(--brand-primary, #b71c1c);
+  color: #ffffff;
+  border: none;
+  border-radius: 24px;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.actionBtn:hover {
+  opacity: 0.9;
+}

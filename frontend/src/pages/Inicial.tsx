@@ -8,10 +8,14 @@ export default function Inicial() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <Logo />
+        
+        <div className={styles.logoWrapper}>
+          <Logo />
+        </div>
+
         <h1 className={styles.title}>AQUOS</h1>
 
-        <button className={styles.btn} onClick={() => navigate("/register")}>
+        <button className={styles.btn} onClick={() => navigate("/Cadastro")}>
           Criar conta
         </button>
 

@@ -65,17 +65,16 @@ export default function PreSessao() {
   }
 
   return (
-    // 2. Substituindo classes string pelas propriedades de styles
+   
     <div className={styles.container}>
-      {/* navegação entre as fases do treino */}
       <nav className={styles.tabs}>
-        <div className={`${styles.tab} ${styles.tabActive}`} onClick={() => navigate("/pre-sessao")}>
+        <div className={`${styles.tab} ${styles.tabActive}`}>
           Pré-Sessão
         </div>
-        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/durante-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
           Durante a Sessão
         </div>
-        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pos-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
           Pós-Sessão
         </div>
       </nav>

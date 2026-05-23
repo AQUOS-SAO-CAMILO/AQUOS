@@ -4,8 +4,6 @@ import { useState } from "react";
 import * as yup from "yup";
 import { cadastroSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
-
-// 1. Importando o arquivo de estilos de autenticação
 import styles from "../styles/Auth.module.css";
 
 export default function Cadastro() {

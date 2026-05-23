@@ -1,11 +1,12 @@
 import React from 'react';
-
-// 1. Importamos os estilos de layout (fundo, card e botões)
 import authStyles from '../styles/Auth.module.css';
-// 2. Importamos os estilos específicos de formulário (inputs, labels, grupos)
 import formStyles from '../styles/Form.module.css';
+import { useNavigate } from "react-router-dom";
+
 
 const DadosAtleta = () => {
+  const navigate = useNavigate();
+
   return (
     // Usamos authStyles para o container externo
     <div className={authStyles.container}>
@@ -73,13 +74,12 @@ const DadosAtleta = () => {
           </div>
 
           <div className={formStyles.buttonContainer}>
-            {/* Voltamos a usar authStyles para os botões */}
-            {/* Dica de UI: Talvez o botão Cancelar fique melhor só com authStyles.btn (sem o btnPrimary) para dar contraste */}
-            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button">
+        
+            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button" onClick={() => navigate("/menu-atleta")}>
               Cancelar
             </button>
             
-            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button">
+            <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} type="button" onClick={() => navigate("/menu-atleta")}>
               Salvar
             </button>
           </div>

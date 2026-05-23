@@ -34,10 +34,10 @@ export default function PosSessao() {
       
       {/* abas de navegação */}
       <nav className={styles.tabs}>
-        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pre-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
           Pré-Sessão
         </div>
-        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/durante-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
           Durante a Sessão
         </div>
         <div className={`${styles.tab} ${styles.tabActive}`}>
@@ -96,7 +96,7 @@ export default function PosSessao() {
         {/* btn de finalizar */}
         <footer>
           {/* Removi a classe 'finish-btn' pois ela não estava declarada no seu App.css original. A 'continueBtn' já deixa o botão vermelho conforme planejado! */}
-          <button className={styles.continueBtn} onClick={() => navigate("/menu-atleta")}>
+          <button className={styles.continueBtn} onClick={() => navigate("/resultado-sessao")}>
             Finalizar
           </button>
         </footer>

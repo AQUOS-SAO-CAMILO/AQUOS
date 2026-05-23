@@ -34,7 +34,7 @@ export default function DuranteSessao() {
       
       {/* abas de navegação */}
       <nav className={styles.tabs}>
-        <div className={`${styles.tab} ${styles.tabDisabled}`} onClick={() => navigate("/pre-sessao")}>
+        <div className={`${styles.tab} ${styles.tabDisabled}`}>
           Pré-Sessão
         </div>
         <div className={`${styles.tab} ${styles.tabActive}`}>
@@ -121,7 +121,7 @@ export default function DuranteSessao() {
         {/* btn de prosseguir */}
         {/* Removi a classe 'sessao-footer' da tag footer pois não havia estilo declarado no CSS base */}
         <footer>
-          <button className={styles.continueBtn} onClick={() => navigate("/menu-atleta")}>
+          <button className={styles.continueBtn} onClick={() => navigate("/pos-sessao")}>
             Continuar
           </button>
         </footer>
