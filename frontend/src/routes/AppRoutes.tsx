@@ -9,6 +9,7 @@ import DuranteSessao from "../pages/DuranteSessao";
 import DadosAtleta from "../pages/DadosAtleta";
 import PosSessao from "../pages/PosSessao";
 import ResultadoSessao from "../pages/ResultadoSessao";
+import DadosAdm from "../pages/DadosAdm";
 
 // gerenciamento das rotas do app
 export default function AppRoutes() {
@@ -24,6 +25,7 @@ export default function AppRoutes() {
       <Route path="/dados-atleta" element={<DadosAtleta/>}/>
       <Route path="/pos-sessao" element={<PosSessao />} />
       <Route path="/resultado-sessao" element={<ResultadoSessao />} />
+      <Route path="/dados-adm" element={<DadosAdm/>}/>
     </Routes>
   );
 }

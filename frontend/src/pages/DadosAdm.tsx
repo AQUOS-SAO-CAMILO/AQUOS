@@ -1,116 +1,99 @@
 import React, { useState, useEffect } from 'react';
-import authStyles from '../styles/Auth.module.css';
-import formStyles from '../styles/Form.module.css';
 import { useNavigate } from "react-router-dom";
 
-const DadosAtleta = () => {
+// Reutilizando os mesmos estilos das telas de autenticação e formulário
+import authStyles from '../styles/Auth.module.css';
+import formStyles from '../styles/Form.module.css';
+
+const DadosAdm = () => {
   const navigate = useNavigate();
 
-  // 1. Estados dos valores do atleta (o que ele escolheu)
+  // 1. Estados para controlar cada campo do formulário
   const [nome, setNome] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [genero, setGenero] = useState("");
-  const [modalidade, setModalidade] = useState("");
+  const [cargo, setCargo] = useState("");
   const [equipe, setEquipe] = useState("");
-  const [peso, setPeso] = useState("");
-  const [altura, setAltura] = useState("");
 
-  // 2. Novos estados para as LISTAS vindas do banco de dados
-  // Esses arrays guardarão as opções que vão aparecer nos selects
-  const [listaModalidades, setListaModalidades] = useState<{ id: string, nome: string }[]>([]);
+  // 2. Estados para as opções que podem vir do banco de dados
+  const [listaCargos, setListaCargos] = useState<{ id: string, nome: string }[]>([]);
   const [listaEquipes, setListaEquipes] = useState<{ id: string, nome: string }[]>([]);
 
   const [loading, setLoading] = useState(true);
 
+  // 3. Busca os dados atuais do Administrador assim que a tela abre (GET)
   useEffect(() => {
-    // 3. Função que busca tudo que a tela precisa
-    async function fetchTodosOsDados() {
+    async function fetchDadosAdm() {
       try {
-        // AQUI VOCÊ FARÁ AS SUAS REQUISIÇÕES REAIS. Exemplo:
-        const [resPerfil, resModalidades, resEquipes] = await Promise.all([
-          fetch("https://seu-backend.com/api/atleta/perfil"),
-          fetch("https://seu-backend.com/api/modalidades"),
+        // Exemplo de chamadas reais:
+        const [resPerfil, resCargos, resEquipes] = await Promise.all([
+          fetch("https://seu-backend.com/api/adm/perfil"),
+          fetch("https://seu-backend.com/api/cargos"),
           fetch("https://seu-backend.com/api/equipes")
         ]);
-        const [dadosPerfil, dadosModalidades, dadosEquipes] = await Promise.all([
-          resPerfil.json(), resModalidades.json(), resEquipes.json()
-        ]);
 
-
-        
         // ==========================================
-        // DADOS SIMULADOS VINDO DO BANCO DE DADOS
+        // SIMULAÇÃO: Dados vindo do banco de dados
         // ==========================================
-        
-        // 1. As opções cadastradas no sistema pelo Adm
-        // const dadosModalidades = [
-        //   { id: "1", nome: "Futebol" },
-        //   { id: "2", nome: "Vôlei" },
-        //   { id: "3", nome: "Natação" },
-        //   { id: "4", nome: "Corrida" }
+        // const dadosCargos = [
+        //   { id: "1", nome: "Treinador Principal" },
+        //   { id: "2", nome: "Auxiliar Técnico" },
+        //   { id: "3", nome: "Fisiologista" },
+        //   { id: "4", nome: "Nutricionista" }
         // ];
 
         // const dadosEquipes = [
         //   { id: "101", nome: "Equipe Alpha" },
         //   { id: "102", nome: "Equipe Beta" },
-        //   { id: "103", nome: "Time Principal" }
+        //   { id: "103", nome: "Todas as Equipes" } // Admins geralmente podem ver todas
         // ];
 
-        // 2. O perfil atual do Atleta
         // const dadosPerfil = {
         //   nome: "Guilherme Silva",
-        //   dataNascimento: "15/05/1998",
+        //   dataNascimento: "10/10/1985",
         //   genero: "masculino",
-        //   modalidadeId: "3", // Ele já estava salvo como "Natação" (id 3)
-        //   equipeId: "101", // Ele já estava salvo como "Equipe Alpha" (id 101)
-        //   peso: "75.5",
-        //   altura: "180"
+        //   cargoId: "3", 
+        //   equipeId: "101" 
         // };
 
-        // Alimentando os estados das listas
-        setListaModalidades(dadosModalidades);
+        // Preenche os estados com as listas
+        setListaCargos(dadosCargos);
         setListaEquipes(dadosEquipes);
 
-        // Alimentando os estados do perfil do atleta
+        // Preenche os estados com as informações do perfil
         setNome(dadosPerfil.nome);
         setDataNascimento(dadosPerfil.dataNascimento);
         setGenero(dadosPerfil.genero);
-        setPeso(dadosPerfil.peso);
-        setAltura(dadosPerfil.altura);
-        
-        // Salvamos os IDs para que o <select> marque a opção certa
-        setModalidade(dadosPerfil.modalidadeId);
+        setCargo(dadosPerfil.cargoId);
         setEquipe(dadosPerfil.equipeId);
 
       } catch (error) {
-        console.error("Erro ao buscar dados do servidor:", error);
+        console.error("Erro ao buscar os dados do administrador:", error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchTodosOsDados();
+    fetchDadosAdm();
   }, []);
 
+  // 4. Função acionada ao clicar em "Salvar" (PUT/PATCH)
   async function handleSalvar() {
     try {
-      // Objeto com os dados para enviar ao backend (PUT/PATCH)
       const dadosAtualizados = {
         nome,
         dataNascimento,
         genero,
-        modalidadeId: modalidade, // Enviamos o ID da modalidade escolhida
-        equipeId: equipe,         // Enviamos o ID da equipe escolhida
-        peso,
-        altura
+        cargoId: cargo,
+        equipeId: equipe
       };
 
-      console.log("Enviando para o Banco:", dadosAtualizados);
+      console.log("Enviando para o Banco (ADM):", dadosAtualizados);
       
-      // await fetch("https://seu-backend.com/api/atleta/perfil", { ... })
+      // await fetch("https://seu-backend.com/api/adm/perfil", { ... })
 
-      alert("Dados atualizados com sucesso!");
-      navigate("/menu-atleta");
+      alert("Dados do administrador atualizados com sucesso!");
+      navigate("/menu-adm");
     } catch (error) {
       console.error("Erro ao salvar:", error);
       alert("Erro ao salvar os dados.");
@@ -131,6 +114,7 @@ const DadosAtleta = () => {
         <div className={formStyles.content}>
           <div className={formStyles.body}>
             
+            {/* NOME COMPLETO */}
             <div className={formStyles.fieldGroup}>
               <label className={formStyles.label}>NOME COMPLETO</label>
               <input 
@@ -141,6 +125,7 @@ const DadosAtleta = () => {
               />
             </div>
 
+            {/* DATA DE NASCIMENTO */}
             <div className={formStyles.fieldGroup}>
               <label className={formStyles.label}>DATA DE NASCIMENTO</label>
               <input 
@@ -152,6 +137,7 @@ const DadosAtleta = () => {
               />
             </div>
 
+            {/* GÊNERO */}
             <div className={formStyles.fieldGroup}>
               <label className={formStyles.label}>GÊNERO</label>
               <div className={formStyles.selectWrapper}>
@@ -168,28 +154,28 @@ const DadosAtleta = () => {
               </div>
             </div>
 
-            {/* 4. Select de MODALIDADE construído via MAP */}
+            {/* CARGO */}
             <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>MODALIDADE</label>
+              <label className={formStyles.label}>CARGO</label>
               <div className={formStyles.selectWrapper}>
                   <select 
                     className={formStyles.input} 
-                    value={modalidade}
-                    onChange={(e) => setModalidade(e.target.value)}
+                    value={cargo}
+                    onChange={(e) => setCargo(e.target.value)}
                   >
                       <option value="" disabled hidden>Selecione</option>
-                      {listaModalidades.map((mod) => (
-                        <option key={mod.id} value={mod.id}>
-                          {mod.nome}
+                      {listaCargos.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.nome}
                         </option>
                       ))}
                   </select>
               </div>
             </div>
 
-            {/* 5. Select de EQUIPE construído via MAP */}
+            {/* EQUIPE(S) */}
             <div className={`${formStyles.fieldGroup} ${equipe !== "" ? formStyles.fieldGroupActive : ''}`}>
-              <label className={formStyles.label}>EQUIPE</label>
+              <label className={formStyles.label}>EQUIPE(S)</label>
               <div className={formStyles.selectWrapper}>
                   <select 
                     className={`${formStyles.input} ${equipe !== "" ? formStyles.inputActive : ''}`} 
@@ -206,32 +192,15 @@ const DadosAtleta = () => {
               </div>
             </div>
 
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>PESO (Kg)</label>
-              <input 
-                type="number" 
-                className={formStyles.input} 
-                value={peso}
-                onChange={(e) => setPeso(e.target.value)}
-              />
-            </div>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>ALTURA (cm)</label>
-              <input 
-                type="number" 
-                className={formStyles.input} 
-                value={altura}
-                onChange={(e) => setAltura(e.target.value)}
-              />
-            </div>
           </div>
 
+          {/* BOTÕES */}
           <div className={formStyles.buttonContainer}>
+  
             <button 
-              className={authStyles.btn} 
+              className={`${authStyles.btn}`} 
               type="button" 
-              onClick={() => navigate("/menu-atleta")}
+              onClick={() => navigate("/menu-adm")}
               style={{ marginTop: '24px' }}
             >
               Cancelar
@@ -252,4 +221,4 @@ const DadosAtleta = () => {
   );
 };
 
-export default DadosAtleta;
+export default DadosAdm;
