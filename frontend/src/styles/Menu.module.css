@@ -1,0 +1,266 @@
+.container {
+    min-height: 100vh;
+    background: var(--bg-main);
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%; 
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    padding-top: 5px;
+}
+
+.userIconSvg {
+    width: 35px;
+    height: 35px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.welcomeText {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+    padding-left: 5px;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.card {
+    background: var(--bg-main);
+    border: 1px solid var(--text-muted);
+    border-radius: 4px;
+    height: 300px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: var(--text-dark);
+    width: 100%;
+}
+
+.card:hover {
+    background: var(--bg-hover);
+}
+
+.footerActions {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.footerActionsMultiBtn {
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0 30px 0;
+}
+
+.reportsBtn {
+    padding: 10px 32px;
+    border: 2px solid var(--brand-primary);
+    border-radius: 24px;
+    background: var(--bg-white);
+    color: var(--brand-primary);
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    width: 100%;
+    max-width: 280px;
+    white-space: nowrap;
+    margin: 0 auto;
+}
+
+.reportIconSvg {
+    width: 20px;
+    height: 20px;
+    color: var(--brand-primary);
+}
+
+.reportsBtn:hover {
+    background: var(--brand-primary);
+    color: var(--text-light);
+}
+
+.reportsBtn:hover .reportIconSvg {
+    color: var(--text-light);
+}
+
+.statsRow {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.metricCard {
+    background: var(--bg-white);
+    border: 1px solid var(--text-muted);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 32%;
+    min-width: 120px;
+    min-height: 110px;
+    color: var(--text-dark);
+}
+
+.metricLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    color: var(--text-gray);
+    text-transform: uppercase;
+}
+
+.metricValue {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.chartCard {
+    background: var(--bg-white);
+    border: 1px solid var(--text-muted);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+.chartTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-dark);
+    text-transform: uppercase;
+}
+
+.chartPlaceholder {
+    min-height: 160px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 0.95rem;
+}
+
+.sectionCard {
+    background: var(--bg-white);
+    border: 1px solid var(--text-muted);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.sectionTitleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sectionTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-dark);
+}
+
+.sectionBadge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+}
+
+.sectionText {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.sectionItem {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text-dark);
+    font-size: 0.92rem;
+}
+
+.sectionItemLabel {
+    font-weight: 700;
+    color: var(--text-gray);
+}
+
+.sectionItemValue {
+    font-weight: 600;
+}
+
+.sectionCardGreen {
+    background: #dcedd7;
+    border-color: #b8dfb5;
+}
+
+.sectionCardPink {
+    background: #ffa4a573;
+    border-color: #FFA4A6;
+}
+
+
+
+.exportLink {
+    font-size: 0.85rem;
+    color: var(--brand-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.sectionCardOrange {
+  border-top: 5px solid #f57c00; /* Laranja para calor */
+}
+
+.sectionCardBlue {
+  border-top: 5px solid #0288d1; /* Azul para frio */
+}
+
+.sectionCardPurple {
+    border-top: 5px solid #7402d1;
+}
+
+.sectionCardPurple {
+    background: #cba4ff67;
+}
+
+.sectionCardGreen { border-top: 5px solid #388e3c; }
+.sectionCardPink { border-top: 5px solid #d81b60; }
+.sectionCardYellow { border-top: 5px solid #fbc02d; }

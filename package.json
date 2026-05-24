@@ -1,5 +1,6 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "dotenv": "^17.4.2",
     "flask": "^0.2.10",
     "pytest": "^1.0.0"
@@ -12,5 +13,8 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "backend": "python -m backend.src.main",
     "frontend": "cd frontend && npm run dev"
+=======
+    "recharts": "^3.8.1"
+>>>>>>> frontend
   }
 }

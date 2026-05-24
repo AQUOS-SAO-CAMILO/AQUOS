@@ -1,0 +1,358 @@
+.container {
+    min-height: 100vh;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-medium);
+    padding: 15px 10px 0;
+    gap: 10px;
+}
+
+.tab {
+    padding: 8px 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-gray); 
+    position: relative;
+    cursor: pointer;
+}
+
+.tabActive {
+    color: var(--text-dark);
+}
+
+.tabActive::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--brand-primary);
+}
+
+.tabDisabled::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #e09e9e;
+    opacity: 0.8;
+}
+
+.content {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.duringContent {
+    gap: 30px !important;
+}
+
+/* Campos e Inputs */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputGroup label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid var(--border-dark);
+    border-radius: 20px;
+    background: var(--bg-white);
+    font-size: 0.95rem;
+    outline: none;
+    color: var(--text-dark);
+}
+
+.input::placeholder, .input.placeholderState {
+    color: var(--text-gray);
+    font-style: italic;
+}
+
+.input option {
+    color: var(--text-dark);
+    font-style: normal;
+}
+
+.selectInput {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+}
+
+/* Sliders e Escalas */
+.sliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.slider {
+    width: 100%;
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--brand-primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.sliderValue {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Botões de Opção */
+.optionButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.optionBtn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: var(--bg-white);
+    color: var(--text-dark);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.optionBtnActive {
+    background: #e0e0e0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Escalas (Urina, Sede, Sintomas) */
+.colorScale {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.colorBox {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid var(--border-light);
+}
+
+.colorBoxSelected {
+    border-color: var(--text-dark);
+    border-width: 2px;
+    transform: scale(1.1);
+}
+
+.sedeScale {
+    display: flex;
+    gap: 15px;
+}
+
+.sedeItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+
+.dropIcon {
+    width: 30px;
+    height: 30px;
+    color: var(--border-light);
+}
+
+.dropIconActive {
+    color: var(--water-icon);
+}
+
+.sedeItem span {
+    font-weight: 700;
+}
+
+.sintomasGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.sintomaBtn {
+    padding: 10px 5px;
+    background: var(--bg-white);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sintomaBtnActive {
+    background: #e0e0e0;
+}
+
+.hydrationInput {
+    background: var(--water-blue);
+    color: var(--text-light);
+    border: none;
+    font-weight: 700;
+}
+
+.hydrationInput::placeholder {
+    color: rgba(255,255,255,0.9);
+}
+
+.continueBtn {
+    width: 100%;
+    padding: 12px;
+    background: var(--brand-primary);
+    color: var(--text-light);
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+/* Blocos de Monitoramento */
+.monitoringBlock {
+    border-radius: 12px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.waterBlock { background-color: var(--water-light); }
+.urineBlock { background-color: var(--urine-light); }
+
+.blockHeader {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.blockHeader h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.totalValue {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.iconSelectionGrid {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.iconItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.iconBox {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.iconBox img {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+}
+
+.waterBg { background-color: var(--water-dark); }
+.urineBg { background-color: var(--urine-dark); }
+
+.iconItem span {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.fineAdjustment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fineAdjustment button {
+    background: transparent;
+    border: none;
+    width: 28px;
+    height: 28px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+}
+
+.fineAdjustment button:active {
+    transform: scale(1.2);
+}
+
+.fineAdjustment span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
