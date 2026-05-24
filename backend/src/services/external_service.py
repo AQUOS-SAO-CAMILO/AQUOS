@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import requests, os
 from pathlib import Path
+import geocoder
 
 env_path = Path('/home/lua/Documents/AQUOS/.env')
 load_dotenv(dotenv_path=env_path)
@@ -9,7 +10,10 @@ api_key = os.getenv('API_KEY')
 if not api_key:
     print("chave de api não encontrada.")
 
-city_name = str(input("Digite sua cidade: "))
+location = geocoder.ip('me')
+city_name = location.city
+print("city_name: " + city_name)
+
 link = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={(api_key)}"
 
 request = requests.get(link)
@@ -37,7 +41,7 @@ climate_translation = {
 description_en = request_dict['weather'][0]['description']
 description_pt = climate_translation.get(description_en, description_en)
 
-print("weather: " + description,f"\ntemperature: {round(temperature, 1)}*C", "\nhumidity: ", humidity)
+print("\nweather: " + description,f"\ntemperature: {round(temperature, 1)}*C", "\nhumidity: ", humidity)
 print(f"\ntempo: {description_pt}")
 print(f"temperatura; {round(temperature, 1)}°C")
 print(f"umidade {humidity}%")
