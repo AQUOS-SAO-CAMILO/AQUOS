@@ -1,3 +1,4 @@
+from backend.src.config import connection
 from backend.src.config.connection import create_connection
 
 def get_athlete_profile_by_id(athlete_id):
@@ -204,3 +205,31 @@ def get_session_result(session_id):
     result = cursor.fetchone()
     connection.close()
     return result
+
+def get_session_by_filters(modality=None, intensity=None, athlete_id=None):
+    try:
+        connection = create_connection()
+        cursor = connection.cursor()
+        
+        query = "SELECT * FROM training_sessions WHERE 1=1"
+        parameters = []
+
+        if modality:
+            query += " AND modality = %s"
+            parameters.append(modality)
+        if intensity:
+            query += " AND intensity = %s"
+            parameters.append(intensity)
+        if athlete_id:
+            query += " AND athlete_id = %s"
+            parameters.append(athlete_id)
+
+        cursor.execute(query, tuple(parameters))
+        
+        columns = [desc[0] for desc in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        return results
+    
+    finally:
+        connection.close()

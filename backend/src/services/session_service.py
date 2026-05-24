@@ -269,3 +269,21 @@ def session_end_logic(session_id, session_end):
     except Exception as e:
         log.error("Erro ao finalizar sessão. session_id=%s | Erro: %s", session_id, e)
         return {"error": f"Erro ao tentar criar sessão. {e}"}
+    
+def session_filter_logic(modality=None, intensity=None, athlete_id=None):
+    try:
+        if not any([modality, intensity, athlete_id]):
+            log.warning("Pelo menos um filtro deve ser fornecido para usar a função de filtragem.")
+            raise ValueError("Pelo menos um filtro deve ser fornecido para usar a função de filtragem.")
+        
+        sessions = get_session_by_filters(modality, intensity, athlete_id)
+        log.info("Sessões filtradas com sucesso. Filtros aplicados: %s, total: %d", (modality, intensity, athlete_id), len(sessions))
+        return {
+            "message": "Atividades filtradas com sucesso!",
+            "sessions": sessions,
+            "total": len(sessions)
+        }
+
+    except Exception as e:
+        log.error("Erro ao filtrar sessões. modality=%s | intensity=%s | athlete_id=%s | Erro: %s", modality, intensity, athlete_id, e)
+        return {"error": f"Erro ao tentar filtrar sessão. {e}"}

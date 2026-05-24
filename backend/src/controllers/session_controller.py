@@ -214,3 +214,20 @@ def session_end():
     except Exception as e:
         log.error("Erro ao finalizar sessão. session_id=%s | Erro: %s", session_id, e)
         return jsonify({"error": f"Erro ao tentar registrar o início da sessão. {e}"})
+
+@session.route('/session/filter', methods=['GET'])
+def session_filter():
+    modality = request.args.get('modality')
+    intensity = request.args.get('intensity')
+    athlete_id = request.args.get('athlete_id')
+
+    log.debug("Requisição de filtro de sessões recebida. athlete_id=%s | modality=%s | intensity=%s", athlete_id, modality, intensity)
+
+    try:
+        result = session_filter_logic(modality, intensity, athlete_id)
+        log.info("Sessões filtradas com sucesso. athlete_id=%s | modality=%s | intensity=%s", athlete_id, modality, intensity)
+        return jsonify(result), 200
+    
+    except Exception as e:
+        log.error("Erro ao filtrar sessões. athlete_id=%s | modality=%s | intensity=%s | Erro: %s", athlete_id, modality, intensity, e)
+        return jsonify({"error": f"Erro ao tentar filtrar sessões. {e}"}), 400

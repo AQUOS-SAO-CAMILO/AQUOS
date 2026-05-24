@@ -1,7 +1,7 @@
 from io import BytesIO
 
 from reportlab.lib.pagesizes import A4
-from backend.src.DAOS.session_DAO import *
+from backend.src.DAOS.session_DAO import session_DAO
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
