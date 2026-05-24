@@ -24,34 +24,31 @@ def start_session():
 
     log.debug("Requisição de início de sessão recebida. athlete_id=%s | modality=%s | intensity=%s", athlete_id, modality, intensity)
 
-    if not athlete_id:
-        log.warning("Id do atleta não informado na requisição de início de sessão.")
-        return jsonify({"message": "Id do atleta é obrigatório."}), 400
-    if not modality:
-        log.warning("Modalidade não informada na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Modalidade do atleta é obrigatória."}), 400
-    if not intensity:
-        log.warning("Intensidade não informada na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Intensidade do exercício é obrigatória."}), 400
-    if not session_start:
-        log.warning("Data de início não informada na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Data de início da sessão do atleta é obrigatória."}), 400
-    if not urine_volume_ml:
-        log.warning("Volume de urina não informado na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Quantidade de urina expelida do atleta é obrigatória."}), 400
-    if not urine_color_pre:
-        log.warning("Cor da urina não informada na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Cor da urina (escala de 1 a 8) do atleta é obrigatória."}), 400
-    if not notes:
-        log.warning("Notas não informadas na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"message": "Notas informativas para o atleta são obrigatórias."}), 400
-    if bladder_emptied is None:
-        log.warning("Campo bladder_emptied não informado na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"error": "Indicar se bexiga foi esvaziada é obrigatório."}), 400
-    if clothing_soaked is None:
-        log.warning("Campo clothing_soaked não informado na requisição de início de sessão. athlete_id=%s", athlete_id)
-        return jsonify({"error": "Indicar se há suor nas roupas é obrigatório."}), 400
-    
+    infos = {
+    'athlete_id': athlete_id,
+    'modality': modality,
+    'intensity': intensity,
+    'session_start': session_start,
+    'urine_color_pre': urine_color_pre,
+    'urine_volume_ml': urine_volume_ml,
+    'notes': notes
+    }
+
+    for key, value in infos.items():
+        if not value:
+            log.warning(f"{key} não informado na requisição de início de sessão. athlete_id={athlete_id}")
+            return jsonify({"message": f"{key} é obrigatório."}), 400
+        
+    infos_bool = {
+        'bladder_emptied': bladder_emptied,
+        'clothing_soaked': clothing_soaked
+    }
+
+    for key, value in infos_bool.items():
+        if value is None:
+            log.warning(f"{key} não informado na requisição de início de sessão. athlete_id={athlete_id}")
+            return jsonify({"message": f"{key} é obrigatório."}), 400
+
     try:
         result = create_session_logic(athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes)
         log.info("Sessão iniciada com sucesso. athlete_id=%s", athlete_id)
