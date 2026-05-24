@@ -132,10 +132,10 @@ export default function ResultadoSessao() {
       {/* Botões de Ação */}
       <div className={styles.buttonGroup}>
         <button className={styles.actionBtn} onClick={() => navigate("/menu-atleta")}>
-          Menu
+          Menu Inicial
         </button>
-        <button className={styles.actionBtn} onClick={() => navigate("/relatorios")}>
-          Relatórios
+        <button className={styles.actionBtn} onClick={() => navigate("/relatorio-atleta")}>
+          Painel Analítico
         </button>
         <button className={styles.actionBtn} onClick={() => console.log("Exportar...")}>
           Exportar Resultado

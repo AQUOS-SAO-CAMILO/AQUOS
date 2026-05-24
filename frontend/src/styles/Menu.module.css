@@ -87,7 +87,8 @@
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
     width: 100%;
-    max-width: 210px;
+    max-width: 280px;
+    white-space: nowrap;
     margin: 0 auto;
 }
 
@@ -231,14 +232,11 @@
 }
 
 .sectionCardPink {
-    background: #f5dadd;
-    border-color: #e7b2ba;
+    background: #ffa4a573;
+    border-color: #FFA4A6;
 }
 
-.sectionCardYellow {
-    background: #f8edc2;
-    border-color: #e8d585;
-}
+
 
 .exportLink {
     font-size: 0.85rem;
@@ -246,3 +244,23 @@
     font-weight: 700;
     text-decoration: none;
 }
+
+.sectionCardOrange {
+  border-top: 5px solid #f57c00; /* Laranja para calor */
+}
+
+.sectionCardBlue {
+  border-top: 5px solid #0288d1; /* Azul para frio */
+}
+
+.sectionCardPurple {
+    border-top: 5px solid #7402d1;
+}
+
+.sectionCardPurple {
+    background: #cba4ff67;
+}
+
+.sectionCardGreen { border-top: 5px solid #388e3c; }
+.sectionCardPink { border-top: 5px solid #d81b60; }
+.sectionCardYellow { border-top: 5px solid #fbc02d; }

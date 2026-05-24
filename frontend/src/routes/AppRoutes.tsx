@@ -12,6 +12,7 @@ import ResultadoSessao from "../pages/ResultadoSessao";
 import DadosAdm from "../pages/DadosAdm";
 import FiltroRelatorio from "../pages/FiltroRelatorio";
 import RelatorioAdm from "../pages/RelatorioAdm";
+import RelatorioAtleta from "../pages/RelatorioAtleta";
 
 // gerenciamento das rotas do app
 export default function AppRoutes() {
@@ -30,6 +31,7 @@ export default function AppRoutes() {
       <Route path="/dados-adm" element={<DadosAdm/>}/>
       <Route path="/filtro-relatorio" element={<FiltroRelatorio/>}/>
       <Route path="/relatorio-adm" element={<RelatorioAdm/>}/>
+      <Route path="/relatorio-atleta" element={<RelatorioAtleta/>}/>
     </Routes>
   );
 }
