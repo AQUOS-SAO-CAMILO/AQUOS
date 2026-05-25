@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
+// Corrigido o erro de importar o useState duas vezes
 import { useState } from "react";
 import Logo from "../components/Logo";
-import { useState } from "react";
 import * as yup from "yup";
 import { loginSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
@@ -12,67 +12,57 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-<<<<<<< HEAD
   
+  // Estados para o alerta
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState<"error" | "success">("error");
+
+  // Função que combina a Validação (Yup) e o Fetch (Backend)
   const handleLogin = async () => {
     try {
+      // 1. Primeiro valida localmente com o Yup
+      await loginSchema.validate({ email, password });
+      
+      // 2. Se a validação passar, tenta conectar com o servidor
       const res = await fetch("http://localhost:5001/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"},
-        body: JSON.stringify({
-          email,
-          password
-        })
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        // 3. Sucesso!
         localStorage.setItem("token", data.token);
-
-        alert("Login realizado!");
-        navigate("/home"); 
+        setAlertType("success");
+        setAlertMessage("Login realizado com sucesso!");
+        
+        // Timeout para dar tempo do usuário ver a mensagem de sucesso
+        setTimeout(() => {
+          navigate("/menu-atleta"); // Ou a rota correta baseada no perfil
+        }, 1500);
       } else {
-        alert(data.error);
+        // Erro retornado pelo backend (ex: senha incorreta)
+        setAlertType("error");
+        setAlertMessage(data.error || "Falha no login");
       }
-
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao conectar com o servidor");
+    } catch (erro: any) {
+      // Erro do Yup (ex: email em branco) ou erro de conexão com o servidor
+      setAlertType("error");
+      setAlertMessage(erro.message || "Erro ao conectar com o servidor");
     }
   };
-=======
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState<"error" | "success">("error");
-
-  async function validateLogin() {
-    try {
-      await loginSchema.validate({ email, password });
-      setAlertType("success");
-      setAlertMessage("Login realizado com sucesso!");
-      setTimeout(() => {
-        navigate("/menu-atleta"); //ou adm
-      }, 1500);
-    } catch (erro: any) {
-      setAlertType("error");
-      setAlertMessage(erro.message);
-    }
-  }
->>>>>>> frontend
 
   return (
-    // 2. Substituição das strings (ex: "auth-container") por styles.container
     <div className={styles.container}>
-      {/* Removi a classe "login-card" pois ela não tinha estilos específicos no seu CSS original */}
       <div className={styles.card}>
         <Logo />
         <h1 className={styles.title}>AQUOS</h1>
 
-<<<<<<< HEAD
-        <input className="auth-input" type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
-        <input className="auth-input" type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} />
-=======
+        {/* Inputs utilizando o CSS module da branch frontend */}
         <input
           className={styles.input}
           type="email"
@@ -80,7 +70,6 @@ export default function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
->>>>>>> frontend
 
         <input
           className={styles.input}
@@ -90,16 +79,12 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-<<<<<<< HEAD
-        <button className="auth-btn primary" onClick={handleLogin}>Próximo</button>
-=======
         <div className={styles.forgot}>Esqueceu a sua senha?</div>
->>>>>>> frontend
 
-        {/* 3. Para combinar a classe base (btn) com a variante (btnPrimary), usamos template literals (crases) */}
+        {/* Botão chamando a nossa função unificada handleLogin */}
         <button 
           className={`${styles.btn} ${styles.btnPrimary}`} 
-          onClick={validateLogin}
+          onClick={handleLogin}
         >
           Entrar
         </button>
