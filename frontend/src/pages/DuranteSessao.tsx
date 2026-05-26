@@ -124,6 +124,11 @@ export default function DuranteSessao() {
           <button className={styles.continueBtn} onClick={() => navigate("/pos-sessao")}>
             Continuar
           </button>
+          <button 
+            className={`${styles.btnBackSessao}`}
+            onClick={() => navigate("/pre-sessao")}>
+            Voltar
+          </button>
         </footer>
       </main>
     </div>

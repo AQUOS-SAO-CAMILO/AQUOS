@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { preSessaoSchema } from "../schemas/authSchemas";
 import Alert from "../components/Alert";
+import stylesBotao from "../styles/Auth.module.css"
 
 // 1. Importando o CSS de Sessão
 import styles from "../styles/Session.module.css";
@@ -227,6 +228,12 @@ export default function PreSessao() {
         <footer>
           <button className={styles.continueBtn} onClick={validatePreSessao}>
             Continuar
+          </button>
+
+          <button 
+            className={`${styles.btnBackSessao}`}
+            onClick={() => navigate("/menu-atleta")}>
+            Voltar
           </button>
         </footer>
 

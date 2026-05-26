@@ -135,13 +135,13 @@ export default function FiltroRelatorios() {
     <div className={authStyles.container} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '40px', paddingBottom: '40px' }}>
       
      
-      <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '32px' }}>Selecione os dados para análise</p>
+      <p style={{ color: '#000', fontSize: '18px', marginBottom: '32px', fontStyle: 'normal' }}>SELECIONE OS DADOS PARA ANÁLISE</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '340px', gap: '28px' }}>
         
         {/* BLOCO: MODALIDADES */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <label style={{ color: '#333', fontSize: '0.85rem', fontWeight: 800, marginLeft: '8px', letterSpacing: '0.5px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          <label style={{ color: '#333', fontSize: '0.85rem', fontWeight: 800, marginLeft: '8px', letterSpacing: '0.5px', alignSelf: 'start'}}>
             MODALIDADES
           </label>
           <div style={cardListStyle}>
@@ -151,7 +151,7 @@ export default function FiltroRelatorios() {
 
         {/* BLOCO: EQUIPES */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <label style={{ color: '#333', fontSize: '0.85rem', fontWeight: 800, marginLeft: '8px', letterSpacing: '0.5px' }}>
+          <label style={{ color: '#333', fontSize: '0.85rem', fontWeight: 800, marginLeft: '8px', letterSpacing: '0.5px', alignSelf: 'start' }}>
             EQUIPES
           </label>
           <div style={cardListStyle}>

@@ -9,9 +9,10 @@
 
 .tabs {
     display: flex;
-    border-bottom: 1px solid var(--border-medium);
+    /* border-bottom: 1px solid var(--border-medium); */
     padding: 15px 10px 0;
     gap: 10px;
+    align-self: center;
 }
 
 .tab {
@@ -20,7 +21,6 @@
     font-weight: 700;
     color: var(--text-gray); 
     position: relative;
-    cursor: pointer;
 }
 
 .tabActive {
@@ -180,6 +180,7 @@
 .sedeScale {
     display: flex;
     gap: 15px;
+    align-self: center;
 }
 
 .sedeItem {
@@ -248,8 +249,18 @@
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 40px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.btnBackSessao{
+    background: transparent;
+    color: var(--brand-primary);
+    border: none;
+    font-size: 18px;
+    margin-top: 3px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* Blocos de Monitoramento */
