@@ -36,7 +36,7 @@ export default function Login() {
       }
 
       if (res.ok) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token.token);
 
         setAlertMessage("Login realizado!");
         setAlertType("success");
@@ -74,9 +74,6 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="auth-btn primary" onClick={handleLogin}>Próximo</button>
-
-        {/* 3. Para combinar a classe base (btn) com a variante (btnPrimary), usamos template literals (crases) */}
         <button 
           className={`${styles.btn} ${styles.btnPrimary}`} 
           onClick={handleLogin}
