@@ -3,6 +3,8 @@ import { useState } from "react";
 import Logo from "../components/Logo";
 import Alert from "../components/Alert";
 import styles from "../styles/Auth.module.css";
+import API from '../config'
+
 
 type AlertType = "success" | "error" | "info" | "warning";
 
@@ -16,7 +18,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5001/login", {
+      const res = await fetch(`${API}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"},
