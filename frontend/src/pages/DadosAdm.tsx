@@ -23,47 +23,47 @@ const DadosAdm = () => {
   useEffect(() => {
     async function fetchDadosAdm() {
       try {
-        // Exemplo de chamadas reais:
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+        const token = localStorage.getItem("token");
+
+       
+        if (!token) {
+          navigate("/");
+          return;
+        }
+
+        const headers = {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Autenticação para rotas protegidas
+        };
+
+        // Dispara as 3 chamadas simultaneamente
         const [resPerfil, resCargos, resEquipes] = await Promise.all([
-          fetch("https://seu-backend.com/api/adm/perfil"),
-          fetch("https://seu-backend.com/api/cargos"),
-          fetch("https://seu-backend.com/api/equipes")
+          fetch(`${apiUrl}/api/adm/perfil`, { headers }), // Ajuste a rota se necessário
+          fetch(`${apiUrl}/api/cargos`, { headers }),
+          fetch(`${apiUrl}/api/equipes`, { headers })
         ]);
 
-        // ==========================================
-        // SIMULAÇÃO: Dados vindo do banco de dados
-        // ==========================================
-        // const dadosCargos = [
-        //   { id: "1", nome: "Treinador Principal" },
-        //   { id: "2", nome: "Auxiliar Técnico" },
-        //   { id: "3", nome: "Fisiologista" },
-        //   { id: "4", nome: "Nutricionista" }
-        // ];
+        // Verifica se todas as respostas deram sucesso (status 200-299)
+        if (!resPerfil.ok || !resCargos.ok || !resEquipes.ok) {
+          throw new Error("Falha ao carregar alguns dados do servidor.");
+        }
 
-        // const dadosEquipes = [
-        //   { id: "101", nome: "Equipe Alpha" },
-        //   { id: "102", nome: "Equipe Beta" },
-        //   { id: "103", nome: "Todas as Equipes" } // Admins geralmente podem ver todas
-        // ];
-
-        // const dadosPerfil = {
-        //   nome: "Guilherme Silva",
-        //   dataNascimento: "10/10/1985",
-        //   genero: "masculino",
-        //   cargoId: "3", 
-        //   equipeId: "101" 
-        // };
+        // Extrai o JSON das respostas (A correção principal está aqui!)
+        const dadosPerfil = await resPerfil.json();
+        const dadosCargos = await resCargos.json();
+        const dadosEquipes = await resEquipes.json();
 
         // Preenche os estados com as listas
         setListaCargos(dadosCargos);
         setListaEquipes(dadosEquipes);
 
         // Preenche os estados com as informações do perfil
-        setNome(dadosPerfil.nome);
-        setDataNascimento(dadosPerfil.dataNascimento);
-        setGenero(dadosPerfil.genero);
-        setCargo(dadosPerfil.cargoId);
-        setEquipe(dadosPerfil.equipeId);
+        setNome(dadosPerfil.nome || "");
+        setDataNascimento(dadosPerfil.dataNascimento || "");
+        setGenero(dadosPerfil.genero || "");
+        setCargo(dadosPerfil.cargoId || "");
+        setEquipe(dadosPerfil.equipeId || "");
 
       } catch (error) {
         console.error("Erro ao buscar os dados do administrador:", error);
@@ -73,11 +73,14 @@ const DadosAdm = () => {
     }
 
     fetchDadosAdm();
-  }, []);
+  }, [navigate]);
 
   // 4. Função acionada ao clicar em "Salvar" (PUT/PATCH)
   async function handleSalvar() {
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const token = localStorage.getItem("token");
+
       const dadosAtualizados = {
         nome,
         dataNascimento,
@@ -88,13 +91,25 @@ const DadosAdm = () => {
 
       console.log("Enviando para o Banco (ADM):", dadosAtualizados);
       
-      // await fetch("https://seu-backend.com/api/adm/perfil", { ... })
+      const response = await fetch(`${apiUrl}/api/adm/perfil`, {
+        method: "PUT", 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(dadosAtualizados)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao salvar os dados.");
+      }
 
       alert("Dados do administrador atualizados com sucesso!");
       navigate("/menu-adm");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao salvar:", error);
-      alert("Erro ao salvar os dados.");
+      alert(error.message || "Erro ao salvar os dados.");
     }
   }
 
@@ -128,7 +143,7 @@ const DadosAdm = () => {
               <label className={formStyles.label}>DATA DE NASCIMENTO</label>
               <input 
                 type="text" 
-                placeholder="00/00/0000" 
+                placeholder="DD/MM/AAAA" 
                 className={formStyles.input} 
                 value={dataNascimento}
                 onChange={(e) => setDataNascimento(e.target.value)}
