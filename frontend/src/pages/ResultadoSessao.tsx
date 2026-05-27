@@ -51,7 +51,7 @@ export default function ResultadoSessao() {
     if (!resultado?.sessionId) return;
     
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
-    // Abre o PDF em uma nova aba para o usuário visualizar ou baixar
+    
     window.open(`${apiUrl}/session/report/${resultado.sessionId}`, '_blank');
   };
 

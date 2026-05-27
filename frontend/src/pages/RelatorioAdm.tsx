@@ -16,7 +16,6 @@ import {
 type Metric = { label: string; value: string };
 type SectionField = { label: string; value: string };
 
-// Tipagem para os Cards Dinâmicos
 type CardData = {
   title: string;
   badge: string;
@@ -34,17 +33,15 @@ export default function RelatorioAdm() {
     quantidadeSessoes: 0,
   });
 
-  // 2. Nova tipagem do Gráfico (Sessão, Média, Mediana e a Faixa Limite)
-  const [chartData, setChartData] = useState<
-    {
-      sessao: string;
-      media: number;
-      mediana: number;
-      limite: [number, number];
-    }[]
-  >([]);
+  // Tipagem atualizada para separar o limite em Min e Max
+  const [chartData, setChartData] = useState<{
+    sessao: string;
+    media: number;
+    mediana: number;
+    limiteMin: number;
+    limiteMax: number;
+  }[]>([]);
 
-  // Categorias de cards separadas para renderizar como o protótipo
   const [modalidadesCards, setModalidadesCards] = useState<CardData[]>([]);
   const [equipesCards, setEquipesCards] = useState<CardData[]>([]);
   const [atletasCards, setAtletasCards] = useState<CardData[]>([]);
@@ -52,42 +49,37 @@ export default function RelatorioAdm() {
 
   const [loading, setLoading] = useState(true);
 
+  // Função para exportar o relatório com base nos filtros da URL
   const handleExport = async () => {
-  try {
-    const sessionId = searchParams.get("session");
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
+      
+  
+      const exportUrl = `${apiUrl}/report/export?${searchParams.toString()}`;
 
-    if (!sessionId) {
-      console.error("Session ID não encontrado");
-      return;
+      const response = await fetch(exportUrl);
+
+      if (!response.ok) {
+        throw new Error("Erro ao gerar relatório");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.href = url;
+      a.download = `relatorio_analitico_filtrado.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao exportar relatório", error);
     }
-
-    const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
-
-    const response = await fetch(
-      `${apiUrl}/session/report/${sessionId}`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Erro ao gerar relatório");
-    }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-
-    a.href = url;
-    a.download = `hydration_report_session_${sessionId}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error("Erro ao exportar relatório", error);
-  }
-};
+  };
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5173";
+    const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
 
     async function loadReport() {
       try {
@@ -103,75 +95,34 @@ export default function RelatorioAdm() {
         const fetchUrl = `${apiUrl}/report?${queryParams.toString()}`;
         console.log("Buscando dados em:", fetchUrl);
 
-        // ====================================================================
-        // QUANDO CONECTAR AO BANCO: DESCOMENTE AS LINHAS ABAIXO
-        // ====================================================================
         const response = await fetch(fetchUrl);
         if (!response.ok) throw new Error("Erro na requisição");
-        const dadosMock = await response.json();
-
-        // ====================================================================
-        // SIMULAÇÃO DA ESTRUTURA DE RETORNO DO BANCO DE DADOS
-        // ====================================================================
-        
-        // const dadosMock = {
-        //   geral: { average: "1.7", median: "1.6", stdDeviation: "0.2", totalSessoes: 20 },
-          
-        //   // 3. Dados do Gráfico de Pareto/Longitudinal atualizados
-        //   grafico: [
-        //     { sessao: 'S1', media: 1.5, mediana: 1.4, limite: [1.2, 1.8] },
-        //     { sessao: 'S2', media: 1.6, mediana: 1.6, limite: [1.3, 1.9] },
-        //     { sessao: 'S3', media: 2.0, mediana: 1.8, limite: [1.1, 2.9] },
-        //     { sessao: 'S4', media: 1.8, mediana: 1.7, limite: [1.5, 2.1] },
-        //     { sessao: 'S5', media: 1.7, mediana: 1.7, limite: [1.4, 2.0] },
-        //   ],
-
-        //   modalidades: modalidadeIds ? [
-        //     {
-        //       nome: "FUTSAL", sessoes: 10, duracao: "90 min", intensidade: "Alta",
-        //       balancoHidrico: "-450ml", taxaSudorese: "1.2 l/h", variacaoMassa: "-1.5%"
-        //     }
-        //   ] : [],
-        //   equipes: equipeIds ? [
-        //     {
-        //       nome: "WINNERS (FUTSAL)", sessoes: 10,
-        //       balancoHidrico: "-300ml", taxaSudorese: "1.0 l/h", variacaoMassa: "-1.0%"
-        //     }
-        //   ] : [],
-        //   atletas: atletaIds ? [
-        //     {
-        //       nome: "GUILHERME", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
-        //       balancoHidrico: "-450ml", taxaSudorese: "1.3 l/h", variacaoMassa: "-1.5%"
-        //     },
-        //     {
-        //       nome: "MARCIN", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
-        //       balancoHidrico: "-300ml", taxaSudorese: "1.1 l/h", variacaoMassa: "-1.2%"
-        //     }
-        //   ] : [],
-        //   climas: [
-        //     {
-        //       nome: "QUENTE", sessoes: 10, tempMedia: "32°C", umidade: "60%",
-        //       balancoHidrico: "-500ml", taxaSudorese: "1.8 l/h", variacaoMassa: "-2.0%"
-        //     }
-        //   ]
-        // };
-        // ====================================================================
+        const dadosRelatorio = await response.json();
 
         setMetrics([
-          { label: "MÉDIA", value: dadosMock.geral.average },
-          { label: "MEDIANA", value: dadosMock.geral.median },
-          { label: "DESVIO", value: dadosMock.geral.stdDeviation },
+          { label: "MÉDIA", value: dadosRelatorio.geral.average },
+          { label: "MEDIANA", value: dadosRelatorio.geral.median },
+          { label: "DESVIO", value: dadosRelatorio.geral.stdDeviation },
         ]);
 
         setSummary({
           title: "SESSÕES REGISTRADAS",
-          quantidadeSessoes: dadosMock.geral.totalSessoes,
+          quantidadeSessoes: dadosRelatorio.geral.totalSessoes,
         });
-        setChartData(dadosMock.grafico);
 
-        // Mapeando a resposta do banco para as suas classes de CSS
+        // Mapeamento corrigido: separando a array de limite em duas propriedades numéricas
+        setChartData(
+          dadosRelatorio.grafico.map((item: any) => ({
+            sessao: item.sessao,
+            media: item.media,
+            mediana: item.mediana,
+            limiteMin: item.limite[0],
+            limiteMax: item.limite[1],
+          }))
+        );
+
         setModalidadesCards(
-          dadosMock.modalidades.map((item: any) => ({
+          dadosRelatorio.modalidades.map((item: any) => ({
             title: item.nome,
             badge: `${item.sessoes} Sessões`,
             accentClass: styles.sectionCardPurple,
@@ -185,11 +136,11 @@ export default function RelatorioAdm() {
                 value: item.variacaoMassa,
               },
             ],
-          })),
+          }))
         );
 
         setEquipesCards(
-          dadosMock.equipes.map((item: any) => ({
+          dadosRelatorio.equipes.map((item: any) => ({
             title: item.nome,
             badge: `${item.sessoes} Sessões`,
             accentClass: styles.sectionCardPink,
@@ -201,11 +152,11 @@ export default function RelatorioAdm() {
                 value: item.variacaoMassa,
               },
             ],
-          })),
+          }))
         );
 
         setAtletasCards(
-          dadosMock.atletas.map((item: any) => ({
+          dadosRelatorio.atletas.map((item: any) => ({
             title: item.nome,
             badge: `${item.sessoes} Sessões`,
             accentClass: styles.sectionCardGreen,
@@ -219,11 +170,11 @@ export default function RelatorioAdm() {
                 value: item.variacaoMassa,
               },
             ],
-          })),
+          }))
         );
 
         setClimasCards(
-          dadosMock.climas.map((item: any) => ({
+          dadosRelatorio.climas.map((item: any) => ({
             title: item.nome,
             badge: `${item.sessoes} Sessões`,
             accentClass: styles.sectionCardYellow,
@@ -237,7 +188,7 @@ export default function RelatorioAdm() {
                 value: item.variacaoMassa,
               },
             ],
-          })),
+          }))
         );
       } catch (error) {
         console.error("Erro ao carregar:", error);
@@ -247,8 +198,6 @@ export default function RelatorioAdm() {
     }
     loadReport();
   }, [searchParams]);
-
-  //const handleExportar = () => alert("Iniciando download do PDF/Excel...");
 
   const renderCategory = (categoryTitle: string, cards: CardData[]) => {
     if (cards.length === 0) return null;
@@ -310,7 +259,6 @@ export default function RelatorioAdm() {
           ))}
         </div>
 
-        {/* 4. NOVO GRÁFICO: ComposedChart (Faixa de Variação + Linha) */}
         <div className={styles.chartCard}>
           <span className={styles.chartTitle}>
             Evolução e Consistência (Taxa de Sudorese)
@@ -349,17 +297,17 @@ export default function RelatorioAdm() {
                   wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }}
                 />
 
-                {/* Área do Desvio Padrão */}
+            
                 <Area
                   type="monotone"
-                  dataKey="limite"
+                  dataKey="limiteMax"
+                  baseValue={0}
                   stroke="none"
                   fill="var(--brand-primary, #b71c1c)"
                   fillOpacity={0.15}
                   name="Variação (Desvio)"
                 />
 
-                {/* Média */}
                 <Line
                   type="monotone"
                   dataKey="media"
@@ -370,7 +318,6 @@ export default function RelatorioAdm() {
                   name="Média"
                 />
 
-                {/* Mediana */}
                 <Line
                   type="monotone"
                   dataKey="mediana"
