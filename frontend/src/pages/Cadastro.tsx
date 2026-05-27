@@ -29,7 +29,7 @@ export default function Cadastro() {
   }
 
   async function validatePassword(valor: string) {
-    if (valor !== password) { // Boa prática do TypeScript/JS: usar !== em vez de !=
+    if (valor !== password) { 
       setErroPassword("As senhas são diferentes");
     } else {
       setErroPassword("");

@@ -41,53 +41,53 @@ export default function RelatorioAtleta() {
         console.log("Buscando dados pessoais em:", fetchUrl);
 
         // ====================================================================
-        // 🔴 QUANDO CONECTAR AO BANCO: DESCOMENTE AS LINHAS ABAIXO
+        //  QUANDO CONECTAR AO BANCO: DESCOMENTE AS LINHAS ABAIXO
         // ====================================================================
-        // const response = await fetch(fetchUrl, {
-        //   headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-        // });
-        // if (!response.ok) throw new Error("Erro na requisição");
-        // const dadosMock = await response.json();
+        const response = await fetch(fetchUrl, {
+          headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+        });
+        if (!response.ok) throw new Error("Erro na requisição");
+        const dadosMock = await response.json();
 
         // ====================================================================
-        // 🔴 SIMULAÇÃO DA ESTRUTURA DE RETORNO DO BANCO DE DADOS (DADOS DO ATLETA)
+        // SIMULAÇÃO DA ESTRUTURA DE RETORNO DO BANCO DE DADOS (DADOS DO ATLETA)
         // ====================================================================
-        const dadosMock = {
-          geral: { average: "1.4", median: "1.3", stdDeviation: "0.1", totalSessoes: 35 },
+        // const dadosMock = {
+        //   geral: { average: "1.4", median: "1.3", stdDeviation: "0.1", totalSessoes: 35 },
           
-          grafico: [
-            { sessao: 'S1', media: 1.2, mediana: 1.2, limite: [1.1, 1.3] },
-            { sessao: 'S2', media: 1.3, mediana: 1.3, limite: [1.1, 1.5] },
-            { sessao: 'S3', media: 1.5, mediana: 1.4, limite: [1.2, 1.8] },
-            { sessao: 'S4', media: 1.4, mediana: 1.4, limite: [1.2, 1.6] },
-            { sessao: 'S5', media: 1.4, mediana: 1.3, limite: [1.2, 1.6] },
-          ],
+        //   grafico: [
+        //     { sessao: 'S1', media: 1.2, mediana: 1.2, limite: [1.1, 1.3] },
+        //     { sessao: 'S2', media: 1.3, mediana: 1.3, limite: [1.1, 1.5] },
+        //     { sessao: 'S3', media: 1.5, mediana: 1.4, limite: [1.2, 1.8] },
+        //     { sessao: 'S4', media: 1.4, mediana: 1.4, limite: [1.2, 1.6] },
+        //     { sessao: 'S5', media: 1.4, mediana: 1.3, limite: [1.2, 1.6] },
+        //   ],
 
           // As informações que o atleta participa
-          modalidades: [
-            {
-              nome: "FUTSAL", sessoes: 35, duracao: "90 min", intensidade: "Alta",
-              balancoHidrico: "-400ml", taxaSudorese: "1.4 l/h", variacaoMassa: "-1.2%"
-            }
-          ],
-          equipes: [
-            {
-              nome: "WINNERS (FUTSAL)", sessoes: 35,
-              balancoHidrico: "-400ml", taxaSudorese: "1.4 l/h", variacaoMassa: "-1.2%"
-            }
-          ],
+          // modalidades: [
+          //   {
+          //     nome: "FUTSAL", sessoes: 35, duracao: "90 min", intensidade: "Alta",
+          //     balancoHidrico: "-400ml", taxaSudorese: "1.4 l/h", variacaoMassa: "-1.2%"
+          //   }
+          // ],
+          // equipes: [
+          //   {
+          //     nome: "WINNERS (FUTSAL)", sessoes: 35,
+          //     balancoHidrico: "-400ml", taxaSudorese: "1.4 l/h", variacaoMassa: "-1.2%"
+          //   }
+          // ],
           // O histórico de como o corpo dele reage em diferentes climas
-          climas: [
-            {
-              nome: "QUENTE", sessoes: 15, tempMedia: "34°C", umidade: "55%",
-              balancoHidrico: "-600ml", taxaSudorese: "1.8 l/h", variacaoMassa: "-1.8%"
-            },
-            {
-              nome: "AMENO", sessoes: 20, tempMedia: "23°C", umidade: "65%",
-              balancoHidrico: "-250ml", taxaSudorese: "1.1 l/h", variacaoMassa: "-0.8%"
-            }
-          ]
-        };
+        //   climas: [
+        //     {
+        //       nome: "QUENTE", sessoes: 15, tempMedia: "34°C", umidade: "55%",
+        //       balancoHidrico: "-600ml", taxaSudorese: "1.8 l/h", variacaoMassa: "-1.8%"
+        //     },
+        //     {
+        //       nome: "AMENO", sessoes: 20, tempMedia: "23°C", umidade: "65%",
+        //       balancoHidrico: "-250ml", taxaSudorese: "1.1 l/h", variacaoMassa: "-0.8%"
+        //     }
+        //   ]
+        // };
         // ====================================================================
 
         setMetrics([

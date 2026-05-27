@@ -52,56 +52,56 @@ export default function RelatorioAdm() {
         console.log("Buscando dados em:", fetchUrl);
 
         // ====================================================================
-        // 🔴 QUANDO CONECTAR AO BANCO: DESCOMENTE AS LINHAS ABAIXO
+        // QUANDO CONECTAR AO BANCO: DESCOMENTE AS LINHAS ABAIXO
         // ====================================================================
-        // const response = await fetch(fetchUrl);
-        // if (!response.ok) throw new Error("Erro na requisição");
-        // const dadosMock = await response.json();
+        const response = await fetch(fetchUrl);
+        if (!response.ok) throw new Error("Erro na requisição");
+        const dadosMock = await response.json();
 
         // ====================================================================
-        // 🔴 SIMULAÇÃO DA ESTRUTURA DE RETORNO DO BANCO DE DADOS
+        // SIMULAÇÃO DA ESTRUTURA DE RETORNO DO BANCO DE DADOS
         // ====================================================================
-        const dadosMock = {
-          geral: { average: "1.7", median: "1.6", stdDeviation: "0.2", totalSessoes: 20 },
+        // const dadosMock = {
+        //   geral: { average: "1.7", median: "1.6", stdDeviation: "0.2", totalSessoes: 20 },
           
-          // 3. Dados do Gráfico de Pareto/Longitudinal atualizados
-          grafico: [
-            { sessao: 'S1', media: 1.5, mediana: 1.4, limite: [1.2, 1.8] },
-            { sessao: 'S2', media: 1.6, mediana: 1.6, limite: [1.3, 1.9] },
-            { sessao: 'S3', media: 2.0, mediana: 1.8, limite: [1.1, 2.9] },
-            { sessao: 'S4', media: 1.8, mediana: 1.7, limite: [1.5, 2.1] },
-            { sessao: 'S5', media: 1.7, mediana: 1.7, limite: [1.4, 2.0] },
-          ],
+        //   // 3. Dados do Gráfico de Pareto/Longitudinal atualizados
+        //   grafico: [
+        //     { sessao: 'S1', media: 1.5, mediana: 1.4, limite: [1.2, 1.8] },
+        //     { sessao: 'S2', media: 1.6, mediana: 1.6, limite: [1.3, 1.9] },
+        //     { sessao: 'S3', media: 2.0, mediana: 1.8, limite: [1.1, 2.9] },
+        //     { sessao: 'S4', media: 1.8, mediana: 1.7, limite: [1.5, 2.1] },
+        //     { sessao: 'S5', media: 1.7, mediana: 1.7, limite: [1.4, 2.0] },
+        //   ],
 
-          modalidades: modalidadeIds ? [
-            {
-              nome: "FUTSAL", sessoes: 10, duracao: "90 min", intensidade: "Alta",
-              balancoHidrico: "-450ml", taxaSudorese: "1.2 l/h", variacaoMassa: "-1.5%"
-            }
-          ] : [],
-          equipes: equipeIds ? [
-            {
-              nome: "WINNERS (FUTSAL)", sessoes: 10,
-              balancoHidrico: "-300ml", taxaSudorese: "1.0 l/h", variacaoMassa: "-1.0%"
-            }
-          ] : [],
-          atletas: atletaIds ? [
-            {
-              nome: "GUILHERME", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
-              balancoHidrico: "-450ml", taxaSudorese: "1.3 l/h", variacaoMassa: "-1.5%"
-            },
-            {
-              nome: "MARCIN", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
-              balancoHidrico: "-300ml", taxaSudorese: "1.1 l/h", variacaoMassa: "-1.2%"
-            }
-          ] : [],
-          climas: [
-            {
-              nome: "QUENTE", sessoes: 10, tempMedia: "32°C", umidade: "60%",
-              balancoHidrico: "-500ml", taxaSudorese: "1.8 l/h", variacaoMassa: "-2.0%"
-            }
-          ]
-        };
+        //   modalidades: modalidadeIds ? [
+        //     {
+        //       nome: "FUTSAL", sessoes: 10, duracao: "90 min", intensidade: "Alta",
+        //       balancoHidrico: "-450ml", taxaSudorese: "1.2 l/h", variacaoMassa: "-1.5%"
+        //     }
+        //   ] : [],
+        //   equipes: equipeIds ? [
+        //     {
+        //       nome: "WINNERS (FUTSAL)", sessoes: 10,
+        //       balancoHidrico: "-300ml", taxaSudorese: "1.0 l/h", variacaoMassa: "-1.0%"
+        //     }
+        //   ] : [],
+        //   atletas: atletaIds ? [
+        //     {
+        //       nome: "GUILHERME", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
+        //       balancoHidrico: "-450ml", taxaSudorese: "1.3 l/h", variacaoMassa: "-1.5%"
+        //     },
+        //     {
+        //       nome: "MARCIN", sessoes: 10, modalidade: "Futsal", equipe: "Winners",
+        //       balancoHidrico: "-300ml", taxaSudorese: "1.1 l/h", variacaoMassa: "-1.2%"
+        //     }
+        //   ] : [],
+        //   climas: [
+        //     {
+        //       nome: "QUENTE", sessoes: 10, tempMedia: "32°C", umidade: "60%",
+        //       balancoHidrico: "-500ml", taxaSudorese: "1.8 l/h", variacaoMassa: "-2.0%"
+        //     }
+        //   ]
+        // };
         // ====================================================================
 
         setMetrics([
