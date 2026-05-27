@@ -3,6 +3,8 @@ import { useState } from "react";
 import Logo from "../components/Logo";
 import Alert from "../components/Alert";
 import styles from "../styles/Auth.module.css";
+import API from '../config'
+
 
 type AlertType = "success" | "error" | "info" | "warning";
 

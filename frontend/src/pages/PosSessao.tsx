@@ -99,6 +99,11 @@ export default function PosSessao() {
           <button className={styles.continueBtn} onClick={() => navigate("/resultado-sessao")}>
             Finalizar
           </button>
+          <button 
+            className={`${styles.btnBackSessao}`}
+            onClick={() => navigate("/durante-sessao")}>
+            Voltar
+          </button>
         </footer>
       </main>
     </div>

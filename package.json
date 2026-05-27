@@ -3,9 +3,12 @@
     "dotenv": "^17.4.2",
     "flask": "^0.2.10",
     "pytest": "^1.0.0",
+    "react-router-dom": "^7.15.1",
     "recharts": "^3.8.1"
   },
   "devDependencies": {
+    "@types/react": "^19.2.15",
+    "@types/react-router-dom": "^5.3.3",
     "concurrently": "^9.2.1"
   },
   "id": "f7o9gq",
