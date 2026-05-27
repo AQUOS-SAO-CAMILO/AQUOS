@@ -63,23 +63,29 @@ export default function PreSessao() {
       const athleteId = getAthleteId();
       if (!athleteId) throw new Error("Sessão expirada. Faça login novamente.");
 
+  
+      const pesoNumerico = parseFloat(massaCorporal.replace(',', '.'));
+      if (isNaN(pesoNumerico) || pesoNumerico <= 0) {
+        throw new Error("Por favor, insira uma massa corporal válida maior que zero.");
+      }
+
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
-      
       const payloadStart = {
         athlete_id: athleteId,
         modality: modalidade,
         intensity: intensidade,
-        session_start: new Date().toISOString().split('.')[0], // Formato ISO sem milissegundos
-        urine_color_pre: corUrina + 1, // Frontend envia 0-6, Backend espera 1-8
-        bladder_emptied: false, // Default p/ pré-treino
-        clothing_soaked: false, // Default p/ pré-treino
-        urine_volume_ml: 0,
+        session_start: new Date().toISOString().split('.')[0], 
+        urine_color_pre: corUrina + 1, 
+        bladder_emptied: false, 
+        clothing_soaked: false, 
+        urine_volume_ml: 0.1, 
+        pre_weight_kg: pesoNumerico,
         
         notes: `Sintomas: ${sintomas.join(", ") || "Nenhum"} | Sede: ${sede} | Roupa: ${vestimenta} | Previsão: ${duracaoPrevista}min`
       };
 
-      // 3. Inicia a sessão no banco
+      // Inicia a sessão no banco
       const resStart = await fetch(`${apiUrl}/session/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,12 +98,18 @@ export default function PreSessao() {
         throw new Error(dataStart.message || dataStart.error || "Erro ao iniciar sessão.");
       }
 
-      //Salva os dados para usar no Pós-Treino
-      const sessionId = dataStart.athlete_id; // backend retorna session_id dentro da chave 'athlete_id'
-      localStorage.setItem("current_session_id", sessionId);
-      localStorage.setItem("pre_weight_kg", massaCorporal);
+      // 
+      // Busca por session_id ou id
+      const sessionId = dataStart.session_id || dataStart.id; 
+      
+      if (!sessionId) {
+          throw new Error("O servidor não retornou um ID de sessão válido.");
+      }
 
-     
+      // Salva os dados no navegador de forma limpa
+      localStorage.setItem("current_session_id", sessionId);
+      localStorage.setItem("pre_weight_kg", pesoNumerico.toString());
+
       if (hidratacao && Number(hidratacao) > 0) {
         await fetch(`${apiUrl}/session/fluidIntake`, {
           method: "POST",
@@ -110,10 +122,8 @@ export default function PreSessao() {
           })
         });
       }
-
       
       setAlertType("success");
-      
       setAlertMessage(dataStart.hydration_alert || "Sessão iniciada com sucesso!");
       
       setTimeout(() => {
