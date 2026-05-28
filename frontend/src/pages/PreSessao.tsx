@@ -53,7 +53,6 @@ export default function PreSessao() {
 
   async function validatePreSessao() {
     try {
-    
       await preSessaoSchema.validate({
         massaCorporal,
         duracaoPrevista,
@@ -63,29 +62,38 @@ export default function PreSessao() {
       const athleteId = getAthleteId();
       if (!athleteId) throw new Error("Sessão expirada. Faça login novamente.");
 
-  
       const pesoNumerico = parseFloat(massaCorporal.replace(',', '.'));
       if (isNaN(pesoNumerico) || pesoNumerico <= 0) {
-        throw new Error("Por favor, insira uma massa corporal válida maior que zero.");
+        throw new Error("Por favor, insira uma massa corporal válida.");
       }
+
+      const traduzirIntensidade = (nivel: number): string => {
+        if (nivel <= 2) return "low";
+        if (nivel === 3) return "moderate";
+        if (nivel === 4) return "high";
+        return "maximal";
+      };
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
       const payloadStart = {
         athlete_id: athleteId,
         modality: modalidade,
-        intensity: intensidade,
+        
+        // 👇 2. AQUI ESTÁ A CORREÇÃO PRINCIPAL:
+        // Envia o texto ('low', 'moderate'...) em vez do número do slider
+        intensity: traduzirIntensidade(intensidade),
+        
         session_start: new Date().toISOString().split('.')[0], 
         urine_color_pre: corUrina + 1, 
         bladder_emptied: false, 
         clothing_soaked: false, 
         urine_volume_ml: 0.1, 
         pre_weight_kg: pesoNumerico,
-        
         notes: `Sintomas: ${sintomas.join(", ") || "Nenhum"} | Sede: ${sede} | Roupa: ${vestimenta} | Previsão: ${duracaoPrevista}min`
       };
 
-      // Inicia a sessão no banco
+      // 3. Inicia a sessão no banco
       const resStart = await fetch(`${apiUrl}/session/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -98,15 +106,9 @@ export default function PreSessao() {
         throw new Error(dataStart.message || dataStart.error || "Erro ao iniciar sessão.");
       }
 
-      // 
-      // Busca por session_id ou id
-      const sessionId = dataStart.session_id || dataStart.id; 
+      // 4. Salva o ID da sessão de forma segura
+      const sessionId = dataStart.session_id || dataStart.id || dataStart.athlete_id; 
       
-      if (!sessionId) {
-          throw new Error("O servidor não retornou um ID de sessão válido.");
-      }
-
-      // Salva os dados no navegador de forma limpa
       localStorage.setItem("current_session_id", sessionId);
       localStorage.setItem("pre_weight_kg", pesoNumerico.toString());
 

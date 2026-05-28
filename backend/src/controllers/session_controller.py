@@ -51,9 +51,12 @@ def start_session():
 
     try:
         result = create_session_logic(athlete_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes)
+        if "error" in result:
+            log.error("Erro ao iniciar sessão. athlete_id=%s | Erro: %s", athlete_id, result["error"])
+            return jsonify(result), 400
         log.info("Sessão iniciada com sucesso. athlete_id=%s", athlete_id)
         return jsonify(result), 201
-    
+
     except Exception as e:
         log.error("Erro ao iniciar sessão. athlete_id=%s | Erro: %s", athlete_id, e)
         return jsonify({"error": f"Erro ao tentar iniciar sessão. {e}"}), 400
@@ -100,6 +103,8 @@ def calculate_metrics():
     
     try:
         session_data = get_session_data(session_id)
+        if "error" in session_data:
+            return jsonify(session_data), 404
         metrics = calculate_session_metrics(session_data)
         save_session_result(session_id, metrics)
         log.info("Métricas calculadas e salvas com sucesso. session_id=%s", session_id)

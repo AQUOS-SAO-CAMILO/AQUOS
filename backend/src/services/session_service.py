@@ -31,6 +31,8 @@ def create_session_logic(athlete_id, modality, intensity, session_start, urine_c
         if profile:
             athlete_profile_id = profile[0]
             log.info("Perfil encontrado para atleta %s", athlete_id)
+            session_id = create_training_session(athlete_profile_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes)
+            log.info("Sessão criada para atleta %s. session_id=%s", athlete_id, session_id)
         else:
             profile_exists = get_athlete_profile_by_id(athlete_id)
 
@@ -45,7 +47,7 @@ def create_session_logic(athlete_id, modality, intensity, session_start, urine_c
 
         return {
             "message": "Sessão criada com sucesso!",
-            "athlete_id": session_id,
+            "session_id": session_id,
             "hydration_alert": message
         }
 
