@@ -35,7 +35,7 @@ export default function ResultadoSessao() {
           balancoHidrico: data.fluid_balance_ml > 0 ? `+ ${data.fluid_balance_ml}` : data.fluid_balance_ml?.toString() || "0",
           faixaAlvoMin: Math.round(data.target_intake_min_mlh)?.toString() || "0",
           faixaAlvoMax: Math.round(data.target_intake_max_mlh)?.toString() || "0",
-          intervaloMinutos: data.intervaloMinutos?.toString() || "15",
+          intervaloMinutos: data.interval_minutes?.toString() || "15",
           alertaMensagem: data.notes || "Hidratação adequada."
         });
       } catch (error) {

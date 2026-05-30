@@ -9,6 +9,8 @@ from flask_login import LoginManager
 from backend.src.config.config import Config
 from backend.src.controllers.user_controller import login
 from backend.src.controllers.session_controller import session
+from backend.src.controllers.report_controller import report
+from backend.src.controllers.athlete_controller import athlete
 from backend.src.config.connection import create_connection
 
 logger.setup()
@@ -31,6 +33,8 @@ connection = create_connection()
 # Login 
 app.register_blueprint(login)
 app.register_blueprint(session)
+app.register_blueprint(report)
+app.register_blueprint(athlete)
 
 # alterar isso dps, coloquei só pra testar se tava tudo ok
 @app.route("/")
