@@ -28,9 +28,11 @@ def authenticate_user():
         token = authenticate_user_logic(email, password)
         log.info("Autenticação realizada com sucesso. email=%s", email)
        
-        return jsonify({
-            "message": "Autenticação bem-sucedida",
-            "token": token,}), 200
+        if "error" in token:
+            log.warning("Falha na autenticação. email=%s | Erro: %s", email, token["error"])
+            return jsonify({"error": token["error"]}), 401
+
+        return jsonify(token), 200
     
     except Exception as e:
         log.error("Erro ao autenticar usuário. email=%s | Erro: %s", email, e)
@@ -121,4 +123,4 @@ def delete_user():
         return jsonify(result), 200
     except Exception as e:
         log.error("Erro ao desativar usuário. user_id=%s | Erro: %s", user_id, e)
-        return jsonify({"error": f"Erro ao tentar deletar usuário do sistema, {e}"})
+        return jsonify({"error": f"Erro ao tentar deletar usuário do sistema, {e}"}), 400    

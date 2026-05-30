@@ -18,6 +18,9 @@ export default function Cadastro() {
   const [erroPassword, setErroPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"error" | "success">("error");
+  
+  // Estado para bloquear o botão enquanto o backend processa
+  const [isLoading, setIsLoading] = useState(false);
 
   async function validateEmail(valor: string) {
     try {
@@ -29,7 +32,7 @@ export default function Cadastro() {
   }
 
   async function validatePassword(valor: string) {
-    if (valor !== password) { // Boa prática do TypeScript/JS: usar !== em vez de !=
+    if (valor !== password) { 
       setErroPassword("As senhas são diferentes");
     } else {
       setErroPassword("");
@@ -38,27 +41,58 @@ export default function Cadastro() {
 
   async function validateCadastro() {
     try {
+      // 1. Validação local
       await cadastroSchema.validate({
         name,
         email,
         password,
         passwordConfirm,
       });
+
+      setIsLoading(true);
+
+      // 2. Conexão com o Backend
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      
+      const res = await fetch(`${apiUrl}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role: "athlete"
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+      
+        throw new Error(data.error || "Erro ao realizar cadastro.");
+      }
+
+      // 3. Sucesso e redirecionamento
       setAlertType("success");
-      setAlertMessage("Cadastro realizado com sucesso!");
+      setAlertMessage("Cadastro realizado com sucesso! Redirecionando para o login...");
+      
+      // Envia para o login após 2 segundos
       setTimeout(() => {
-        navigate("/menu-atleta");
-      }, 1500);
+        navigate("/");
+      }, 2000);
+
     } catch (erro: any) {
       setAlertType("error");
-      setAlertMessage(erro.message);
+      setAlertMessage(erro.message || "Erro de conexão com o servidor");
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    // 2. Trocando as classes para o padrão CSS Modules
     <div className={styles.container}>
-      {/* Removida a classe 'register-card' pois não existia regra CSS atrelada a ela */}
       <div className={styles.card}>
         <Logo />
         <h1 className={styles.title}>AQUOS</h1>
@@ -69,6 +103,7 @@ export default function Cadastro() {
           placeholder="Nome"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          disabled={isLoading}
         />
 
         <input
@@ -80,8 +115,8 @@ export default function Cadastro() {
             setEmail(e.target.value);
             validateEmail(e.target.value);
           }}
+          disabled={isLoading}
         />
-        {/* Usando a classe styles.errorText */}
         {erroEmail && <div className={styles.errorText}>{erroEmail}</div>}
 
         <input
@@ -90,6 +125,7 @@ export default function Cadastro() {
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
         />
 
         <input
@@ -101,15 +137,16 @@ export default function Cadastro() {
             setPasswordConfirm(e.target.value);
             validatePassword(e.target.value);
           }}
+          disabled={isLoading}
         />
-        {/* Usando a classe styles.errorText */}
         {erroPassword && <div className={styles.errorText}>{erroPassword}</div>}
 
         <button 
           className={`${styles.btn} ${styles.btnPrimary}`} 
           onClick={validateCadastro}
+          disabled={isLoading}
         >
-          Registrar
+          {isLoading ? "Registrando..." : "Registrar"}
         </button>
 
         {alertMessage && (
@@ -123,6 +160,7 @@ export default function Cadastro() {
         <button 
           className={`${styles.btn} ${styles.btnBack}`} 
           onClick={() => navigate("/")}
+          disabled={isLoading}
         >
           Voltar
         </button>

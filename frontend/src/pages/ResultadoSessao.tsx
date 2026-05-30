@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/ResultadoSessao.module.css";
 
-// Interface para garantir que o TypeScript entenda o formato dos dados
 interface DadosResultado {
+  sessionId: number;
   taxaSudorese: string;
   variacaoMassa: string;
   balancoHidrico: string;
@@ -16,54 +16,60 @@ interface DadosResultado {
 export default function ResultadoSessao() {
   const navigate = useNavigate();
 
-  // 1. Estados para armazenar o resultado e o status de carregamento
   const [resultado, setResultado] = useState<DadosResultado | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 2. Busca os dados no backend assim que a tela é montada
   useEffect(() => {
-    async function fetchResultado() {
-      try {
-        // Substitua pela URL da sua API que retorna os cálculos da sessão finalizada
-        const response = await fetch("https://seu-backend.com/api/sessoes/resultado-atual");
-        const data = await response.json();
+    // Busca os dados diretamente da memória do navegador
+    const storedMetrics = localStorage.getItem("session_metrics");
 
-        // Atualiza o estado com os dados vindos do BD
+    if (storedMetrics) {
+      try {
+        const data = JSON.parse(storedMetrics);
+        
+        // Mapeando as chaves exatas que a função calculate_session_metrics  devolve
         setResultado({
-          taxaSudorese: data.taxaSudorese || "0.00",
-          variacaoMassa: data.variacaoMassa || "0",
-          balancoHidrico: data.balancoHidrico || "- 000",
-          faixaAlvoMin: data.faixaAlvoMin || "000",
-          faixaAlvoMax: data.faixaAlvoMax || "000",
-          intervaloMinutos: data.intervaloMinutos || "00",
-          alertaMensagem: data.alertaMensagem || "RISCO DE PERDA EXCESSIVA"
+          sessionId: data.session_id,
+          taxaSudorese: data.sweat_rate_lph?.toString() || "0.00",
+          variacaoMassa: data.weight_loss_pct?.toString() || "0",
+          balancoHidrico: data.fluid_balance_ml > 0 ? `+ ${data.fluid_balance_ml}` : data.fluid_balance_ml?.toString() || "0",
+          faixaAlvoMin: Math.round(data.target_intake_min_mlh)?.toString() || "0",
+          faixaAlvoMax: Math.round(data.target_intake_max_mlh)?.toString() || "0",
+          intervaloMinutos: data.intervaloMinutos?.toString() || "15",
+          alertaMensagem: data.notes || "Hidratação adequada."
         });
       } catch (error) {
-        console.error("Erro ao buscar os resultados da sessão:", error);
-        // Em caso de erro, definimos valores de fallback (padrão)
-        setResultado({
-          taxaSudorese: "0.00",
-          variacaoMassa: "0",
-          balancoHidrico: "000",
-          faixaAlvoMin: "000",
-          faixaAlvoMax: "000",
-          intervaloMinutos: "00",
-          alertaMensagem: "ERRO AO CARREGAR DADOS"
-        });
-      } finally {
-        // Ao final (dando certo ou erro), tiramos a tela de loading
-        setLoading(false);
+        console.error("Erro ao processar os dados da sessão:", error);
       }
     }
-
-    fetchResultado();
+    
+    setLoading(false);
   }, []);
 
-  // 3. Renderização de estado de "Carregando"
-  if (loading || !resultado) {
+  // Função para chamar o endpoint que gera o PDF (rota /session/report/<session_id>)
+  const handleExportarPDF = () => {
+    if (!resultado?.sessionId) return;
+    
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+    
+    window.open(`${apiUrl}/session/report/${resultado.sessionId}`, '_blank');
+  };
+
+  if (loading) {
     return (
       <div className={styles.container} style={{ justifyContent: "center" }}>
         <h2 className={styles.sectionTitle}>Calculando resultados...</h2>
+      </div>
+    );
+  }
+
+  if (!resultado) {
+    return (
+      <div className={styles.container} style={{ justifyContent: "center", textAlign: "center" }}>
+        <h2 className={styles.sectionTitle}>Nenhum dado encontrado.</h2>
+        <button className={styles.actionBtn} onClick={() => navigate("/menu-atleta")}>
+          Voltar ao Menu
+        </button>
       </div>
     );
   }
@@ -108,24 +114,23 @@ export default function ResultadoSessao() {
         </div>
         
         <span className={styles.cardValue}>
-          {resultado.faixaAlvoMin} - {resultado.faixaAlvoMax} ml/h
+          {resultado.faixaAlvoMin} - {resultado.faixaAlvoMax} ml
         </span>
         
         <span className={styles.italicText}>
-          Ingerir {resultado.faixaAlvoMin} - {resultado.faixaAlvoMax} ml a cada {resultado.intervaloMinutos}min
+          Ingerir {resultado.faixaAlvoMin} a {resultado.faixaAlvoMax} ml a cada {resultado.intervaloMinutos} min
         </span>
       </div>
 
       {/* Seção Alertas */}
       <h2 className={styles.sectionTitle}>ALERTAS</h2>
-      <div className={`${styles.resultCard} ${styles.yellowCard}`}>
-        {/* Ícone de Alerta */}
+      {/* Condicional para mudar a cor do alerta se for grave ou não */}
+      <div className={`${styles.resultCard} ${resultado.alertaMensagem.includes("adequada") ? styles.greenCard : styles.yellowCard}`}>
         <svg className={styles.alertIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
           <line x1="12" y1="9" x2="12" y2="13" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
-        {/* Texto do alerta vindo do backend */}
         <span className={styles.cardLabel}>{resultado.alertaMensagem}</span>
       </div>
 
@@ -137,7 +142,7 @@ export default function ResultadoSessao() {
         <button className={styles.actionBtn} onClick={() => navigate("/relatorio-atleta")}>
           Painel Analítico
         </button>
-        <button className={styles.actionBtn} onClick={() => console.log("Exportar...")}>
+        <button className={styles.actionBtn} onClick={handleExportarPDF}>
           Exportar Resultado
         </button>
       </div>

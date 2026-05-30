@@ -102,6 +102,7 @@
 }
 
 .italicText {
+  color: #000;
   font-size: 0.8rem;
   font-style: italic;
   margin-top: 12px;
