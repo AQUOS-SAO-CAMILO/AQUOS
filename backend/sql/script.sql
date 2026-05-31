@@ -93,6 +93,23 @@ CREATE TABLE session_results (
     calculated_at           TIMESTAMPTZ   NOT NULL DEFAULT now()
 );
 
+-- teams 
+CREATE TABLE teams(
+    id       UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_id UUID         REFERENCES users(id) ON DELETE SET NULL,
+    name     VARCHAR(100) NOT NULL
+);
+
+-- relation N:N between users and teams
+CREATE TABLE teams_users(
+    team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (team_id, user_id)
+);
+
+CREATE INDEX idx_teams_users_user ON teams_users(user_id);
+
+
 -- Índices essenciais
 CREATE INDEX idx_sessions_athlete  ON training_sessions(athlete_id, session_start DESC);
 CREATE INDEX idx_intake_session    ON fluid_intake_logs(session_id);
