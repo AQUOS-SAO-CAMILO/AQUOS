@@ -142,9 +142,9 @@ export default function ResultadoSessao() {
         <button className={styles.actionBtn} onClick={() => navigate("/relatorio-atleta")}>
           Painel Analítico
         </button>
-        <button className={styles.actionBtn} onClick={handleExportarPDF}>
+        {/* <button className={styles.actionBtn} onClick={handleExportarPDF}>
           Exportar Resultado
-        </button>
+        </button> */}
       </div>
     </div>
   );
