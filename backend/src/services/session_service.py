@@ -289,3 +289,23 @@ def session_filter_logic(modality=None, intensity=None, athlete_id=None):
     except Exception as e:
         log.error("Erro ao filtrar sessões. modality=%s | intensity=%s | athlete_id=%s | Erro: %s", modality, intensity, athlete_id, e)
         return {"error": f"Erro ao tentar filtrar sessão. {e}"}
+    
+def get_teams():
+
+    try:
+    
+        teams = select_all_teams()
+
+        teams_data = [
+            {
+            "id": team["id"],
+            "name": team["name"]
+            }
+            for team in teams
+        ]
+
+        return teams_data
+    
+    except Exception as e:
+        log.exception("Erro ao selecionar equipes")
+        return {"eror:" f"Erro ao selecionar equipes"}

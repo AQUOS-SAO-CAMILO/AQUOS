@@ -234,11 +234,11 @@ def get_session_by_filters(modality=None, intensity=None, athlete_id=None):
     finally:
         connection.close()
 
-def get_teams():
+def select_all_teams():
 
     connection = None
     cursor = None
-    
+
     try:
         connection = create_connection()
         cursor = connection.cursor()
