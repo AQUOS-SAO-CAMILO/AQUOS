@@ -56,7 +56,7 @@ def create_session_logic(athlete_id, modality, intensity, session_start, urine_c
         return {"error": f"Erro ao tentar criar sessão. {e}"}
 
 
-def session_mass_logic(pre_weight_kg, post_weight_kg, session_id, urine_volume_ml=None):
+def session_mass_logic(pre_weight_kg, post_weight_kg, session_id):
     try:
         session = select_all_data(session_id)
 
@@ -69,7 +69,7 @@ def session_mass_logic(pre_weight_kg, post_weight_kg, session_id, urine_volume_m
         weight_loss_pct = ((post_weight_kg - pre_weight_kg) / pre_weight_kg) * 100
         log.debug("Variação de massa calculada. session_id=%s | perda=%.2f%%", session_id, weight_loss_pct)
 
-        update_mass_value(pre_weight_kg, post_weight_kg, session_id, urine_volume_ml)
+        update_mass_value(pre_weight_kg, post_weight_kg, session_id)
         log.info("Massa atualizada com sucesso. session_id=%s", session_id)
 
         return {
@@ -92,8 +92,7 @@ def calculate_session_metrics(session_data):
     mass_loss_kg = pre_weight - pos_weight
     adjusted_weight_loss_kg = mass_loss_kg + (total_intake_ml / 1000) - (urine_volume_ml / 1000)
     weight_loss_pct = (mass_loss_kg / pre_weight) * 100 if pre_weight > 0 else 0
-    raw_sweat_rate = adjusted_weight_loss_kg / duration_hours if duration_hours > 0 else 0
-    sweat_rate_lph = min(99.999, max(0.0, raw_sweat_rate))
+    sweat_rate_lph = adjusted_weight_loss_kg / duration_hours if duration_hours > 0 else 0
     fluid_balance_ml = total_intake_ml - (adjusted_weight_loss_kg * 1000)
 
     log.debug("Métricas calculadas. session_id=%s | perda=%.2f%% | sudorese=%.2fL/h | balanço=%.2fml",
@@ -155,11 +154,9 @@ def save_session_result(session_id, metrics):
             insert_session_result(metrics, session_id)
             log.info("Resultado de sessão inserido. session_id=%s", session_id)
 
-        return None
-
     except Exception as e:
         log.error("Erro ao salvar resultado. session_id=%s | Erro: %s", session_id, e)
-        return {"error": f"Erro ao salvar resultado da sessão. {e}"}
+        return {"error": f"Erro ao tentar criar sessão. {e}"}
 
 
 def get_session_data(session_id):
@@ -177,14 +174,12 @@ def get_session_data(session_id):
             "session_end": session[4],
             "temperature_c": session[5],
             "humidity_pct": session[6],
-            "urine_volume_ml": float(session[7]) if session[7] is not None else 0.0,
-            "total_intake_ml": float(session[8]) if session[8] is not None else 0.0,
         }
 
         if session[4] and session[3]:
             duration_session = (session[4] - session[3]).total_seconds() / 3600
-            session_data["duration_hours"] = round(duration_session, 4)
-            log.debug("Duração calculada. session_id=%s | duração=%.4fh", session_id, duration_session)
+            session_data["duration_hours"] = round(duration_session, 2)
+            log.debug("Duração calculada. session_id=%s | duração=%.2fh", session_id, duration_session)
 
         log.info("Dados da sessão recuperados. session_id=%s", session_id)
         return session_data

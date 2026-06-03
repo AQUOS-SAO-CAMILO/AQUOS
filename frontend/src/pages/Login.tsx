@@ -23,6 +23,7 @@ export default function Login() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<AlertType>("error");
 
+  // Função auxiliar para decodificar o token JWT e ler os dados de dentro dele
   const parseJwt = (token: string) => {
     try {
       const base64Url = token.split('.')[1];
@@ -39,6 +40,7 @@ export default function Login() {
 
   const handleLogin = async () => {
   try {
+    // Puxa a URL base do arquivo .env. Se não existir, usa o localhost como padrão.
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
     const res = await fetch(`${apiUrl}/login`, {
@@ -62,16 +64,19 @@ export default function Login() {
       }
 
       if (res.ok) {
+        // 1. Salva o token no navegador (corrigido para data.token)
         const tokenString = data.token;
         localStorage.setItem("token", tokenString);
 
+        // 2. Decodifica o token para saber quem acabou de logar
         const decodedToken = parseJwt(tokenString);
 
         setAlertMessage("Login realizado!");
         setAlertType("success");
 
+        // 3. Redirecionamento baseado na "role" do usuário (aguarda 1 segundo para mostrar a mensagem de sucesso)
         setTimeout(() => {
-          if (data.user?.is_admin === 1) {
+          if (decodedToken && (decodedToken.role === "admin" || decodedToken.role === "adm")) {
             navigate("/menu-adm");
           } else {
             navigate("/menu-atleta"); 

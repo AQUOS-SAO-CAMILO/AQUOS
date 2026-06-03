@@ -90,37 +90,7 @@ const DadosAtleta = () => {
       <div className={authStyles.card}>
         <div className={formStyles.content}>
           <div className={formStyles.body}>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>NOME</label>
-              <input className={formStyles.input} type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Seu nome completo" />
-            </div>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>DATA DE NASCIMENTO</label>
-              <input className={formStyles.input} type="date" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} />
-            </div>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>GÊNERO</label>
-              <select className={formStyles.input} value={genero} onChange={(e) => setGenero(e.target.value)}>
-                <option value="" disabled>Selecione</option>
-                <option value="masculino">Masculino</option>
-                <option value="feminino">Feminino</option>
-                <option value="outro">Outro</option>
-              </select>
-            </div>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>PESO (kg)</label>
-              <input className={formStyles.input} type="number" step="0.1" min="0" value={peso} onChange={(e) => setPeso(e.target.value)} placeholder="Ex: 70.5" />
-            </div>
-
-            <div className={formStyles.fieldGroup}>
-              <label className={formStyles.label}>ALTURA (cm)</label>
-              <input className={formStyles.input} type="number" step="0.1" min="0" value={altura} onChange={(e) => setAltura(e.target.value)} placeholder="Ex: 175" />
-            </div>
-
+    
             <div className={formStyles.fieldGroup}>
               <label className={formStyles.label}>MODALIDADE</label>
               <select className={formStyles.input} value={modalidade} onChange={(e) => setModalidade(e.target.value)}>
@@ -128,7 +98,7 @@ const DadosAtleta = () => {
                 {listaModalidades.map(mod => <option key={mod.id} value={mod.id}>{mod.nome}</option>)}
               </select>
             </div>
-
+         
           </div>
           <div className={formStyles.buttonContainer}>
             <button className={authStyles.btn} onClick={() => navigate("/menu-atleta")}>Cancelar</button>

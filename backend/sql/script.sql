@@ -20,10 +20,7 @@ CREATE TABLE athlete_profiles (
     athlete_code    VARCHAR(64)   NOT NULL UNIQUE,
     sport_modality  VARCHAR(128),
     body_weight_kg  NUMERIC(5,2)  CHECK (body_weight_kg > 0),
-    created_at      TIMESTAMPTZ   NOT NULL DEFAULT now(),
-    birth_date   DATE,
-    gender       VARCHAR(16),
-    height_cm    NUMERIC(5,1) CHECK (height_cm > 0),
+    created_at      TIMESTAMPTZ   NOT NULL DEFAULT now()
 );
 
 

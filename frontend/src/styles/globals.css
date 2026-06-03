@@ -10,6 +10,9 @@ body {
     box-sizing: border-box;
 }
 
+/* src/styles/globals.css */
+@import './variables.css';
+
 body {
     margin: 0;
     font: 18px/145% var(--sans);

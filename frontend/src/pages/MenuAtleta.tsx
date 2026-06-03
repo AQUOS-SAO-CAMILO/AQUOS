@@ -9,6 +9,7 @@ export default function MenuAtleta() {
   const [clima, setClima] = useState<{ temp: string; desc: string } | null>(null);
   const [ultimaSessao, setUltimaSessao] = useState<{ data: string; resultado: string } | null>(null);
 
+  // Função auxiliar para pegar o ID do atleta do token JWT
   const getAtletaIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -25,6 +26,7 @@ export default function MenuAtleta() {
   };
 
   useEffect(() => {
+    // 1. Verificação de segurança principal
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
@@ -38,19 +40,21 @@ export default function MenuAtleta() {
     const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
     const headers = { "Authorization": `Bearer ${token}` };
 
+    // --- BUSCA O CLIMA (GET) ---
     async function fetchClima() {
       try {
-        const response = await fetch(`${apiUrl}/clima`, { headers }); 
+        const response = await fetch(`${apiUrl}/api/clima?cidade=Sao+Bernardo+do+Campo`, { headers }); 
         if (!response.ok) throw new Error("Erro na resposta do clima");
         
         const data = await response.json();
-        setClima({ temp: `${data.weather.temperature}°C`, desc: data.weather.description});
+        setClima({ temp: `${data.temperatura}°C`, desc: data.condicao });
       } catch (error) {
         console.error("Erro ao buscar clima:", error);
         setClima({ temp: "--", desc: "Clima offline" });
       }
     }
 
+    // --- BUSCA A ÚLTIMA SESSÃO (GET) ---
     async function fetchUltimaSessao() {
       if (!atletaId) return;
       
