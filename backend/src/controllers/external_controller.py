@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify
 clima = Blueprint('clima', __name__)
 
 @clima.route('/clima', methods=['GET'])
-def get_clima():
+def get_clima_data():
     try:
         return jsonify(get_clima())
     except Exception as e:

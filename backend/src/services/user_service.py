@@ -68,8 +68,8 @@ def register_user_logic(email, password, name, role='athlete'):
             role = "nutritionist"
         elif "@treinador" in email_lower:
             role = "trainer"
-        elif "@medico" in email_lower:
-            role = "physician"
+        elif "@admin" in email_lower or "@adm" in email_lower:
+            role = "trainer"
         else:
             role = "athlete"
 
