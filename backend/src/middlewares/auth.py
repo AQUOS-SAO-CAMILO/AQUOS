@@ -10,7 +10,7 @@ def init_middlewares(app):
     def check_authentication():
         
         if request.method == "OPTIONS":
-        return None
+            return None
 
         public_endpoints = ['login.authenticate_user', 'login.register_user', 
             'hello_world', 'clima.get_clima']

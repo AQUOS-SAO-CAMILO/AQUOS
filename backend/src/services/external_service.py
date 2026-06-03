@@ -26,7 +26,7 @@ climate_translation = {
 def get_clima():
     api_key = os.getenv('API_KEY')  
     if not api_key:
-        return jsonify({"error": "chave de api não encontrada."}), 500
+        return {"error": "chave de api não encontrada."}, 500
 
     location = geocoder.ip('me')
     city_name = location.city
@@ -42,11 +42,11 @@ def get_clima():
     temperature = round(data['main']['temp'] - 273.15, 1)
     humidity = round(data['main']['humidity'], 1)
 
-    return jsonify({
+    return {
         "weather": {
             "description": description_pt,
             "temperature": temperature,
             "humidity": humidity,
             "city": city_name
         }
-    })
+    }

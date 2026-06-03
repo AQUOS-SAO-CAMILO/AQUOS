@@ -1,6 +1,5 @@
 import logging, os
 from psycopg2 import connect
-from backend.middlewares.auth import init_middlewares
 import backend.src.logger as logger
 
 from flask import Flask, request, jsonify 

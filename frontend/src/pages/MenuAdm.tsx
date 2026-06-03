@@ -30,7 +30,7 @@ export default function MenuAdm() {
         if (!response.ok) throw new Error("Erro na resposta do clima");
         
         const data = await response.json();
-        setClima({ temp: `${data.weather.temperature}°C`, desc: data.weather.description });
+        setClima({ temp: `${data.weather.temperature}°C`, desc: `${data.weather.description}`});
       } catch (error) {
         console.error("Erro ao buscar clima:", error);
         setClima({ temp: "--", desc: "Clima offline" }); 
