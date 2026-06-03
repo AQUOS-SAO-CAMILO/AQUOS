@@ -214,7 +214,7 @@ const DadosAdm = () => {
               className={`${authStyles.btn}`} 
               type="button" 
               onClick={() => navigate("/menu-adm")}
-              style={{ marginTop: '24px' }}
+    
             >
               Cancelar
             </button>

@@ -80,7 +80,7 @@ export default function PreSessao() {
         athlete_id: athleteId,
         modality: modalidade,
         
-        // 👇 2. AQUI ESTÁ A CORREÇÃO PRINCIPAL:
+    
         // Envia o texto ('low', 'moderate'...) em vez do número do slider
         intensity: traduzirIntensidade(intensidade),
         
@@ -111,6 +111,7 @@ export default function PreSessao() {
       
       localStorage.setItem("current_session_id", sessionId);
       localStorage.setItem("pre_weight_kg", pesoNumerico.toString());
+      localStorage.setItem("planned_duration_min", duracaoPrevista);
 
       if (hidratacao && Number(hidratacao) > 0) {
         await fetch(`${apiUrl}/session/fluidIntake`, {

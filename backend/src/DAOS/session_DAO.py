@@ -67,17 +67,22 @@ def select_all_data(session_id):
     connection.close()
     return result
 
-def update_mass_value(pre_weight_kg, post_weight_kg, session_id):
+def update_mass_value(pre_weight_kg, post_weight_kg, session_id, urine_volume_ml=None):
     connection = create_connection()
     cursor = connection.cursor()
-    cursor.execute("""UPDATE training_sessions     
-                      SET pre_weight_kg = %s, post_weight_kg = %s 
-                      WHERE id = %s""", (pre_weight_kg, post_weight_kg, session_id))
+    if urine_volume_ml is not None:
+        cursor.execute("""UPDATE training_sessions
+                          SET pre_weight_kg = %s, post_weight_kg = %s, urine_volume_ml = %s
+                          WHERE id = %s""", (pre_weight_kg, post_weight_kg, urine_volume_ml, session_id))
+    else:
+        cursor.execute("""UPDATE training_sessions
+                          SET pre_weight_kg = %s, post_weight_kg = %s
+                          WHERE id = %s""", (pre_weight_kg, post_weight_kg, session_id))
     connection.commit()
     connection.close()
     return {
             "Update": True,
-            "session_id": session_id    
+            "session_id": session_id
                 }
 
 def get_id_by_session_id(session_id): 
@@ -134,10 +139,16 @@ def insert_session_result(metrics, session_id, ):
 def select_session_data(session_id):
     connection = create_connection()
     cursor = connection.cursor()
-    cursor.execute("""SELECT id, pre_weight_kg, post_weight_kg, session_start, session_end, 
-                       temperature_c, humidity_pct
-                       FROM training_sessions
-                       WHERE id = %s""", (session_id,))
+    cursor.execute("""
+        SELECT ts.id, ts.pre_weight_kg, ts.post_weight_kg, ts.session_start, ts.session_end,
+               ts.temperature_c, ts.humidity_pct, ts.urine_volume_ml,
+               COALESCE(SUM(fi.volume_ml), 0) AS total_intake_ml
+        FROM training_sessions ts
+        LEFT JOIN fluid_intake_logs fi ON fi.session_id = ts.id
+        WHERE ts.id = %s
+        GROUP BY ts.id, ts.pre_weight_kg, ts.post_weight_kg, ts.session_start, ts.session_end,
+                 ts.temperature_c, ts.humidity_pct, ts.urine_volume_ml
+    """, (session_id,))
     result = cursor.fetchone()
     connection.close()
     return result
