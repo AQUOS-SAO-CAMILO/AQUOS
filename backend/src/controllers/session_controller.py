@@ -69,19 +69,20 @@ def session_mass():
     pre_weight_kg = data.get("pre_weight_kg")
     post_weight_kg = data.get("post_weight_kg")
     session_id = data.get('session_id')
+    urine_volume_ml = data.get('urine_volume_ml')
 
     log.debug("Requisição de registro de massa recebida. session_id=%s | pre_weight_kg=%s | post_weight_kg=%s", session_id, pre_weight_kg, post_weight_kg)
 
     if pre_weight_kg is None or post_weight_kg is None:
         log.warning("Valores de massa ausentes na requisição. session_id=%s", session_id)
         return jsonify({"error": "Os valores de massa devem ser fornecidos para realização do cálculo."}), 400
-    
+
     if not session_id:
         log.warning("Id da sessão não informado na requisição de massa.")
         return jsonify({"error": "O usuário precisa ser identificado para realizazção do cálculo"}), 400
-    
+
     try:
-        result = session_mass_logic(pre_weight_kg, post_weight_kg, session_id)
+        result = session_mass_logic(pre_weight_kg, post_weight_kg, session_id, urine_volume_ml)
         log.info("Massa registrada com sucesso. session_id=%s", session_id)
         return jsonify(result), 201
     
@@ -94,19 +95,28 @@ def calculate_metrics():
     data = request.get_json()
 
     session_id = data.get('session_id')
+    planned_duration_min = data.get('planned_duration_min')
 
-    log.debug("Requisição de cálculo de métricas recebida. session_id=%s", session_id)
-    
+    log.debug("Requisição de cálculo de métricas recebida. session_id=%s | duração_prevista=%s min", session_id, planned_duration_min)
+
     if not session_id:
         log.warning("Id da sessão não informado na requisição de métricas.")
         return jsonify({"error": "Id da sessão é obrigatório."}), 400
-    
+
     try:
         session_data = get_session_data(session_id)
         if "error" in session_data:
             return jsonify(session_data), 404
+
+        if planned_duration_min and float(planned_duration_min) > 0:
+            session_data['duration_hours'] = float(planned_duration_min) / 60
+            log.debug("Duração sobrescrita pela duração prevista. session_id=%s | %.2fh", session_id, session_data['duration_hours'])
+
         metrics = calculate_session_metrics(session_data)
-        save_session_result(session_id, metrics)
+        save_result = save_session_result(session_id, metrics)
+        if save_result and "error" in save_result:
+            log.error("Falha ao salvar resultado da sessão. session_id=%s | Erro: %s", session_id, save_result["error"])
+            return jsonify({"error": save_result["error"]}), 500
         log.info("Métricas calculadas e salvas com sucesso. session_id=%s", session_id)
 
         return jsonify(metrics), 200
