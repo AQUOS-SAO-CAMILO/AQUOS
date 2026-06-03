@@ -73,13 +73,16 @@ export default function PosSessao() {
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
+      const urineVolume = Number(localStorage.getItem("urine_volume_ml") || "0");
+
       const massRes = await fetch(`${apiUrl}/session/mass`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           session_id: sessionId,
           pre_weight_kg: Number(preWeight),
-          post_weight_kg: Number(massaCorporal)
+          post_weight_kg: Number(massaCorporal),
+          urine_volume_ml: urineVolume
         })
       });
       const massData = await massRes.json();
@@ -96,10 +99,12 @@ export default function PosSessao() {
       const endData = await endRes.json();
       if (!endRes.ok) throw new Error(endData.error || "Erro ao finalizar treino.");
 
+      const plannedDurationMin = Number(localStorage.getItem("planned_duration_min") || "0");
+
       const metricsRes = await fetch(`${apiUrl}/session/metrics`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: sessionId })
+        body: JSON.stringify({ session_id: sessionId, planned_duration_min: plannedDurationMin || null })
       });
       const metricsData = await metricsRes.json();
       if (!metricsRes.ok) throw new Error(metricsData.error || "Erro ao calcular resultados.");
@@ -110,6 +115,7 @@ export default function PosSessao() {
       localStorage.removeItem("current_session_id");
       localStorage.removeItem("pre_weight_kg");
       localStorage.removeItem("urine_volume_ml");
+      localStorage.removeItem("planned_duration_min");
       localStorage.removeItem("temp_pos_massa");
       localStorage.removeItem("temp_pos_suor");
       localStorage.removeItem("temp_pos_sintomas");

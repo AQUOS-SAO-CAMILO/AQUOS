@@ -19,7 +19,6 @@ export default function Cadastro() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"error" | "success">("error");
   
-  // Estado para bloquear o botão enquanto o backend processa
   const [isLoading, setIsLoading] = useState(false);
 
   async function validateEmail(valor: string) {
@@ -41,7 +40,6 @@ export default function Cadastro() {
 
   async function validateCadastro() {
     try {
-      // 1. Validação local
       await cadastroSchema.validate({
         name,
         email,
@@ -51,7 +49,6 @@ export default function Cadastro() {
 
       setIsLoading(true);
 
-      // 2. Conexão com o Backend
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       
       const res = await fetch(`${apiUrl}/register`, {
@@ -63,7 +60,6 @@ export default function Cadastro() {
           name,
           email,
           password,
-          role: "athlete"
         })
       });
 
@@ -74,11 +70,9 @@ export default function Cadastro() {
         throw new Error(data.error || "Erro ao realizar cadastro.");
       }
 
-      // 3. Sucesso e redirecionamento
       setAlertType("success");
       setAlertMessage("Cadastro realizado com sucesso! Redirecionando para o login...");
       
-      // Envia para o login após 2 segundos
       setTimeout(() => {
         navigate("/");
       }, 2000);
