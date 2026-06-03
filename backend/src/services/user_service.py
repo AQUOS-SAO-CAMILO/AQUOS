@@ -26,11 +26,14 @@ def authenticate_user_logic(email, password):
             log.warning("Tentativa de autenticação com senha incorreta. user_id=%s", user_id)
             raise ValueError("Senha incorreta")
         
+        is_admin = 1 if user_role in ['nutritionist', 'trainer', 'physician', 'admin'] else 0
+        
         token = jwt.encode({
             "User_id": user_id,
             "email": user_email,
             "name": username,
             "role": user_role,
+            "is_admin": is_admin,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         }, current_app.config['SECRET_KEY'], algorithm='HS256')
 
@@ -38,7 +41,14 @@ def authenticate_user_logic(email, password):
 
         return {
             "message": "Token gerado com sucesso!",
-            "token": token
+            "token": token,
+            "user": {
+                "id": user_id,
+                "email": user_email,
+                "name": username,
+                "role": user_role,
+                "is_admin": is_admin
+            }
         } 
     
     except Exception as e:
@@ -53,6 +63,16 @@ def register_user_logic(email, password, name, role='athlete'):
             log.warning("Tentativa de cadastro com e-mail já existente. email=%s", email)
             raise Exception("Usuário já está cadastrado no sistema")
         
+        email_lower = email.lower()
+        if "@nutricionista" in email_lower:
+            role = "nutritionist"
+        elif "@treinador" in email_lower:
+            role = "trainer"
+        elif "@medico" in email_lower:
+            role = "physician"
+        else:
+            role = "athlete"
+
         hashed_password = generate_password_hash(password)
         password = hashed_password
 

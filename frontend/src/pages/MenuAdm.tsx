@@ -5,47 +5,41 @@ import styles from "../styles/Menu.module.css";
 export default function MenuAdm() {
   const navigate = useNavigate();
 
-  // Estados para armazenar os dados dinâmicos
   const [nomeUsuario, setNomeUsuario] = useState("Administrador");
   const [clima, setClima] = useState<{ temp: string; desc: string } | null>(null);
   const [atletasEmRisco, setAtletasEmRisco] = useState<number | null>(null);
 
   useEffect(() => {
-    // 1. Verificação de segurança principal
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
       return;
     }
 
-    // Busca o nome salvo no momento do Login
     const nomeSalvo = localStorage.getItem("nomeUsuario");
     if (nomeSalvo) setNomeUsuario(nomeSalvo);
 
-    // Padronização da URL e do Cabeçalho de Autenticação
     const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
     const headers = { "Authorization": `Bearer ${token}` };
 
-    // --- BUSCA O CLIMA (GET) ---
     async function fetchClima() {
       try {
         
-        const response = await fetch(`${apiUrl}/api/clima?cidade=Sao+Bernardo+do+Campo`, { headers });
+        const response = await fetch(`${apiUrl}/clima`, { headers });
         
         if (!response.ok) throw new Error("Erro na resposta do clima");
         
         const data = await response.json();
-        setClima({ temp: `${data.temperatura}°C`, desc: data.condicao });
+        setClima({ temp: `${data.weather.temperature}°C`, desc: data.weather.description });
       } catch (error) {
         console.error("Erro ao buscar clima:", error);
-        setClima({ temp: "--", desc: "Clima offline" }); // Fallback elegante
+        setClima({ temp: "--", desc: "Clima offline" }); 
       }
     }
 
-    // --- BUSCA ATLETAS EM RISCO (GET) ---
     async function fetchAtletasRisco() {
       try {
-        const response = await fetch(`${apiUrl}/api/alertas/atletas-risco`, { headers });
+        const response = await fetch(`${apiUrl}/alertas/atletas-risco`, { headers });
         
         if (!response.ok) throw new Error("Erro na resposta dos alertas");
         
@@ -80,7 +74,6 @@ export default function MenuAdm() {
 
         <div className={styles.grid}>
           
-          {/* Card API Clima */}
           <button className={styles.card} style={{ flexDirection: 'column', gap: '8px' }}>
             <span>API Clima</span>
             {clima ? (
@@ -92,7 +85,6 @@ export default function MenuAdm() {
             )}
           </button>
 
-          {/* Card Atletas em Risco */}
           <button 
             className={styles.card} 
             style={{ flexDirection: 'column', gap: '8px', cursor: "pointer" }}
