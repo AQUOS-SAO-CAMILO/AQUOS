@@ -244,3 +244,28 @@ def get_session_by_filters(modality=None, intensity=None, athlete_id=None):
     
     finally:
         connection.close()
+
+def select_all_teams():
+
+    connection = None
+    cursor = None
+
+    try:
+        connection = create_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM teams")
+
+        columns = [desc[0] for desc in cursor.description]
+        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        return results
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+
+    
