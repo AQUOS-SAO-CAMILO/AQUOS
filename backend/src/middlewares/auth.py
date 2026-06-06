@@ -13,7 +13,7 @@ def init_middlewares(app):
             return None
 
         public_endpoints = ['login.authenticate_user', 'login.register_user', 
-            'hello_world', 'clima.get_clima']
+                'clima.get_clima']
 
         if request.endpoint in public_endpoints:
                 return None
@@ -26,7 +26,7 @@ def init_middlewares(app):
 
         try:
             payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            request.user_id = payload.get("User_id")
+            request.user_id = payload.get("user_id")
             request.user_role = payload.get("role")
             log.info(f"Token validado. Usuário: {request.user_id} | role: {request.user_role}")
         except jwt.ExpiredSignatureError:
@@ -38,7 +38,7 @@ def init_middlewares(app):
         
     @app.after_request
     def log_response(response):
-        log.info(f"Outgoing response: {response.status_code}")
+        log.info(f"Outgoing response: {response.status_code} {response.get_data(as_text=True)}")
         return response
 
     @app.teardown_request

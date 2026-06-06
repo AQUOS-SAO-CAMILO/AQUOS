@@ -2,10 +2,8 @@ from dotenv import load_dotenv
 import requests, os
 from pathlib import Path
 import geocoder
-from flask import Blueprint, jsonify
 
-env_path = Path('/home/lua/Documents/AQUOS/.env')
-load_dotenv(dotenv_path=env_path)
+load_dotenv()
     
 climate_translation = {
     "clear sky": "céu limpo",
