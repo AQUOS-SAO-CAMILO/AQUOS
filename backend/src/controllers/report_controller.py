@@ -1,6 +1,11 @@
-from flask import Blueprint, jsonify
+import io
+
+from flask import Blueprint, jsonify, send_file
+from requests import request
 from backend.src.services.report_service import build_athlete_report, get_last_session_summary
 import logging
+
+from backend.src.utils.report_pdf import generate_hydration_pdf
 
 log = logging.getLogger("meuapp")
 
@@ -21,18 +26,20 @@ def last_session(atleta_id):
         return jsonify({"error": f"Erro ao buscar última sessão. {e}"}), 500
 
 
-@report.route("/report/atleta/<atleta_id>", methods=["GET"])
-def athlete_report(atleta_id):
-    log.debug("Requisição de relatório do atleta recebida. atleta_id=%s", atleta_id)
-
+@report.route("/report/export", methods=["GET"])
+def athlete_report():
+    atleta_id = request.args.get("atleta") 
+    
     if not atleta_id:
         return jsonify({"error": "Id do atleta é obrigatório."}), 400
 
     try:
-        data = build_athlete_report(atleta_id)
-        log.info("Relatório do atleta gerado com sucesso. atleta_id=%s", atleta_id)
-        return jsonify(data), 200
-
+        pdf_bytes = generate_hydration_pdf(atleta_id) 
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=f"relatorio_atleta_{atleta_id}.pdf"
+        )
     except Exception as e:
-        log.error("Erro ao gerar relatório do atleta. atleta_id=%s | Erro: %s", atleta_id, e)
         return jsonify({"error": f"Erro ao gerar relatório. {e}"}), 500
