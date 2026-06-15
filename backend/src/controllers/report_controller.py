@@ -1,16 +1,24 @@
-import io
-
-from flask import Blueprint, jsonify, send_file
-from requests import request
-from backend.src.services.report_service import build_athlete_report, get_last_session_summary
+import io, jwt
+from flask import Blueprint, jsonify, send_file, request, current_app
+from backend.src.services.report_service import build_athlete_report, get_last_session_summary, build_adm_report, get_atletas_em_risco
+from backend.src.utils.report_pdf import generate_hydration_pdf, generate_adm_report_pdf
 import logging
 
-from backend.src.utils.report_pdf import generate_hydration_pdf
 
 log = logging.getLogger("meuapp")
 
 report = Blueprint("report", __name__)
 
+def _get_user_id():
+    auth = request.headers.get("Authorization", "")
+    token = auth.replace("Bearer ", "").strip()
+    if not token:
+        return None
+    try:
+        payload = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+        return payload.get("User_id")
+    except Exception:
+        return None
 
 @report.route("/api/sessoes/ultima/<atleta_id>", methods=["GET"])
 def last_session(atleta_id):
@@ -28,18 +36,76 @@ def last_session(atleta_id):
 
 @report.route("/report/export", methods=["GET"])
 def athlete_report():
-    atleta_id = request.args.get("atleta") 
+    user_id = _get_user_id()
     
-    if not atleta_id:
+    if not user_id:
         return jsonify({"error": "Id do atleta é obrigatório."}), 400
 
+    modality      = request.args.get("modality")
+    team_id       = request.args.get("team_id")
+    athlete_id    = request.args.get("athlete_id")
+    session_start = request.args.get("session_start")
+    session_end   = request.args.get("session_end")
+
     try:
-        pdf_bytes = generate_hydration_pdf(atleta_id) 
+        data = build_adm_report(
+            modality=modality,
+            team_id=team_id,
+            athlete_id=athlete_id,
+            session_start=session_start,
+            session_end=session_end,
+        )
+
+        pdf_bytes = generate_adm_report_pdf(data) 
         return send_file(
             io.BytesIO(pdf_bytes),
             mimetype="application/pdf",
             as_attachment=True,
-            download_name=f"relatorio_atleta_{atleta_id}.pdf"
+            download_name="relatorio_atleta_.pdf"
         )
     except Exception as e:
         return jsonify({"error": f"Erro ao gerar relatório. {e}"}), 500
+    
+@report.route("/report", methods=["GET"])
+def adm_report():
+    user_id = _get_user_id()
+    if not user_id:
+        return jsonify({"error": "Não autorizado."}), 401
+
+    modality = request.args.get("modality")
+    team_id = request.args.get("team_id")
+    athlete_id = request.args.get("athlete_id")
+    session_start = request.args.get("session_start")
+    session_end = request.args.get("session_end")
+
+    log.debug(
+        "Requisição de relatório adm. modality=%s | team_id=%s | athlete_id=%s",
+        modality, team_id, athlete_id
+    )
+
+    try:
+        data = build_adm_report(
+            modality=modality,
+            team_id=team_id,
+            athlete_id=athlete_id,
+            session_start=session_start,
+            session_end=session_end,
+        )
+        return jsonify(data), 200
+    except Exception as e:
+        log.error("Erro ao gerar relatório adm. Erro: %s", e)
+        return jsonify({"error": f"Erro ao gerar relatório. {e}"}), 500
+    
+@report.route("/alertas/atletas-risco", methods=["GET"])
+def atletas_em_risco():
+    user_id = _get_user_id()
+    if not user_id:
+        return jsonify({"error": "Não autorizado."}), 401
+ 
+    try:
+        from backend.src.services.report_service import get_atletas_em_risco
+        quantidade = get_atletas_em_risco()
+        return jsonify({"quantidade": quantidade}), 200
+    except Exception as e:
+        log.error("Erro ao buscar atletas em risco. Erro: %s", e)
+        return jsonify({"error": f"Erro ao buscar atletas em risco. {e}"}), 500

@@ -1,7 +1,7 @@
 import logging, os
 import backend.src.logger as logger
 
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from config import Config
 from dotenv import load_dotenv
@@ -11,6 +11,8 @@ from backend.src.controllers.session_controller import session
 from backend.src.config.connection import create_connection
 from backend.src.DAOS.user_DAO import *
 from backend.src.controllers.external_controller import clima
+from backend.src.controllers.report_controller import report
+from backend.src.controllers.athlete_controller import athlete
 from backend.src.middlewares.auth import init_middlewares
     
 load_dotenv()
@@ -35,6 +37,8 @@ init_middlewares(app)
 app.register_blueprint(login)
 app.register_blueprint(session)
 app.register_blueprint(clima)
+app.register_blueprint(report)
+app.register_blueprint(athlete)
 
 @app.route("/")
 def hello_world():

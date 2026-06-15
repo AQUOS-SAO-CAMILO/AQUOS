@@ -33,7 +33,6 @@ export default function RelatorioAdm() {
     quantidadeSessoes: 0,
   });
 
-  // Tipagem atualizada para separar o limite em Min e Max
   const [chartData, setChartData] = useState<{
     sessao: string;
     media: number;
@@ -48,27 +47,30 @@ export default function RelatorioAdm() {
   const [climasCards, setClimasCards] = useState<CardData[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
 
-  // Função para exportar o relatório com base nos filtros da URL
+  const getAuthHeaders = (): HeadersInit => {
+    const token = localStorage.getItem("token");
+    return { "Authorization": `Bearer ${token}` };
+  };
+
   const handleExport = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
       
-  
-      const exportUrl = `${apiUrl}/report/export?${searchParams.toString()}`;
+      const params = buildBackendParams();
+      const exportUrl = `${apiUrl}/report/export?${params.toString()}`;
 
-      const response = await fetch(exportUrl);
+      const response = await fetch(exportUrl, { headers: getAuthHeaders() });
 
-      if (!response.ok) {
-        throw new Error("Erro ao gerar relatório");
-      }
+      if (!response.ok) throw new Error("Erro ao gerar relatório");
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
 
       a.href = url;
-      a.download = `relatorio_analitico_filtrado.pdf`;
+      a.download = "relatorio_analitico_filtrado.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -78,25 +80,34 @@ export default function RelatorioAdm() {
     }
   };
 
+  const buildBackendParams = () => {
+    const params = new URLSearchParams();
+    const modality   = searchParams.get("modality");
+    const teamId     = searchParams.get("team_id");
+    const athleteId  = searchParams.get("athlete_id");
+    const start      = searchParams.get("session_start");
+    const end        = searchParams.get("session_end");
+
+    if (modality)  params.append("modality",      modality);
+    if (teamId)    params.append("team_id",        teamId);
+    if (athleteId) params.append("athlete_id",     athleteId);
+    if (start)     params.append("session_start",  start);
+    if (end)       params.append("session_end",    end);
+    return params;
+  };
+
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
 
     async function loadReport() {
       try {
-        const modalidadeIds = searchParams.get("modalidade");
-        const equipeIds = searchParams.get("equipe");
-        const atletaIds = searchParams.get("atleta");
-
-        const queryParams = new URLSearchParams();
-        if (modalidadeIds) queryParams.append("modalidade", modalidadeIds);
-        if (equipeIds) queryParams.append("equipe", equipeIds);
-        if (atletaIds) queryParams.append("atleta", atletaIds);
-
-        const fetchUrl = `${apiUrl}/report?${queryParams.toString()}`;
+        const params = buildBackendParams();
+        const fetchUrl = `${apiUrl}/report?${params.toString()}`;
         console.log("Buscando dados em:", fetchUrl);
 
-        const response = await fetch(fetchUrl);
+        const response = await fetch(fetchUrl, { headers: getAuthHeaders() });
         if (!response.ok) throw new Error("Erro na requisição");
+
         const dadosRelatorio = await response.json();
 
         setMetrics([
@@ -110,7 +121,6 @@ export default function RelatorioAdm() {
           quantidadeSessoes: dadosRelatorio.geral.totalSessoes,
         });
 
-        // Mapeamento corrigido: separando a array de limite em duas propriedades numéricas
         setChartData(
           dadosRelatorio.grafico.map((item: any) => ({
             sessao: item.sessao,
@@ -131,10 +141,7 @@ export default function RelatorioAdm() {
               { label: "Intensidade", value: item.intensidade },
               { label: "Balanço Hídrico", value: item.balancoHidrico },
               { label: "Taxa de Sudorese", value: item.taxaSudorese },
-              {
-                label: "Variação de Massa Corporal",
-                value: item.variacaoMassa,
-              },
+              { label: "Variação de Massa Corporal", value: item.variacaoMassa }
             ],
           }))
         );
@@ -147,10 +154,7 @@ export default function RelatorioAdm() {
             fields: [
               { label: "Balanço Hídrico", value: item.balancoHidrico },
               { label: "Taxa de Sudorese", value: item.taxaSudorese },
-              {
-                label: "Variação de Massa Corporal",
-                value: item.variacaoMassa,
-              },
+              { label: "Variação de Massa Corporal", value: item.variacaoMassa },
             ],
           }))
         );
@@ -165,10 +169,7 @@ export default function RelatorioAdm() {
               { label: "Equipe", value: item.equipe },
               { label: "Balanço Hídrico", value: item.balancoHidrico },
               { label: "Taxa de Sudorese", value: item.taxaSudorese },
-              {
-                label: "Variação de Massa Corporal",
-                value: item.variacaoMassa,
-              },
+              { label: "Variação de Massa Corporal", value: item.variacaoMassa }
             ],
           }))
         );
@@ -183,15 +184,13 @@ export default function RelatorioAdm() {
               { label: "Umidade", value: item.umidade },
               { label: "Balanço Hídrico", value: item.balancoHidrico },
               { label: "Taxa de Sudorese", value: item.taxaSudorese },
-              {
-                label: "Variação de Massa Corporal",
-                value: item.variacaoMassa,
-              },
+              { label: "Variação de Massa Corporal", value: item.variacaoMassa }
             ],
           }))
         );
       } catch (error) {
         console.error("Erro ao carregar:", error);
+        setErro("Não foi possível carregar o relatório. Tente novamente.");
       } finally {
         setLoading(false);
       }
@@ -239,11 +238,14 @@ export default function RelatorioAdm() {
   };
 
   if (loading)
-    return (
-      <div className={styles.container}>
-        <h3>Carregando Relatório...</h3>
-      </div>
-    );
+    return <div className={styles.container}><h3>Carregando Relatório...</h3></div>
+
+  if (erro) return (
+    <div className={styles.container} style={{ justifyContent: "center", alignItems: "center" }}>
+      <p style={{ color: "#b71c1c", marginBottom: 16 }}>{erro}</p>
+      <button className={styles.reportsBtn} onClick={() => navigate(-1)}>Voltar</button>
+    </div>
+  );
 
   return (
     <div className={styles.container}>

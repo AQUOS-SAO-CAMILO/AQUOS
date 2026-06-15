@@ -38,7 +38,13 @@ def init_middlewares(app):
         
     @app.after_request
     def log_response(response):
-        log.info(f"Outgoing response: {response.status_code} {response.get_data(as_text=True)}")
+        if response.direct_passthrough:
+            log.info(f"Outgoing response: {response.status_code}")
+        else:
+            try:
+                log.info(f"Outgoing response: {response.status_code} {response.get_data(as_text=True)}")
+            except:
+                log.info(f"Outgoing response: {response.status_code} [Não foi possível ler o corpo]")
         return response
 
     @app.teardown_request
