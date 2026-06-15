@@ -134,6 +134,9 @@ const DadosAtleta = () => {
             <button className={authStyles.btn} onClick={() => navigate("/menu-atleta")}>Cancelar</button>
             <button className={`${authStyles.btn} ${authStyles.btnPrimary}`} onClick={handleSalvar}>Salvar</button>
           </div>
+          <div className={formStyles.buttonContainer}>
+            <button className={authStyles.btn} onClick={() => navigate("/")}>Logout</button>
+          </div>
         </div>
       </div>
     </div>

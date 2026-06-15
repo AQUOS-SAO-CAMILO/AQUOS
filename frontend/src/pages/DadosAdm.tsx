@@ -216,7 +216,9 @@ const DadosAdm = () => {
               Salvar
             </button>
           </div>
-
+            <div className={formStyles.buttonContainer}>
+              <button className={authStyles.btn} onClick={() => navigate("/")}>Logout</button>
+            </div>
         </div>
       </div>
     </div>

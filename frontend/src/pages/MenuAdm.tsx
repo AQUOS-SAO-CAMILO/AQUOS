@@ -88,7 +88,7 @@ export default function MenuAdm() {
           <button 
             className={styles.card} 
             style={{ flexDirection: 'column', gap: '8px', cursor: "pointer" }}
-            onClick={() => navigate("/atletas-risco")} 
+            // onClick={() => navigate("/atletas-risco")} 
           >
             <span>Atletas em risco</span>
             {atletasEmRisco !== null ? (
