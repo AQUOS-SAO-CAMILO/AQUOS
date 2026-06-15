@@ -97,23 +97,3 @@ def get_sessions_by_filters_with_results(modality=None, team_id=None, athlete_id
         raise e
     finally:
         connection.close()
-
-
-def get_atletas_risco_count():
-    connection = create_connection()
-    try:
-        cursor = connection.cursor()
-        cursor.execute("""
-            SELECT COUNT(DISTINCT ap.user_id)
-            FROM session_results sr
-            INNER JOIN training_sessions ts ON ts.id = sr.session_id
-            INNER JOIN athlete_profiles ap  ON ap.id = ts.athlete_id
-            WHERE sr.dehydration_risk IN ('high', 'critical')
-              AND ts.session_start >= NOW() - INTERVAL '24 hours'
-        """)
-        result = cursor.fetchone()
-        return result[0] if result else 0
-    except Exception as e:
-        raise e
-    finally:
-        connection.close()

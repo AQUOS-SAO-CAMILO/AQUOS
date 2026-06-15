@@ -1,5 +1,5 @@
 import logging
-from backend.src.DAOS.athlete_DAO import get_full_athlete_profile, upsert_athlete_profile
+from backend.src.DAOS.athlete_DAO import get_full_athlete_profile, upsert_athlete_profile, get_atletas_risco_count
 
 log = logging.getLogger("meuapp")
 
@@ -37,3 +37,6 @@ def save_athlete_profile_data(user_id, nome, data_nascimento, genero, modalidade
 
 def get_modalidades_list():
     return [{"id": m, "nome": m} for m in MODALIDADES]
+
+def get_atletas_em_risco():
+    return get_atletas_risco_count()

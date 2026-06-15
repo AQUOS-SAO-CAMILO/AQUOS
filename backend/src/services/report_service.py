@@ -1,7 +1,7 @@
 import statistics
 import logging
 from collections import defaultdict
-from backend.src.DAOS.report_DAO import get_athlete_sessions_with_results, get_last_session_with_result, get_sessions_by_filters_with_results, get_atletas_risco_count
+from backend.src.DAOS.report_DAO import get_athlete_sessions_with_results, get_last_session_with_result, get_sessions_by_filters_with_results
 
 log = logging.getLogger("meuapp")
 
@@ -270,7 +270,3 @@ def build_adm_report(modality=None, team_id=None, athlete_id=None,
         "atletas":     atletas,
         "climas":      climas,
     }
-
-
-def get_atletas_em_risco():
-    return get_atletas_risco_count()

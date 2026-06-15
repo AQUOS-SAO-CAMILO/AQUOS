@@ -1,6 +1,6 @@
 import io, jwt
 from flask import Blueprint, jsonify, send_file, request, current_app
-from backend.src.services.report_service import build_athlete_report, get_last_session_summary, build_adm_report, get_atletas_em_risco
+from backend.src.services.report_service import build_athlete_report, get_last_session_summary, build_adm_report
 from backend.src.utils.report_pdf import generate_hydration_pdf, generate_adm_report_pdf
 import logging
 
@@ -95,17 +95,3 @@ def adm_report():
     except Exception as e:
         log.error("Erro ao gerar relatório adm. Erro: %s", e)
         return jsonify({"error": f"Erro ao gerar relatório. {e}"}), 500
-    
-@report.route("/alertas/atletas-risco", methods=["GET"])
-def atletas_em_risco():
-    user_id = _get_user_id()
-    if not user_id:
-        return jsonify({"error": "Não autorizado."}), 401
- 
-    try:
-        from backend.src.services.report_service import get_atletas_em_risco
-        quantidade = get_atletas_em_risco()
-        return jsonify({"quantidade": quantidade}), 200
-    except Exception as e:
-        log.error("Erro ao buscar atletas em risco. Erro: %s", e)
-        return jsonify({"error": f"Erro ao buscar atletas em risco. {e}"}), 500

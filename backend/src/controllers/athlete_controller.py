@@ -5,6 +5,7 @@ from backend.src.services.athlete_service import (
     get_athlete_profile_data,
     save_athlete_profile_data,
     get_modalidades_list,
+    get_atletas_em_risco
 )
 
 log = logging.getLogger("meuapp")
@@ -71,3 +72,16 @@ def list_modalidades():
 @athlete.route("/api/equipes", methods=["GET"])
 def list_equipes():
     return jsonify([]), 200
+
+@athlete.route("/alertas/atletas-risco", methods=["GET"])
+def atletas_em_risco():
+    user_id = _get_user_id()
+    if not user_id:
+        return jsonify({"error": "Não autorizado."}), 401
+ 
+    try:
+        quantidade = get_atletas_em_risco()
+        return jsonify({"quantidade": quantidade}), 200
+    except Exception as e:
+        log.error("Erro ao buscar atletas em risco. Erro: %s", e)
+        return jsonify({"error": f"Erro ao buscar atletas em risco. {e}"}), 500
