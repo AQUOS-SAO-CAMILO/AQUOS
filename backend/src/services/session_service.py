@@ -1,5 +1,6 @@
 from backend.src.DAOS.session_DAO import *
 from datetime import datetime
+from backend.src.services.external_service import get_clima
 
 import logging
 
@@ -44,6 +45,13 @@ def create_session_logic(athlete_id, modality, intensity, session_start, urine_c
                 athlete_profile_id = create_athlete_profile(athlete_id, athlete_code)
                 session_id = create_training_session(athlete_profile_id, modality, intensity, session_start, urine_color_pre, bladder_emptied, clothing_soaked, urine_volume_ml, notes)
                 log.info("Novo perfil e sessão criados para atleta %s. session_id=%s", athlete_id, session_id)
+
+        try:
+            env_result = session_environment_logic(session_id)
+            if "error" in env_result:
+                log.warning("Clima não registrado automaticamente. session_id=%s | Erro: %s", session_id, env_result["error"])
+        except Exception as e:
+            log.warning("Falha ao registrar clima automaticamente. session_id=%s | Erro: %s", session_id, e)
 
         return {
             "message": "Sessão criada com sucesso!",
@@ -194,14 +202,22 @@ def get_session_data(session_id):
         return {"error": f"Erro ao tentar criar sessão. {e}"}
 
 
-def session_environment_logic(temperature_c, humidity_pct, session_id):
+def session_environment_logic(session_id):
     try:
         session = select_all_data(session_id)
         if not session:
             raise ValueError("Sessão de treino não encontrada")
+        
+        clima = get_clima()
+
+        if not clima:
+            raise ValueError("Clima não encontrado.")
+        
+        temperature_c = clima["weather"]["temperature"]
+        humidity_pct = clima["weather"]["humidity"]
 
         update_environment_data(temperature_c, humidity_pct, session_id)
-        log.info("Dados de ambiente registrados. session_id=%s | temp=%.1f | umidade=%.1f%%", session_id, temperature_c, humidity_pct)
+        log.info("Dados de ambiente registrados via API. session_id=%s | temp=%.1f | umidade=%.1f%%", session_id, temperature_c, humidity_pct)
 
         return {
             "message": "temperatura e umidade adicionados com sucesso ao banco de dados!",
