@@ -15,7 +15,6 @@
 | Larissa Gomes                | 25.00625-5 | @gLariii         | Desenvolvedor |
 | Luana Ferreira Silva         | 25.01656-9 | @luafxrreira     | Desenvolvedor |
 | Thiago Santos Machado        | 25.01702-1 | @Thiago-stosm    | Desenvolvedor |
-| Victor Hugo Pinto Zakimi     | 23.00187-9 | @Victor-Hugo-PZ  | Desenvolvedor |
 
 ## **<span style="color:green;">Estrutura do projeto</span>**
 ```
