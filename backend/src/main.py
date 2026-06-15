@@ -13,6 +13,7 @@ from backend.src.DAOS.user_DAO import *
 from backend.src.controllers.external_controller import clima
 from backend.src.controllers.report_controller import report
 from backend.src.controllers.athlete_controller import athlete
+from backend.src.controllers.admin_controller import admin
 from backend.src.middlewares.auth import init_middlewares
     
 load_dotenv()
@@ -39,6 +40,7 @@ app.register_blueprint(session)
 app.register_blueprint(clima)
 app.register_blueprint(report)
 app.register_blueprint(athlete)
+app.register_blueprint(admin)
 
 @app.route("/")
 def hello_world():

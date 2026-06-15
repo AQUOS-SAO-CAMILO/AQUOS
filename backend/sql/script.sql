@@ -26,6 +26,15 @@ CREATE TABLE athlete_profiles (
     height_cm    NUMERIC(5,1) CHECK (height_cm > 0),
 );
 
+CREATE TABLE admin_profiles (
+    id            UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id       UUID          NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    admin_code    VARCHAR(64)   NOT NULL UNIQUE,
+    birth_date    DATE,
+    gender        VARCHAR(16),
+    role_title    VARCHAR(128),
+    team_id     UUID          REFERENCES teams(id) ON DELETE SET NULL
+);
 
 -- training_sessions
 CREATE TABLE training_sessions (
