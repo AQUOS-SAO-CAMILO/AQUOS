@@ -326,4 +326,72 @@ def generate_adm_report_pdf(data: dict) -> bytes:
  
     doc.build(story)
     return buffer.getvalue()
- 
+
+def generate_athlete_report_pdf(data: dict) -> bytes:
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+        leftMargin=20*mm, rightMargin=20*mm,
+        topMargin=18*mm, bottomMargin=18*mm)
+    st = _styles()
+    story = []
+
+    def hr():
+        return HRFlowable(width="100%", thickness=0.5,
+                          color=colors.HexColor("#AAAAAA"), spaceAfter=4)
+
+    from datetime import datetime
+    story.append(Paragraph("Relatório Pessoal do Atleta", st["title"]))
+    story.append(hr())
+    story.append(Paragraph(
+        f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M')} &nbsp;|&nbsp; "
+        f"Total de sessões: {data['geral']['totalSessoes']}", st["meta"]))
+    story.append(Spacer(1, 6*mm))
+
+    story.append(Paragraph("Resumo Geral", st["section"]))
+    story.append(hr())
+    story.append(_data_table([
+        ("Média (Taxa de Sudorese)", data["geral"]["average"]),
+        ("Mediana",                  data["geral"]["median"]),
+        ("Desvio Padrão",            data["geral"]["stdDeviation"]),
+        ("Total de Sessões",         str(data["geral"]["totalSessoes"])),
+    ], st))
+    story.append(Spacer(1, 5*mm))
+
+    if data.get("modalidades"):
+        story.append(Paragraph("Por Modalidade", st["section"]))
+        story.append(hr())
+        for item in data["modalidades"]:
+            story.append(Spacer(1, 3*mm))
+            story.append(Paragraph(f"{item['nome']} — {item['sessoes']} sessões", st["value"]))
+            story.append(_data_table([
+                ("Duração Média",              item["duracao"]),
+                ("Intensidade",                item["intensidade"]),
+                ("Balanço Hídrico",            item["balancoHidrico"]),
+                ("Taxa de Sudorese",           item["taxaSudorese"]),
+                ("Variação de Massa Corporal", item["variacaoMassa"]),
+            ], st))
+        story.append(Spacer(1, 5*mm))
+
+    if data.get("climas"):
+        story.append(Paragraph("Por Condição Climática", st["section"]))
+        story.append(hr())
+        for item in data["climas"]:
+            story.append(Spacer(1, 3*mm))
+            story.append(Paragraph(f"{item['nome']} — {item['sessoes']} sessões", st["value"]))
+            story.append(_data_table([
+                ("Temperatura Média", item["tempMedia"]),
+                ("Umidade",           item["umidade"]),
+                ("Balanço Hídrico",   item["balancoHidrico"]),
+                ("Taxa de Sudorese",  item["taxaSudorese"]),
+                ("Variação de Massa", item["variacaoMassa"]),
+            ], st))
+        story.append(Spacer(1, 5*mm))
+
+    story.append(Spacer(1, 4*mm))
+    story.append(HRFlowable(width="100%", thickness=0.3,
+                             color=colors.HexColor("#AAAAAA"), spaceAfter=3))
+    story.append(Paragraph(
+        "Hydration Monitoring System &nbsp;·&nbsp; Relatório do Atleta", st["footer"]))
+
+    doc.build(story)
+    return buffer.getvalue() 

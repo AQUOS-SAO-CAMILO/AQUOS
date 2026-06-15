@@ -21,7 +21,6 @@ export default function RelatorioAtleta() {
   const [metrics, setMetrics] = useState<Metric[]>([]);
   const [summary, setSummary] = useState({ title: "MINHAS SESSÕES", quantidadeSessoes: 0 });
   
-
   const [chartData, setChartData] = useState<{ sessao: string; media: number; mediana: number; limiteMin: number; limiteMax: number; }[]>([]);
   
   const [modalidadesCards, setModalidadesCards] = useState<CardData[]>([]);
@@ -30,7 +29,6 @@ export default function RelatorioAtleta() {
 
   const [loading, setLoading] = useState(true);
 
-  //  Função  para extrair o ID do Atleta direto do Token de segurança
   const getAtletaIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -46,15 +44,13 @@ export default function RelatorioAtleta() {
     }
   };
 
-  // Exportação do PDF conectada ao Backend
   const handleExportar = async () => {
     try {
       const atletaId = getAtletaIdFromToken();
       if (!atletaId) throw new Error("Usuário não autenticado");
 
       const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
-      // Conecta com a rota de exportação específica do atleta
-      const exportUrl = `${apiUrl}/report/export?atleta=${atletaId}`;
+      const exportUrl = `${apiUrl}/report/athlete/export?atleta=${atletaId}`;
 
       const response = await fetch(exportUrl, {
         headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
@@ -67,7 +63,7 @@ export default function RelatorioAtleta() {
       const a = document.createElement("a");
 
       a.href = url;
-      a.download = `relatorio_pessoal_atleta.pdf`;
+      a.download = "relatorio_pessoal_atleta.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -89,16 +85,15 @@ export default function RelatorioAtleta() {
           navigate("/");
           return;
         }
-
      
-        const fetchUrl = `${apiUrl}/report/atleta/${atletaId}`;
+        const fetchUrl = `${apiUrl}/report/athlete/${atletaId}`;
         console.log("Buscando dados pessoais em:", fetchUrl);
 
         const response = await fetch(fetchUrl, {
           headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
         });
-        
         if (!response.ok) throw new Error("Erro na requisição");
+
         const dadosRelatorio = await response.json();
 
         setMetrics([

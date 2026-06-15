@@ -59,7 +59,7 @@ export default function RelatorioAdm() {
       const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
       
       const params = buildBackendParams();
-      const exportUrl = `${apiUrl}/report/export?${params.toString()}`;
+      const exportUrl = `${apiUrl}/report/admin/export?${params.toString()}`;
 
       const response = await fetch(exportUrl, { headers: getAuthHeaders() });
 
@@ -102,7 +102,7 @@ export default function RelatorioAdm() {
     async function loadReport() {
       try {
         const params = buildBackendParams();
-        const fetchUrl = `${apiUrl}/report?${params.toString()}`;
+        const fetchUrl = `${apiUrl}/report/admin?${params.toString()}`;
         console.log("Buscando dados em:", fetchUrl);
 
         const response = await fetch(fetchUrl, { headers: getAuthHeaders() });
