@@ -1,6 +1,6 @@
 import jwt, logging
 from flask import Blueprint, jsonify, request, current_app
-from backend.src.services.admin_service import get_admin_profile_data_logic, save_admin_data_logic
+from backend.src.services.admin_service import *
 
 log = logging.getLogger("meuapp")
 admin = Blueprint("admin", __name__)
@@ -31,7 +31,7 @@ def get_admin_profile():
         return jsonify({"error": f"Erro ao buscar perfil. {e}"}), 500
 
     
-@admin.route("dados-adm", methods=["PUT"])
+@admin.route("/admin/perfil", methods=["PUT"])
 def save_admin_data():
 
     user_id = _get_user_id()

@@ -32,7 +32,6 @@ CREATE TABLE admin_profiles (
     admin_code    VARCHAR(64)   NOT NULL UNIQUE,
     birth_date    DATE,
     gender        VARCHAR(16),
-    role_title    VARCHAR(128),
     team_id     UUID          REFERENCES teams(id) ON DELETE SET NULL
 );
 

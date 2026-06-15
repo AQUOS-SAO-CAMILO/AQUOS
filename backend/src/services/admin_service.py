@@ -9,6 +9,9 @@ def get_admin_profile_data_logic(user_id):
         
         if not found_admin:
             raise Exception(f"Admnistrador com id {user_id} não encontrado")
+        
+        teams_data = get_admin_teams(user_id)
+        lista_equipes = [{"id": row[0], "nome": row[1]} for row in teams_data]
 
         admin_data = {
             "id": found_admin[0],
@@ -16,8 +19,8 @@ def get_admin_profile_data_logic(user_id):
             "name": found_admin[2],
             "birth_date": found_admin[3].isoformat() if found_admin[3] else None,
             "gender": found_admin[4],
-            "role_title": found_admin[5],
-            "team_id": found_admin[6]
+            "role": found_admin[5],
+            "team_name": lista_equipes
         }
         
         log.info("Perfil do administrador %s recuperado com sucesso.", user_id)
@@ -35,10 +38,13 @@ def get_admin_profile_data_logic(user_id):
 
 def save_admin_data_logic(user_id, full_name, birth_date, gender, role_title, team_id):
     try:
+        if not full_name or full_name.strip() == "":
+            raise Exception("O nome completo é obrigatório e não pode ser nulo.")
+        
         formatted_birth_date = birth_date if birth_date else None
         formatted_team_id = team_id if team_id and team_id != "" else None
     
-        update_admin_profile(user_id=user_id, full_name=full_name, 
+        update_admin_profile(user_id=user_id, full_name=full_name.strip(), 
                 birth_date=formatted_birth_date, gender=gender, 
                 role_title=role_title, team_id=formatted_team_id)
         
@@ -48,4 +54,3 @@ def save_admin_data_logic(user_id, full_name, birth_date, gender, role_title, te
     except Exception as e:
         log.error("Erro ao salvar perfil do administrador %s. Erro: %s", user_id, e)
         return {"error": f"Erro ao tentar salvar os dados. {e}"}
-    
