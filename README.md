@@ -124,7 +124,7 @@ AQUOS/
 
 ## **<span style="color:white;">Funcionalidades</span>**  
 
-## Atleta
+**ATLETA**
 - Registro de sessões de treino com dados pré, durante e pós-sessão 
 - Monitoramento de ingestão de fluidos durante o treino  
 - Cálculo automático de taxa de sudorese, balanço hídrico e variação de massa corporal  
@@ -133,7 +133,7 @@ AQUOS/
 - Exportação de relatório PDF individual  
 - Registro automático de temperatura e umidade via API climática
 
-## Administrador (Treinador / Nutricionista)
+**ADMINISTRADOR**
 - Painel analítico com filtros por modalidade, equipe e atleta  
 - Visualização agrupada por condição climática  
 - Monitoramento de atletas em risco em tempo real  
@@ -158,7 +158,7 @@ AQUOS/
 - ReportLab
 
 **OpenWeatherApi**   
-Dados climáticos em tempo real
+- Dados climáticos em tempo real
 
 ## **<span style="color:white;">Pré-requisitos</span>**
 
