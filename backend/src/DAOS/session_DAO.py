@@ -1,5 +1,5 @@
-from backend.src.config import connection
 from backend.src.config.connection import create_connection
+from backend.src.logger import logging
 
 def get_athlete_profile_by_id(athlete_id):
     connection = create_connection()
@@ -217,31 +217,91 @@ def get_session_result(session_id):
     connection.close()
     return result
 
-def get_session_by_filters(modality=None, intensity=None, athlete_id=None):
+def get_all_modalities():
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT DISTINCT modality
+        FROM training_sessions
+        WHERE modality IS NOT NULL
+        ORDER BY modality ASC
+    """)
+    results = [{"id": row[0], "nome": row[0]} for row in cursor.fetchall()]
+    connection.close()
+    return results
+
+
+def get_all_athletes():
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT u.id, u.name
+        FROM users u
+        INNER JOIN athlete_profiles ap ON ap.user_id = u.id
+        ORDER BY u.name ASC
+    """)
+    results = [{"id": str(row[0]), "nome": row[1]} for row in cursor.fetchall()]
+    connection.close()
+    return results
+
+
+def get_all_teams():
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT id, name FROM teams ORDER BY name ASC")
+    results = [{"id": str(row[0]), "nome": row[1]} for row in cursor.fetchall()]
+    connection.close()
+    return results
+
+
+def get_session_by_filters(modality=None, intensity=None, athlete_id=None,
+                               team_id=None, session_start=None, session_end=None):
     try:
         connection = create_connection()
         cursor = connection.cursor()
-        
-        query = "SELECT * FROM training_sessions WHERE 1=1"
+
+        query = """
+            SELECT ts.*
+            FROM training_sessions ts
+            INNER JOIN athlete_profiles ap ON ap.id = ts.athlete_id
+            INNER JOIN users u ON u.id = ap.user_id
+            WHERE 1=1
+        """
         parameters = []
 
         if modality:
-            query += " AND modality = %s"
+            query += " AND ts.modality = %s"
             parameters.append(modality)
         if intensity:
-            query += " AND intensity = %s"
+            query += " AND ts.intensity = %s"
             parameters.append(intensity)
         if athlete_id:
-            query += " AND athlete_id = %s"
+            query += " AND ap.user_id = %s"
             parameters.append(athlete_id)
+        if team_id:
+            query += """
+                AND ap.user_id IN (
+                    SELECT tu.user_id FROM teams_users tu WHERE tu.team_id = %s
+                )
+            """
+            parameters.append(team_id)
+        if session_start and str(session_start).strip() != "":
+            query += " AND ts.session_start >= %s"
+            parameters.append(f"{session_start} 00:00:00-03")
+        if session_end and str(session_end).strip() != "":
+            query += " AND ts.session_start <= %s"
+            parameters.append(f"{session_end} 23:59:59-03")
+
+        query += " ORDER BY ts.session_start DESC"
 
         cursor.execute(query, tuple(parameters))
-        
+        raw_result = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
-        results = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
+        results = [dict(zip(columns, row)) for row in raw_result]
         return results
-    
+
+    except Exception as e:
+        raise e
     finally:
         connection.close()
 

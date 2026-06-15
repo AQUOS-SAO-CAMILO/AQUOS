@@ -277,14 +277,22 @@ def session_end_logic(session_id, session_end):
         log.error("Erro ao finalizar sessão. session_id=%s | Erro: %s", session_id, e)
         return {"error": f"Erro ao tentar criar sessão. {e}"}
     
-def session_filter_logic(modality=None, intensity=None, athlete_id=None):
+def session_filter_logic(modality=None, intensity=None, athlete_id=None, 
+                         team_id=None, session_start=None, session_end=None):
     try:
-        if not any([modality, intensity, athlete_id]):
+        if not any([modality, intensity, athlete_id, team_id, session_start, session_end]):
             log.warning("Pelo menos um filtro deve ser fornecido para usar a função de filtragem.")
             raise ValueError("Pelo menos um filtro deve ser fornecido para usar a função de filtragem.")
         
-        sessions = get_session_by_filters(modality, intensity, athlete_id)
-        log.info("Sessões filtradas com sucesso. Filtros aplicados: %s, total: %d", (modality, intensity, athlete_id), len(sessions))
+        sessions = get_session_by_filters(            
+            modality=modality,
+            intensity=intensity,
+            athlete_id=athlete_id,
+            team_id=team_id,
+            session_start=session_start,
+            session_end=session_end,
+        )
+        log.info("Sessões filtradas com sucesso. Total: %d", len(sessions))
         return {
             "message": "Atividades filtradas com sucesso!",
             "sessions": sessions,
@@ -292,15 +300,35 @@ def session_filter_logic(modality=None, intensity=None, athlete_id=None):
         }
 
     except Exception as e:
-        log.error("Erro ao filtrar sessões. modality=%s | intensity=%s | athlete_id=%s | Erro: %s", modality, intensity, athlete_id, e)
+        log.error("Erro ao filtrar sessões. Erro: %s", e)
         return {"error": f"Erro ao tentar filtrar sessão. {e}"}
     
-def get_teams():
-
+def get_modalities_logic():
     try:
+        return get_all_modalities()
+    except Exception as e:
+        log.error("Erro ao buscar modalidades. Erro: %s", e)
+        return {"error": f"Erro ao buscar modalidades. {e}"}
+ 
+ 
+def get_athletes_logic():
+    try:
+        return get_all_athletes()
+    except Exception as e:
+        log.error("Erro ao buscar atletas. Erro: %s", e)
+        return {"error": f"Erro ao buscar atletas. {e}"}
+ 
+ 
+def get_teams_logic():
+    try:
+        return get_all_teams()
+    except Exception as e:
+        log.error("Erro ao buscar equipes. Erro: %s", e)
+        return {"error": f"Erro ao buscar equipes. {e}"}
     
+def get_teams():
+    try:
         teams = select_all_teams()
-
         teams_data = [
             {
             "id": team["id"],
@@ -308,9 +336,7 @@ def get_teams():
             }
             for team in teams
         ]
-
         return teams_data
-    
     except Exception as e:
         log.exception("Erro ao selecionar equipes")
         return {"eror:" f"Erro ao selecionar equipes"}

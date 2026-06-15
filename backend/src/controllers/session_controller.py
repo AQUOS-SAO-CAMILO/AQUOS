@@ -230,19 +230,66 @@ def session_end():
         log.error("Erro ao finalizar sessão. session_id=%s | Erro: %s", session_id, e)
         return jsonify({"error": f"Erro ao tentar registrar o início da sessão. {e}"})
 
+@session.route('/api/modalidades', methods=['GET'])
+def list_modalities():
+    log.debug("Requisição de listagem de modalidades recebida.")
+    try:
+        result = get_modalities_logic()
+        return jsonify(result), 200
+    except Exception as e:
+        log.error("Erro ao listar modalidades. Erro: %s", e)
+        return jsonify({"error": f"Erro ao listar modalidades. {e}"}), 400
+ 
+ 
+@session.route('/api/atletas', methods=['GET'])
+def list_athletes():
+    log.debug("Requisição de listagem de atletas recebida.")
+    try:
+        result = get_athletes_logic()
+        return jsonify(result), 200
+    except Exception as e:
+        log.error("Erro ao listar atletas. Erro: %s", e)
+        return jsonify({"error": f"Erro ao listar atletas. {e}"}), 400
+ 
+ 
+@session.route('/api/equipes', methods=['GET'])
+def list_teams():
+    log.debug("Requisição de listagem de equipes recebida.")
+    try:
+        result = get_teams_logic()
+        return jsonify(result), 200
+    except Exception as e:
+        log.error("Erro ao listar equipes. Erro: %s", e)
+        return jsonify({"error": f"Erro ao listar equipes. {e}"}), 400
+
 @session.route('/session/filter', methods=['GET'])
 def session_filter():
     modality = request.args.get('modality')
     intensity = request.args.get('intensity')
     athlete_id = request.args.get('athlete_id')
+    team_id = request.args.get('team_id')
+    session_start = request.args.get('session_start')
+    session_end = request.args.get('session_end')
 
-    log.debug("Requisição de filtro de sessões recebida. athlete_id=%s | modality=%s | intensity=%s", athlete_id, modality, intensity)
+    log.debug("Requisição de filtro de sessões recebida. athlete_id=%s | modality=%s | intensity=%s | team_id=%s | session_start=%s | session_end=%s", 
+              athlete_id, modality, intensity, team_id, session_start, session_end)
 
     try:
-        result = session_filter_logic(modality, intensity, athlete_id)
-        log.info("Sessões filtradas com sucesso. athlete_id=%s | modality=%s | intensity=%s", athlete_id, modality, intensity)
+        result = session_filter_logic(            
+            modality=modality,
+            intensity=intensity,
+            athlete_id=athlete_id,
+            team_id=team_id,
+            session_start=session_start,
+            session_end=session_end,
+        )
+        if "error" in result:
+            return jsonify(result), 400
+        
+        log.info("Sessões filtradas com sucesso. athlete_id=%s | modality=%s | intensity=%s | team_id=%s", 
+                 athlete_id, modality, intensity, team_id)
         return jsonify(result), 200
     
     except Exception as e:
-        log.error("Erro ao filtrar sessões. athlete_id=%s | modality=%s | intensity=%s | Erro: %s", athlete_id, modality, intensity, e)
+        log.error("Erro ao filtrar sessões. Erro: %s", e)
         return jsonify({"error": f"Erro ao tentar filtrar sessões. {e}"}), 400
