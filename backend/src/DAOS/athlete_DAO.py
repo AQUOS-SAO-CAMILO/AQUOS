@@ -15,11 +15,11 @@ def get_full_athlete_profile(user_id):
     return result
 
 
-def upsert_athlete_profile(user_id, nome, birth_date, gender, sport_modality, body_weight_kg, height_cm):
+def upsert_athlete_profile(user_id, name, birth_date, gender, sport_modality, body_weight_kg, height_cm):
     connection = create_connection()
     cursor = connection.cursor()
 
-    cursor.execute("UPDATE users SET name = %s WHERE id = %s", (nome, user_id))
+    cursor.execute("UPDATE users SET name = %s WHERE id = %s", (name, user_id))
 
     cursor.execute("SELECT id FROM athlete_profiles WHERE user_id = %s", (user_id,))
     existing = cursor.fetchone()

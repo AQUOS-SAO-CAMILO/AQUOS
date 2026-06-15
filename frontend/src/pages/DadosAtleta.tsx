@@ -10,12 +10,10 @@ const DadosAtleta = () => {
   const [dataNascimento, setDataNascimento] = useState("");
   const [genero, setGenero] = useState("");
   const [modalidade, setModalidade] = useState("");
-  const [equipe, setEquipe] = useState("");
   const [peso, setPeso] = useState("");
   const [altura, setAltura] = useState("");
 
-  const [listaModalidades, setListaModalidades] = useState<{ id: string, nome: string }[]>([]);
-  const [listaEquipes, setListaEquipes] = useState<{ id: string, nome: string }[]>([]);
+  const [listaModalidades, setListaModalidades] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,32 +21,42 @@ const DadosAtleta = () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
         const token = localStorage.getItem("token");
-        const headers = { "Authorization": `Bearer ${token}` };
 
-        // Dispara as requisições
-        const [resPerfil, resMod, resEquipes] = await Promise.all([
-          fetch(`${apiUrl}/api/atleta/perfil`, { headers }),
-          fetch(`${apiUrl}/api/modalidades`, { headers }),
-          fetch(`${apiUrl}/api/equipes`, { headers })
+        if (!token) {
+          navigate("/");
+          return;
+        }
+
+        const headers = { 
+          "Content-Type": "application/json", 
+          "Authorization": `Bearer ${token}` 
+        };
+
+        const response = await fetch(`${apiUrl}/atleta/perfil`, { headers })
+          
+        if (!response.ok) throw new Error("Falha ao carregar alguns dados do servidor.");
+
+        const dadosPerfil = await response.json();
+
+        setListaModalidades([
+          "Futebol", "Futsal", "Basquete", "Vôlei", "Natação",
+          "Atletismo", "Ciclismo", "Tênis", "Handebol", "Rugby",
+          "Corrida", "Musculação", "Jiu-Jitsu", "Judô", "Outro"
         ]);
 
-        if (!resPerfil.ok || !resMod.ok || !resEquipes.ok) throw new Error("Erro ao buscar dados");
-
-        const [dadosPerfil, dadosMod, dadosEquipes] = await Promise.all([
-          resPerfil.json(), resMod.json(), resEquipes.json()
-        ]);
-
-        setListaModalidades(dadosMod);
-        setListaEquipes(dadosEquipes);
-
-        setNome(dadosPerfil.nome || "");
-        setDataNascimento(dadosPerfil.dataNascimento || "");
-        setGenero(dadosPerfil.genero || "");
-        setPeso(dadosPerfil.peso || "");
-        setAltura(dadosPerfil.altura || "");
-        setModalidade(dadosPerfil.modalidadeId || "");
-        setEquipe(dadosPerfil.equipeId || "");
-
+        if (dadosPerfil.data) {
+          const atleta = dadosPerfil.data;
+          setNome(atleta.name || "");
+          
+          if (atleta.birth_date) {
+            setDataNascimento(atleta.birth_date.split("T")[0]);
+          }
+          
+          setGenero(atleta.gender || "");
+          setPeso(atleta.body_weight_kg || "");
+          setAltura(atleta.height_cm || "");
+          setModalidade(atleta.sport_modality || "");
+        }
       } catch (error) {
         console.error("Erro:", error);
       } finally {
@@ -56,20 +64,27 @@ const DadosAtleta = () => {
       }
     }
     fetchTodosOsDados();
-  }, []);
+  }, [navigate]);
 
   async function handleSalvar() {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`${apiUrl}/api/atleta/perfil`, {
+      const response = await fetch(`${apiUrl}/atleta/perfil`, {
         method: "PUT",
         headers: { 
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}` 
         },
-        body: JSON.stringify({ nome, dataNascimento, genero, modalidadeId: modalidade, equipeId: equipe, peso, altura })
+        body: JSON.stringify({ 
+          name: nome, 
+          birth_date: dataNascimento, 
+          gender: genero, 
+          sport_modality: modalidade, 
+          body_weight_kg: peso, 
+          height_cm: altura  
+        })
       });
 
       if (!response.ok) throw new Error("Erro ao salvar");
@@ -125,7 +140,7 @@ const DadosAtleta = () => {
               <label className={formStyles.label}>MODALIDADE</label>
               <select className={formStyles.input} value={modalidade} onChange={(e) => setModalidade(e.target.value)}>
                 <option value="" disabled>Selecione</option>
-                {listaModalidades.map(mod => <option key={mod.id} value={mod.id}>{mod.nome}</option>)}
+                {listaModalidades.map(mod => <option key={mod} value={mod}>{mod}</option>)}
               </select>
             </div>
 

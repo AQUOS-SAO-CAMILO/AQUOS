@@ -4,7 +4,6 @@ from flask import Blueprint, jsonify, request, current_app
 from backend.src.services.athlete_service import (
     get_athlete_profile_data,
     save_athlete_profile_data,
-    get_modalidades_list,
     get_atletas_em_risco
 )
 
@@ -25,7 +24,7 @@ def _get_user_id():
         return None
 
 
-@athlete.route("/api/atleta/perfil", methods=["GET"])
+@athlete.route("/atleta/perfil", methods=["GET"])
 def get_perfil():
     user_id = _get_user_id()
     if not user_id:
@@ -40,7 +39,7 @@ def get_perfil():
         return jsonify({"error": f"Erro ao buscar perfil. {e}"}), 500
 
 
-@athlete.route("/api/atleta/perfil", methods=["PUT"])
+@athlete.route("/atleta/perfil", methods=["PUT"])
 def update_perfil():
     user_id = _get_user_id()
     if not user_id:
@@ -51,27 +50,18 @@ def update_perfil():
     try:
         save_athlete_profile_data(
             user_id,
-            nome=data.get("nome"),
-            data_nascimento=data.get("dataNascimento"),
-            genero=data.get("genero"),
-            modalidade_id=data.get("modalidadeId"),
-            peso=data.get("peso"),
-            altura=data.get("altura"),
+            name=data.get("name"),
+            birth_date=data.get("birth_date"),
+            gender=data.get("gender"),
+            sport_modality=data.get("sport_modality"),
+            body_weight_kg=data.get("body_weight_kg"),
+            height_cm=data.get("height_cm"),
         )
+        log.info("Dados do atleta atualizados com sucesso. user_id=%s", user_id)
         return jsonify({"message": "Perfil atualizado com sucesso!"}), 200
     except Exception as e:
         log.error("Erro ao atualizar perfil. user_id=%s | Erro: %s", user_id, e)
         return jsonify({"error": f"Erro ao atualizar perfil. {e}"}), 500
-
-
-@athlete.route("/api/modalidades", methods=["GET"])
-def list_modalidades():
-    return jsonify(get_modalidades_list()), 200
-
-
-@athlete.route("/api/equipes", methods=["GET"])
-def list_equipes():
-    return jsonify([]), 200
 
 @athlete.route("/alertas/atletas-risco", methods=["GET"])
 def atletas_em_risco():
