@@ -69,11 +69,25 @@
     box-shadow: 0 0 0 1.5px var(--input-focus);
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .buttonContainer {
     display: flex;
     justify-content: space-between;
     gap: 12px;
     margin-top: 32px;
+}
+
+.buttonContainer:last-of-type {
+    margin-top: 12px;
 }
 
 @media (max-width: 768px) {
