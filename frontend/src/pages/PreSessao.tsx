@@ -93,10 +93,12 @@ export default function PreSessao() {
         notes: `Sintomas: ${sintomas.join(", ") || "Nenhum"} | Sede: ${sede} | Roupa: ${vestimenta} | Previsão: ${duracaoPrevista}min`
       };
 
+      const token = localStorage.getItem("token");
+
       // 3. Inicia a sessão no banco
       const resStart = await fetch(`${apiUrl}/session/start`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify(payloadStart)
       });
 
@@ -116,7 +118,7 @@ export default function PreSessao() {
       if (hidratacao && Number(hidratacao) > 0) {
         await fetch(`${apiUrl}/session/fluidIntake`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
           body: JSON.stringify({
             session_id: sessionId,
             fluid_type: "water",

@@ -72,12 +72,13 @@ export default function PosSessao() {
       }
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const token = localStorage.getItem("token")
 
       const urineVolume = Number(localStorage.getItem("urine_volume_ml") || "0");
 
       const massRes = await fetch(`${apiUrl}/session/mass`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({
           session_id: sessionId,
           pre_weight_kg: Number(preWeight),
@@ -90,7 +91,7 @@ export default function PosSessao() {
 
       const endRes = await fetch(`${apiUrl}/session/end`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}`  },
         body: JSON.stringify({
           session_id: sessionId,
           session_end: new Date().toISOString().split('.')[0]
@@ -103,7 +104,7 @@ export default function PosSessao() {
 
       const metricsRes = await fetch(`${apiUrl}/session/metrics`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}`  },
         body: JSON.stringify({ session_id: sessionId, planned_duration_min: plannedDurationMin || null })
       });
       const metricsData = await metricsRes.json();

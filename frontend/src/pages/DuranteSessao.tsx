@@ -56,12 +56,13 @@ export default function DuranteSessao() {
       }
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const token = localStorage.getItem("token")
 
       // Se o atleta registou consumo de água, envia para a API
       if (aguaTotal > 0) {
         const res = await fetch(`${apiUrl}/session/fluidIntake`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
           body: JSON.stringify({
             session_id: sessionId,
             fluid_type: "water",

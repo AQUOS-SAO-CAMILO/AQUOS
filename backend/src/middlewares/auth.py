@@ -26,7 +26,7 @@ def init_middlewares(app):
 
         try:
             payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            request.user_id = payload.get("user_id")
+            request.user_id = payload.get("User_id")
             request.user_role = payload.get("role")
             log.info(f"Token validado. Usuário: {request.user_id} | role: {request.user_role}")
         except jwt.ExpiredSignatureError:
