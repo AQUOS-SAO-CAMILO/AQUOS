@@ -166,7 +166,7 @@ Dados climáticos em tempo real
 - PostgreSQL 18  
 - npm
 
-## **<span style="color:white;">Como executar</span>**
+## **<span style="color:white;">Como executar no modo desenvolvimento</span>**
 
 1. Clone o repositório e mude o diretório
 ```bash
@@ -206,6 +206,18 @@ cp .env.example .env
 7. Execute o servidor
 ```bash
 npm run dev
+```
+## **<span style="color:white;">Como executar no modo produção</span>**
+1. Iniciar o Servidor Backend (Flask)
+```bash
+python -m backend.src.main
+```
+2. Instalar e Abrir o Aplicativo
+```bash
+# Navegue até o diretório de compilação final do instalador:
+src-tauri/target/release/bundle/nsis/
+# Execute o assistente de instalação aquos_0.1.0_x64-setup.exe no Windows.
+# Abra o AQUOS a partir do atalho gerado automaticamente em sua Área de Trabalho.
 ```
 
 ## **<span style="color:white;">Licença</span>**  

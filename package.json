@@ -11,6 +11,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.11.2",
     "@types/react": "^19.2.15",
     "@types/react-router-dom": "^5.3.3",
     "concurrently": "^9.2.1"
@@ -19,6 +20,8 @@
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "backend": "python -m backend.src.main",
-    "frontend": "cd frontend && npm run dev"
+    "frontend": "cd frontend && npm run dev",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   }
 }
