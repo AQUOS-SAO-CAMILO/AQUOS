@@ -5,30 +5,12 @@ VENV    = backend\venv
 PIP     = $(VENV)\Scripts\pip.exe
 PY      = $(VENV)\Scripts\python.exe
 
-all: help
-
-help:
-	@echo.
-	@echo AQUOS — comandos disponíveis (Windows)
-	@echo =========================================
-	@echo   nmake /f Makefile.win setup              Copia .env.example para .env
-	@echo   nmake /f Makefile.win install            Instala TODAS as dependencias
-	@echo   nmake /f Makefile.win install-backend    Cria venv e instala pacotes Python
-	@echo   nmake /f Makefile.win install-frontend   Executa npm install no frontend
-	@echo   nmake /f Makefile.win dev                Inicia backend + frontend juntos
-	@echo   nmake /f Makefile.win backend            Inicia apenas o servidor Flask
-	@echo   nmake /f Makefile.win frontend           Inicia apenas o Vite dev server
-	@echo   nmake /f Makefile.win test               Executa os testes Python
-	@echo   nmake /f Makefile.win lint               Executa o ESLint no frontend
-	@echo   nmake /f Makefile.win clean              Remove venv, node_modules e cache
-	@echo.
-
-# ── Configuração inicial ────────────────────────────────────────────────────
+# Configuração inicial
 
 setup:
 	@IF NOT EXIST .env (copy .env.example .env && echo >>> .env criado a partir de .env.example. && echo >>> Preencha as variaveis antes de iniciar.) ELSE (echo >>> .env ja existe, nenhuma acao necessaria.)
 
-# ── Dependências ────────────────────────────────────────────────────────────
+# Dependências
 
 install-backend:
 	python -m venv $(VENV)
@@ -43,7 +25,7 @@ install-frontend:
 install: install-backend install-frontend
 	@echo >>> Todas as dependencias instaladas com sucesso.
 
-# ── Execução ────────────────────────────────────────────────────────────────
+# Execução
 
 dev:
 	set "VIRTUAL_ENV=$(MAKEDIR)\$(VENV)" && set "PATH=$(MAKEDIR)\$(VENV)\Scripts;%PATH%" && npm run dev
@@ -54,7 +36,7 @@ backend:
 frontend:
 	cd frontend && npm run dev
 
-# ── Qualidade ───────────────────────────────────────────────────────────────
+# Qualidade
 
 test:
 	$(PY) -m pytest backend\tests\ -v
@@ -62,7 +44,7 @@ test:
 lint:
 	cd frontend && npm run lint
 
-# ── Limpeza ─────────────────────────────────────────────────────────────────
+# Limpeza
 
 clean:
 	@IF EXIST $(VENV) rmdir /s /q $(VENV)

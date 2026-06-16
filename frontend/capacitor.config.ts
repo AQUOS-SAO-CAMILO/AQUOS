@@ -8,6 +8,11 @@ const config: CapacitorConfig = {
     SplashScreen: {
       backgroundColor: '#ffffff'
     }
+  },
+
+  server: {
+    cleartext: true,
+    allowNavigation: ['192.168.15.8:5001']
   }
 };
 
