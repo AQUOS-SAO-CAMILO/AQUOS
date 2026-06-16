@@ -20,14 +20,12 @@ export default function ResultadoSessao() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Busca os dados diretamente da memória do navegador
     const storedMetrics = localStorage.getItem("session_metrics");
 
     if (storedMetrics) {
       try {
         const data = JSON.parse(storedMetrics);
         
-        // Mapeando as chaves exatas que a função calculate_session_metrics  devolve
         setResultado({
           sessionId: data.session_id,
           taxaSudorese: data.sweat_rate_lph?.toString() || "0.00",
@@ -46,7 +44,6 @@ export default function ResultadoSessao() {
     setLoading(false);
   }, []);
 
-  // Função para chamar o endpoint que gera o PDF (rota /session/report/<session_id>)
   const handleExportarPDF = () => {
     if (!resultado?.sessionId) return;
     
@@ -78,13 +75,11 @@ export default function ResultadoSessao() {
     <div className={styles.container}>
       <h1 className={styles.mainTitle}>RESULTADO DA SESSÃO</h1>
 
-      {/* Card Verde - Taxa de Sudorese */}
       <div className={`${styles.resultCard} ${styles.greenCard}`}>
         <span className={styles.cardLabel}>TAXA DE SUDORESE ESTIMADA</span>
         <span className={styles.cardValue}>{resultado.taxaSudorese} l/h</span>
       </div>
 
-      {/* Cards Brancos Lado a Lado */}
       <div className={styles.cardsRow}>
         <div className={`${styles.resultCard} ${styles.whiteCard}`}>
           <span className={styles.cardLabel}>VARIAÇÃO DE<br/>MASSA CORPORAL</span>
@@ -97,11 +92,9 @@ export default function ResultadoSessao() {
         </div>
       </div>
 
-      {/* Seção Recomendações */}
       <h2 className={styles.sectionTitle}>RECOMENDAÇÕES</h2>
       <div className={`${styles.resultCard} ${styles.blueCard}`}>
         <div className={styles.blueCardHeader}>
-          {/* Ícone de Gota D'água */}
           <svg className={styles.dropIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>
@@ -122,9 +115,7 @@ export default function ResultadoSessao() {
         </span>
       </div>
 
-      {/* Seção Alertas */}
       <h2 className={styles.sectionTitle}>ALERTAS</h2>
-      {/* Condicional para mudar a cor do alerta se for grave ou não */}
       <div className={`${styles.resultCard} ${resultado.alertaMensagem.includes("adequada") ? styles.greenCard : styles.yellowCard}`}>
         <svg className={styles.alertIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -134,7 +125,6 @@ export default function ResultadoSessao() {
         <span className={styles.cardLabel}>{resultado.alertaMensagem}</span>
       </div>
 
-      {/* Botões de Ação */}
       <div className={styles.buttonGroup}>
         <button className={styles.actionBtn} onClick={() => navigate("/menu-atleta")}>
           Menu Inicial
@@ -142,9 +132,6 @@ export default function ResultadoSessao() {
         <button className={styles.actionBtn} onClick={() => navigate("/relatorio-atleta")}>
           Painel Analítico
         </button>
-        {/* <button className={styles.actionBtn} onClick={handleExportarPDF}>
-          Exportar Resultado
-        </button> */}
       </div>
     </div>
   );

@@ -19,8 +19,8 @@ from backend.src.middlewares.auth import init_middlewares
 load_dotenv()
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*", "methods": 
-                             ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
-                             "allow_headers": ["Content-Type", "Authorization"]}})
+    ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+    "allow_headers": ["Content-Type", "Authorization"]}})
 
 app.config.from_object(Config)
 if not app.config.get('SECRET_KEY'):
