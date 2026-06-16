@@ -7,7 +7,6 @@ import styles from "../styles/Session.module.css";
 export default function PreSessao() {
   const navigate = useNavigate();
   
-  // estados p/ os inputs interativos
   const [intensidade, setIntensidade] = useState(3);
   const [vestimenta, setVestimenta] = useState("Normal");
   const [corUrina, setCorUrina] = useState(0);
@@ -22,7 +21,6 @@ export default function PreSessao() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"error" | "success">("error");
 
-  // gerencia seleção de sintomas (múltipla)
   const toggleSintoma = (sintoma: string) => {
     if (sintomas.includes(sintoma)) {
       setSintomas(sintomas.filter((s) => s !== sintoma));
@@ -35,7 +33,6 @@ export default function PreSessao() {
     "#FFFFFF", "#F9F5C5", "#F7EF4E", "#FFCC00", "#FFA500", "#F28500", "#C67111",
   ];
 
-  // Função para pegar o ID do atleta de dentro do Token JWT
   const getAthleteId = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -81,7 +78,6 @@ export default function PreSessao() {
         modality: modalidade,
         
     
-        // Envia o texto ('low', 'moderate'...) em vez do número do slider
         intensity: traduzirIntensidade(intensidade),
         
         session_start: new Date().toISOString().split('.')[0], 
@@ -95,7 +91,6 @@ export default function PreSessao() {
 
       const token = localStorage.getItem("token");
 
-      // 3. Inicia a sessão no banco
       const resStart = await fetch(`${apiUrl}/session/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
@@ -108,7 +103,6 @@ export default function PreSessao() {
         throw new Error(dataStart.message || dataStart.error || "Erro ao iniciar sessão.");
       }
 
-      // 4. Salva o ID da sessão de forma segura
       const sessionId = dataStart.session_id || dataStart.id || dataStart.athlete_id; 
       
       localStorage.setItem("current_session_id", sessionId);

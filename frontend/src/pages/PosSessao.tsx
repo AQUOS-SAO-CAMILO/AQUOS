@@ -6,17 +6,14 @@ import styles from "../styles/Session.module.css";
 export default function PosSessao() {
   const navigate = useNavigate();
   
-  // Estados p/ os inputs interativos
   const [massaCorporal, setMassaCorporal] = useState("");
   const [nivelSuor, setNivelSuor] = useState("Moderado");
   const [sintomas, setSintomas] = useState<string[]>([]);
   
-  // Estados de feedback
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"error" | "success">("error");
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Recupera os dados temporários se o usuário tiver voltado de outra tela
   useEffect(() => {
     const massaSalva = localStorage.getItem("temp_pos_massa");
     const suorSalvo = localStorage.getItem("temp_pos_suor");
@@ -47,7 +44,6 @@ export default function PosSessao() {
     "Dor abdominal", "Vômito", "Diarreia"
   ];
 
-  // 2. Salva o estado atual localmente antes de voltar
   const handleVoltar = () => {
     localStorage.setItem("temp_pos_massa", massaCorporal);
     localStorage.setItem("temp_pos_suor", nivelSuor);
@@ -112,7 +108,6 @@ export default function PosSessao() {
 
       localStorage.setItem("session_metrics", JSON.stringify(metricsData));
       
-      // 3. apagar todos os temporários
       localStorage.removeItem("current_session_id");
       localStorage.removeItem("pre_weight_kg");
       localStorage.removeItem("urine_volume_ml");

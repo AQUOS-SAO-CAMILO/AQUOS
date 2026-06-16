@@ -12,16 +12,13 @@ import styles from "../styles/Session.module.css";
 export default function DuranteSessao() {
   const navigate = useNavigate();
   
-  // Estados p/ os totais acumulados
   const [aguaTotal, setAguaTotal] = useState(0);
   const [urinaTotal, setUrinaTotal] = useState(0);
 
-  // Estados para feedback visual e carregamento
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState<"error" | "success">("error");
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Recupera o progresso temporário caso o usuário tenha navegado entre as telas
   useEffect(() => {
     const aguaSalva = localStorage.getItem("temp_agua");
     const urinaSalva = localStorage.getItem("temp_urina");
@@ -30,22 +27,18 @@ export default function DuranteSessao() {
     if (urinaSalva) setUrinaTotal(Number(urinaSalva));
   }, []);
 
-  // Funções p/ somar volumes rápidos
   const addAgua = (ml: number) => setAguaTotal(prev => prev + ml);
   const addUrina = (ml: number) => setUrinaTotal(prev => prev + ml);
 
-  // Ajuste fino de 50ml
   const ajustarAgua = (ml: number) => setAguaTotal(prev => Math.max(0, prev + ml));
   const ajustarUrina = (ml: number) => setUrinaTotal(prev => Math.max(0, prev + ml));
 
-  // 2. Salva o estado atual localmente antes de voltar para a tela anterior
   const handleVoltar = () => {
     localStorage.setItem("temp_agua", aguaTotal.toString());
     localStorage.setItem("temp_urina", urinaTotal.toString());
     navigate("/pre-sessao");
   };
 
-  // Função que envia os dados para o backend e avança
   const handleContinuar = async () => {
     setIsLoading(true);
     try {
@@ -58,7 +51,6 @@ export default function DuranteSessao() {
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
       const token = localStorage.getItem("token")
 
-      // Se o atleta registou consumo de água, envia para a API
       if (aguaTotal > 0) {
         const res = await fetch(`${apiUrl}/session/fluidIntake`, {
           method: "POST",
@@ -75,10 +67,8 @@ export default function DuranteSessao() {
         if (!res.ok) throw new Error(data.error || "Erro ao registrar hidratação");
       }
 
-      // Guarda o volume de urina acumulado para o cálculo final de métricas no pós-sessão
       localStorage.setItem("urine_volume_ml", urinaTotal.toString());
 
-      // 3. Limpa os estados temporários de navegação, pois os dados já foram processados/salvos
       localStorage.removeItem("temp_agua");
       localStorage.removeItem("temp_urina");
 
@@ -102,7 +92,6 @@ export default function DuranteSessao() {
 
       <main className={`${styles.content} ${styles.duringContent}`}>
         
-        {/* Bloco de ingestão de água */}
         <section className={`${styles.monitoringBlock} ${styles.waterBlock}`}>
           <div className={styles.blockHeader}>
             <h3>INGESTÃO DE ÁGUA TOTAL</h3>
@@ -137,7 +126,6 @@ export default function DuranteSessao() {
           </div>
         </section>
 
-        {/* Bloco de volume urinário */}
         <section className={`${styles.monitoringBlock} ${styles.urineBlock}`}>
           <div className={styles.blockHeader}>
             <h3>VOLUME URINÁRIO TOTAL</h3>
